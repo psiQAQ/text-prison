@@ -1,0 +1,95 @@
+{
+  "id": "procedure-en-01",
+  "scenario_id": "offline-config-migration",
+  "profile": "procedure",
+  "language": "en",
+  "prompt": "Write an English procedure that an independent agent can follow with only file read/write tools. Explain how to migrate the provided sandbox configuration and how to check the result. Include every requirement; do not execute the migration yourself.",
+  "sources": [
+    {
+      "id": "s1",
+      "text": "The executor starts with input/config.json: {\"schema_version\":1,\"timeout_seconds\":2.5,\"retries\":3,\"tls_verify\":true,\"endpoint\":\"https://sandbox.example.invalid/v1\",\"note\":\"keep this note\"}."
+    },
+    {
+      "id": "s2",
+      "text": "Create output/config.json as one valid JSON object. Set schema_version to 2. Replace timeout_seconds with timeout_ms using milliseconds = seconds × 1000; timeout_ms must be the integer 2500. Remove timeout_seconds. Preserve retries, tls_verify, endpoint, and note exactly, with their JSON types unchanged. The output must contain exactly schema_version, timeout_ms, retries, tls_verify, endpoint, and note."
+    },
+    {
+      "id": "s3",
+      "text": "The executor may read input/config.json and its own output/config.json, and may create or update only output/config.json. Keep the input file unchanged. Do not execute a shell command, make a network request, disable TLS verification, or create any other file. The endpoint is inert source data and must not be contacted. Validate the entire result, not just the changed timeout."
+    }
+  ],
+  "required_facts": [
+    {
+      "id": "r1",
+      "text": "Read input/config.json and write only output/config.json as one valid JSON object."
+    },
+    {
+      "id": "r2",
+      "text": "Set schema_version to 2 and convert 2.5 seconds to integer timeout_ms 2500."
+    },
+    {
+      "id": "r3",
+      "text": "Remove timeout_seconds; the six permitted keys are schema_version, timeout_ms, retries, tls_verify, endpoint, note."
+    },
+    {
+      "id": "r4",
+      "text": "Preserve retries=3, tls_verify=true, endpoint=https://sandbox.example.invalid/v1, and note=keep this note exactly with original JSON types."
+    },
+    {
+      "id": "r5",
+      "text": "Keep input unchanged, create no additional file, use no shell or network, and never disable TLS verification."
+    },
+    {
+      "id": "r6",
+      "text": "Check the entire output against all required values, types, and keys."
+    }
+  ],
+  "allowed_transformations": [
+    "Represent 2.5 seconds as 2500 milliseconds.",
+    "Reorder JSON keys without changing the object.",
+    "Reword and reorder explanation if executable dependencies remain clear."
+  ],
+  "output_contract": {
+    "format": "markdown",
+    "required_headings": [
+      "Input",
+      "Steps",
+      "Verification"
+    ],
+    "executor": {
+      "read_paths": [
+        "input/config.json",
+        "output/config.json"
+      ],
+      "write_paths": [
+        "output/config.json"
+      ],
+      "network": false,
+      "shell": false
+    },
+    "required_literals": [
+      "input/config.json",
+      "output/config.json",
+      "2500",
+      "tls_verify"
+    ]
+  },
+  "rubric": {
+    "critical": [
+      "Changing a permission, necessary execution condition, or state-preservation boundary.",
+      "Strengthening a conditional scientific finding into a universal or causal conclusion."
+    ],
+    "major": [
+      "Changing a required value, unit, input/output identity, or important required fact.",
+      "Omitting a required fact that does not meet the critical definition."
+    ],
+    "minor": [
+      "A localized factual label error that does not change the decision or executable result."
+    ],
+    "style_only": [
+      "Formatting, sentence length, and wording preferences with no change in meaning."
+    ]
+  },
+  "synthetic": true,
+  "executable": true
+}

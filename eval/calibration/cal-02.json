@@ -1,0 +1,48 @@
+{
+  "review_id": "cal-02",
+  "batch_id": "calibration-v0.2",
+  "candidate_text": "The timeout is 2500 milliseconds.",
+  "task": {
+    "id": "cal-02",
+    "scenario_id": "cal-unit-conversion",
+    "profile": "reference",
+    "language": "en",
+    "prompt": "Assess whether the candidate preserves every required fact and condition using only the supplied source.",
+    "sources": [
+      {
+        "id": "s1",
+        "text": "The timeout is 2.5 seconds. For this task, express the timeout in milliseconds using 1 second = 1000 milliseconds. Keep the physical duration unchanged."
+      }
+    ],
+    "required_facts": [
+      {
+        "id": "r1",
+        "text": "The physical timeout duration is 2.5 seconds, equivalently 2500 milliseconds."
+      }
+    ],
+    "allowed_transformations": [
+      "Convert seconds to milliseconds using 1 s = 1000 ms."
+    ],
+    "output_contract": {
+      "format": "text"
+    },
+    "rubric": {
+      "critical": [
+        "Changing a permission, necessary execution condition, or state-preservation boundary.",
+        "Strengthening a conditional scientific finding into a universal or causal conclusion."
+      ],
+      "major": [
+        "Changing a required value, unit, input/output identity, or important required fact.",
+        "Omitting a required fact that does not meet the critical definition."
+      ],
+      "minor": [
+        "A localized factual label error that does not change the decision or executable result."
+      ],
+      "style_only": [
+        "Formatting, sentence length, and wording preferences with no change in meaning."
+      ]
+    },
+    "synthetic": true,
+    "executable": false
+  }
+}

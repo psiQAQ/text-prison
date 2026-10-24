@@ -1,0 +1,15 @@
+*.md text eol=lf
+*.py text eol=lf
+*.json text eol=lf
+*.yaml text eol=lf
+*.js text eol=lf
+*.mjs text eol=lf
+*.ts text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.txt text eol=lf
+*.lock text eol=lf
+*.ini text eol=lf
+.gitmodules text eol=lf
+.gitattributes text eol=lf
+.gitignore text eol=lf

@@ -1,59 +1,31 @@
-# 从 v0.1 原型到有证据方案：后续实现差量
+# v0.2 实现状态与后续边界
 
-日期：2026-10-24。本文件是开发清单，**本次文档补丁没有执行表内代码修改**。先补测量与保护，再扩大写作规则。除明确依赖的事项外，不需要重建原型。
+日期：2026-10-24。运行记录和本地评测工具已迁移到 v0.2。原始文档补丁的历史说明在 [DOCS_PATCH.md](../DOCS_PATCH.md)，不作为当前实现状态。
 
-## 1. 保留与禁止误改
+| 范围 | 当前实现 | 验收入口 |
+|---|---|---|
+| Skill 与机械检查 | 六类 profile、中英文路由；规则元数据；JSON 溢出、TeX 保护修复 | `tests/test_checker.py`、`tests/test_skill_metadata.py` |
+| 安装器 | Codex、Claude、Pi 项目级复制；拒绝覆盖和链接父目录 | `tests/test_install_skill.py` |
+| 版本契约 | v0.2 run/task/AI/human schema；v0.1 兼容读取 | `eval/contracts.py`、`tests/test_eval_contracts.py` |
+| Pi 采集 | JSONL、真实终态、usage 去重、持久预算、限定读写 | `eval/pi_adapter.py`、`eval/tool_boundary.mjs` |
+| 任务与校准 | 4 个合成场景、12 条材料、私有独立 verifier | `eval/tasks/`、`eval/calibration/` |
+| 实验编排 | 原生 A/D、受控 B/C、共享 C 初稿反馈消融、独立执行与触发 | `eval/runner.py` |
+| 人工工作台 | 初判保存/冻结、AI 揭盲、裁决、历史与导出 | `eval/review_store.py`、`eval/web/` |
+| 汇总 | 场景等权、缺失范围、首次执行、触发基率、成本分账 | `eval/analysis.py`、`eval/reporting.py` |
+| 来源 | 旧来源 ID 与 R01–R32；五个固定提交子模块 | `sources.json`、[RELATED_WORK](RELATED_WORK.md) |
 
-保留六类 profile、共用 Skill 源、项目级安装、离线 Markdown/JSON 检查、精确契约与语义状态分离。保留现有反例以及 `not_evaluated` 行为。不得因为新文档描述了语义审查就将检查器的 semantic_status 改为 passed。
+实际执行与未完成项以 [当前验证记录](../validation/v0.2/README.md) 和 `runs/<实验>/SUMMARY.md` 为准。代码存在、离线测试通过、模型调用成功、人工验收完成是不同状态。
 
-本轮不新增全局 hooks、MCP、常驻服务，不替换模型权限，不安装第三方 Skill，不复制官方完整词典。不把评测全文或所有参考文献塞进 SKILL.md。
+## 保留的语义边界
 
-## 2. 按实际路径拆分工作
+机械检查器始终返回 `semantic_status=not_evaluated`。AI 评审是独立侧车，不把数值字面匹配解释为事实正确。自由提取声明未经对齐不计算声明一致率；评委校准主要对照冻结的人工初判，参考 AI 后的裁决独立保存。
 
-| 优先级 | 文件/目录 | 后续修改 | 验收证据 |
-|---|---|---|---|
-| P0 | `skills/text-prison/assets/rules.json` | 增补来源类型、作用域、例外、hard/advisory、覆盖声明；旧字段做迁移 | 每条规则有阳性、阴性、边界与未覆盖声明 |
-| P0 | `sources.json` | 将 RELATED_WORK 的新来源映射为机器可读记录，记录版本/哈希与核验范围 | 不把未取得的 STE/ISO 正文标为已核验；动态基线固定 commit |
-| P0 | `tests/test_checker.py` 与计划新增的 `tests/fixtures/` | 增加否定、模态、单位、条件、引用、代码/公式保护的测试；区分机械与语义 | 机械检查不误宣称检出所有语义变异；明确已知盲区 |
-| P0 | `eval/run.schema.json` | 设计新版本与兼容读取；新增实验区块、日志和侧车引用 | 旧 v0.1 记录可读；不改写历史原始数据 |
-| P0 | 计划新增 `eval/adapters/`、日志 fixtures | Codex/Claude 原生事件、请求级 usage、子 Agent/累计去重 | 显式阳性和阴性被正确采集；缺失返回 unknown/null |
-| P1 | 计划新增 `eval/tasks/` 与 `eval/runner/` | 来源/事实/契约/验收任务包；隔离运行；A/B/C/D 与反馈消融 | 人工参考解通过，独立坏例失败，所有组环境一致 |
-| P1 | `eval/prompts/semantic-review.md` 的调用适配 | 生成编辑级审查侧车并做人工校准 | FSP、RFR、critical 与 coverage 来自可追溯记录 |
-| P1 | 计划新增 `eval/analysis/` | 场景宏平均、成对区间、读者交叉因素、成本与缺失敏感性 | 已知模拟数据回归；零事件不输出零宽风险区间 |
-| P2 | `skills/text-prison/SKILL.md` 与 `references/` | 根据已验证规则压缩运行时提示；保持科研模态、局部路由和一次修订上限 | 关键保护不因 Token 预算删除；无关任务不退化 |
-| P2 | `skills/text-prison/scripts/check.py` 的可选后端 | 先做规则对应表，再接 Vale；机器契约与语义分开 | 固定 Vale/规则版本，双后端重复问题去重，误报有数据 |
+失败和重试留存，未知不补零，未运行分配仍进入对应分母。原生 D 未触发不能删掉。反馈消融共享同一份 C 初稿，实际支出只记一次初稿；可比工作流分别包含初稿成本，两种口径不相加。
 
-P0/P1/P2 是依赖顺序，不是未来完成时间承诺。没有样本、宿主日志和真实调用记录时，不生成“示例排行榜”冒充实验结果。
+## 本轮仍不覆盖
 
-## 3. schema 迁移需要特别注意
+正式风险界值、功效设计、读者实验、Codex/Claude 原生采集、长期缓存和全模型交叉保持待做。四场景不用于宣称正式收益。没有人工校准就不进入产品试跑；规则压缩等待已确认问题和实测证据，不根据 AI 单方意见删除保护条款。
 
-当前 `eval/run.schema.json` 固定 `schema_version=0.1`，arm 只有 A/B/C/D/C+；`usage` 禁止额外属性。新协议不能直接给这些枚举塞入新的外部基线名称，或向 usage 任意追加字段而仍称符合旧 schema。
+没有新增 MCP、全局 hooks 或生产常驻组件。人工网页服务由用户显式启动，仅监听 loopback。第三方子模块只作研究参考，不自动安装、运行 hooks 或进入 Skill 包。
 
-下一版至少需要表达以下信息，字段名称在实现时冻结：
-
-| 语义 | 目的 |
-|---|---|
-| experiment_id、track、condition_variant | 区分真实 D 与“强制一次修订”的反馈消融 |
-| assignment_id、attempt_id、retry_of、exclusion_reason | 所有失败/重跑留证，防止择优轨迹 |
-| source/required-fact/verifier/prompt manifest | 冻结独立验收与可见信息 |
-| semantic_review_ref、human_review_ref | 引用逐项证据，避免只保存一个分数 |
-| provider/schema、request ID、aggregation flags | usage 去重和覆盖判断 |
-| cost_scope、shared_draft_ref | 写作/执行/评测分账及共用初稿核算 |
-| trigger_evidence、observation_coverage、expected_route | 区分 unknown、不触发与错误路由 |
-| reader assignment / anonymized reader ID | 处理读者差异，避免同场景重复学习 |
-
-开发阶段可以用独立 JSON 侧车保存新字段，并在旧记录顶层添加引用（旧 schema 顶层允许扩展），但必须说明侧车尚无稳定 schema；不能把新字段塞进旧 usage。正式实验前完成新 schema 与校验器，不依靠口头约定。
-
-## 4. 不需要实现的“大而全”功能
-
-首轮不需要训练自己的 LENS 模型，不需要把所有研究指标都做成线上门禁，不需要引入整套 SkillsBench 任务库存，也不需要对所有宿主/模型全交叉。优先完成一个可复核的主比较和必要的反馈消融。
-
-外部 SimpleEnglish 对照先限于英语共享场景、固定 skill-only 配置；其全面模态限制不是本项目规则。公开的短而聚焦 Skills 相关性也不等于“最多三个模块”已被证明是通用最佳值。
-
-## 5. 本次文档补丁的兼容性
-
-安装命令与运行依赖不变。`validation/` 内 35 项测试通过记录属于原始 v0.1，不是这次新功能的验收；本次没有重新运行产品测试，也没有新增产品实验。
-
-原始 `MANIFEST.sha256.json` 描述的是初始化包。覆盖修改后的 Markdown 后，该旧清单对修改文件自然不再匹配；应保留其基线含义，并在正式发版时重新生成完整发布清单，而不是称补丁后仍符合原包哈希。本补丁另有变更文件哈希记录，见 [DOCS_PATCH.md](../DOCS_PATCH.md)。
-
-`NOTICE.md` 和 `sources.json` 本轮未改。新研究链接的规范记录在 [RELATED_WORK.md](RELATED_WORK.md)，未来机器化时再同步，避免一个未核验的自动脚本现在改写运行时数据。
+根 `MANIFEST.sha256.json` 和原始 ZIP 保持基线含义。新清单与证据独立版本化，不能用旧哈希声称当前文件已验证。

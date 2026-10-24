@@ -1,6 +1,6 @@
 # Independent semantic review — documentation protocol v0.2
 
-This is an offline evaluation template, not a new feature of the v0.1 checker. It does not certify ASD-STE100 compliance. Its proposed output is a separate review artifact, not a replacement for `eval/run.schema.json`.
+This is the independent semantic review instruction for protocol v0.2. It does not certify ASD-STE100 compliance. Its output is a separate review artifact; the mechanical checker remains `semantic_status=not_evaluated`.
 
 ## Inputs
 
@@ -18,7 +18,7 @@ Do not see the writing arm, writer model, style rules, mechanical score, or othe
 6. Assign `critical`, `major`, `minor`, or `style_only` using the supplied domain-specific rubric. Missing mandatory conditions can be critical. Do not average away a critical error with stylistic improvements.
 7. Record spans or stable source identifiers for each finding and required-fact judgment. If a fact is absent, use a null candidate span and identify its required-fact ID. Provide a brief evidence-based explanation, not private reasoning or invented confidence percentages.
 
-## Proposed review artifact fields
+## Review artifact fields
 
 | Field | Required content |
 |---|---|
@@ -28,7 +28,7 @@ Do not see the writing arm, writer model, style rules, mechanical score, or othe
 | `required_facts` | Required-fact ID, status, candidate evidence, preserved qualifiers or missing conditions |
 | `edits` | Original/candidate spans, semantic category, severity, source evidence |
 | `uncertain_items` | Unresolved items and the exact evidence needed |
-| `summary` | Counts derived from the records, coverage, and artifact-level status |
+| `summary` | Omit from the model response; the runner derives it from validated records |
 
 The artifact-level status is `failed` when a confirmed semantic error or required omission is present; `uncertain` when no confirmed error is found but a required judgment is unresolved; `not_evaluated` when a meaningful review cannot be performed; and `passed` only when all declared required checks are complete and no semantic error is identified. `Passed` is limited to the supplied evidence and checks, not a guarantee of truth in all contexts. Style-only findings do not fail semantic review.
 
@@ -42,4 +42,4 @@ The runner, not the reviewer, computes aggregate ratios and confidence intervals
 - A valid, requested unit conversion is not an error merely because its literal representation changes.
 - A new deployment prohibition is a behavioral addition unless the sources or task authorize it.
 
-Method references: [FActScore](../../docs/RELATED_WORK.md#r14), [SALSA](../../docs/RELATED_WORK.md#r15), [judge-bias research](../../docs/RELATED_WORK.md#r23). The implementation and human calibration of this review format remain future work.
+Method references: [FActScore](../../docs/RELATED_WORK.md#r14), [SALSA](../../docs/RELATED_WORK.md#r15), [judge-bias research](../../docs/RELATED_WORK.md#r23). The local workbench preserves independent human initial judgments before revealing AI reviews; final human adjudication is a separate record.

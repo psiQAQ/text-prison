@@ -1,0 +1,466 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TextPrison semantic review v0.2",
+  "type": "object",
+  "required": [
+    "review_version",
+    "source_coverage",
+    "claims",
+    "required_facts",
+    "edits",
+    "uncertain_items"
+  ],
+  "properties": {
+    "review_version": {
+      "const": "0.2"
+    },
+    "source_coverage": {
+      "type": "object",
+      "required": [
+        "status",
+        "affected_source_ids",
+        "note"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "adequate",
+            "partial",
+            "insufficient"
+          ]
+        },
+        "affected_source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "text",
+          "status",
+          "candidate_span",
+          "source_evidence",
+          "justification",
+          "severity",
+          "error_types"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "supported",
+              "contradicted",
+              "unsupported",
+              "unassessable"
+            ]
+          },
+          "candidate_span": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "source_id",
+                "span"
+              ],
+              "properties": {
+                "source_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "span": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "justification": {
+            "type": "string",
+            "minLength": 1
+          },
+          "severity": {
+            "enum": [
+              "critical",
+              "major",
+              "minor",
+              "style_only",
+              null
+            ]
+          },
+          "error_types": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "negation",
+                "modality",
+                "condition",
+                "scope",
+                "causality",
+                "actor_object",
+                "quantity_unit",
+                "time_version",
+                "citation",
+                "unsupported_addition",
+                "required_omission",
+                "permission",
+                "execution",
+                "other"
+              ]
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "required_facts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "fact_id",
+          "status",
+          "candidate_span",
+          "source_evidence",
+          "justification",
+          "severity",
+          "error_types"
+        ],
+        "properties": {
+          "fact_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "preserved",
+              "missing",
+              "altered",
+              "unassessable"
+            ]
+          },
+          "candidate_span": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "source_id",
+                "span"
+              ],
+              "properties": {
+                "source_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "span": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "justification": {
+            "type": "string",
+            "minLength": 1
+          },
+          "severity": {
+            "enum": [
+              "critical",
+              "major",
+              "minor",
+              "style_only",
+              null
+            ]
+          },
+          "error_types": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "negation",
+                "modality",
+                "condition",
+                "scope",
+                "causality",
+                "actor_object",
+                "quantity_unit",
+                "time_version",
+                "citation",
+                "unsupported_addition",
+                "required_omission",
+                "permission",
+                "execution",
+                "other"
+              ]
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "edits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "original_span",
+          "candidate_span",
+          "semantic_category",
+          "severity",
+          "source_evidence",
+          "justification"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "original_span": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "candidate_span": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "semantic_category": {
+            "enum": [
+              "negation",
+              "modality",
+              "condition",
+              "scope",
+              "causality",
+              "actor_object",
+              "quantity_unit",
+              "time_version",
+              "citation",
+              "unsupported_addition",
+              "required_omission",
+              "permission",
+              "execution",
+              "other"
+            ]
+          },
+          "severity": {
+            "enum": [
+              "critical",
+              "major",
+              "minor",
+              "style_only"
+            ]
+          },
+          "source_evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "source_id",
+                "span"
+              ],
+              "properties": {
+                "source_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "span": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "justification": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "uncertain_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "affected_ids",
+          "evidence_needed"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "affected_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "evidence_needed": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "status",
+        "claims",
+        "required_facts",
+        "semantic_errors",
+        "critical_errors",
+        "review_complete",
+        "error_types"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "passed",
+            "failed",
+            "uncertain",
+            "not_evaluated"
+          ]
+        },
+        "claims": {
+          "type": "object",
+          "required": [
+            "total",
+            "supported",
+            "contradicted",
+            "unsupported",
+            "unassessable"
+          ],
+          "properties": {
+            "total": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "supported": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "contradicted": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "unsupported": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "unassessable": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "required_facts": {
+          "type": "object",
+          "required": [
+            "total",
+            "preserved",
+            "missing",
+            "altered",
+            "unassessable",
+            "unreviewed"
+          ],
+          "properties": {
+            "total": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "preserved": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "missing": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "altered": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "unassessable": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "unreviewed": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "semantic_errors": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "critical_errors": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "review_complete": {
+          "type": "boolean"
+        },
+        "error_types": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

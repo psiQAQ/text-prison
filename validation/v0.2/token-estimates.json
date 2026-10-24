@@ -1,0 +1,76 @@
+{
+  "asset_sha256": "446a9538cb6c348e3516120d7c08b09f57c36495e2acfffe59a5bf8b0cfb1a2d",
+  "asset_url": "https://openaipublic.blob.core.windows.net/encodings/o200k_base.tiktoken",
+  "implementation": "tiktoken",
+  "interpretation": "Offline size proxy only; this is not the exact tokenizer or billed usage of the configured models.",
+  "skill_entry": {
+    "characters": 2678,
+    "sha256": "0f8a82d1f1954bf79bfda16106be32100107c8fa3d94622c734f6888bf763fde",
+    "tokens": 528,
+    "utf8_bytes": 2678
+  },
+  "tasks": [
+    {
+      "full_B": {
+        "characters": 3674,
+        "sha256": "2c334b3ad5eea60c91e99ce26ebfc769cf6001879da8f0f5b307016b36de6172",
+        "tokens": 736,
+        "utf8_bytes": 3908
+      },
+      "routed_C": {
+        "characters": 938,
+        "sha256": "af5ec0367789e908296b5b70dc2277227f89c34b46a1d900688d8887f9629e23",
+        "tokens": 241,
+        "utf8_bytes": 1172
+      },
+      "task_id": "agent-spec-zh-01"
+    },
+    {
+      "full_B": {
+        "characters": 3674,
+        "sha256": "2c334b3ad5eea60c91e99ce26ebfc769cf6001879da8f0f5b307016b36de6172",
+        "tokens": 736,
+        "utf8_bytes": 3908
+      },
+      "routed_C": {
+        "characters": 858,
+        "sha256": "ac5ce74ccfdc0cba1cc654f7b9a085b7baecf23ae7deb2685efe850b7b847d1a",
+        "tokens": 228,
+        "utf8_bytes": 1092
+      },
+      "task_id": "explanation-zh-01"
+    },
+    {
+      "full_B": {
+        "characters": 3674,
+        "sha256": "2c334b3ad5eea60c91e99ce26ebfc769cf6001879da8f0f5b307016b36de6172",
+        "tokens": 736,
+        "utf8_bytes": 3908
+      },
+      "routed_C": {
+        "characters": 1219,
+        "sha256": "82522d7a5d3d12db4a399cab5e9ac7a2d47cea3297aef849f0043b4683595ea6",
+        "tokens": 218,
+        "utf8_bytes": 1219
+      },
+      "task_id": "procedure-en-01"
+    },
+    {
+      "full_B": {
+        "characters": 3674,
+        "sha256": "2c334b3ad5eea60c91e99ce26ebfc769cf6001879da8f0f5b307016b36de6172",
+        "tokens": 736,
+        "utf8_bytes": 3908
+      },
+      "routed_C": {
+        "characters": 1122,
+        "sha256": "c2eea9f5336948e2888956a28c14f29f5345141cf12c547f1f1ae81768f4d5b2",
+        "tokens": 205,
+        "utf8_bytes": 1122
+      },
+      "task_id": "research-en-01"
+    }
+  ],
+  "tokenizer": "o200k_base",
+  "version": "0.14.0"
+}

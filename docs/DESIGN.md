@@ -1,6 +1,6 @@
 # TextPrison v0.2 文档设计：有证据的表达约束
 
-日期：2026-10-24。**本次仅更新文档，运行时实现仍为 v0.1。** 新指标、评测 runner、规则编译器和宿主适配器尚未实现。来源与证据边界见 [RELATED_WORK.md](RELATED_WORK.md)，未来修改路径见 [IMPLEMENTATION_DELTA.md](IMPLEMENTATION_DELTA.md)。
+日期：2026-10-24。运行记录、本地 Pi runner 和人工工作台已实现 v0.2；正式产品收益与人工阅读理解仍需实验，不从实现状态推断。来源与证据边界见 [RELATED_WORK.md](RELATED_WORK.md)，实现与待做范围见 [IMPLEMENTATION_DELTA.md](IMPLEMENTATION_DELTA.md)。
 
 ## 1. 目标与成功含义
 

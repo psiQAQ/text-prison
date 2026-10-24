@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TextPrison synthetic task v0.2",
+  "type": "object",
+  "required": [
+    "id",
+    "scenario_id",
+    "profile",
+    "language",
+    "prompt",
+    "sources",
+    "required_facts",
+    "allowed_transformations",
+    "output_contract",
+    "rubric"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scenario_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "profile": {
+      "enum": [
+        "explanation",
+        "procedure",
+        "reference",
+        "research",
+        "agent-spec",
+        "structured"
+      ]
+    },
+    "language": {
+      "enum": [
+        "en",
+        "zh"
+      ]
+    },
+    "prompt": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "text"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "required_facts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "text"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "allowed_transformations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "output_contract": {
+      "type": "object"
+    },
+    "rubric": {
+      "type": "object",
+      "required": [
+        "critical",
+        "major",
+        "minor",
+        "style_only"
+      ],
+      "properties": {
+        "critical": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "major": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "minor": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "style_only": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "executable": {
+      "type": "boolean"
+    },
+    "synthetic": {
+      "const": true
+    }
+  },
+  "additionalProperties": true
+}

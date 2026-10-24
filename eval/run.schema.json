@@ -1,24 +1,32 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "TextPrison experiment record v0.1",
+  "title": "TextPrison experiment record v0.2",
   "type": "object",
   "required": [
     "schema_version",
     "run_id",
     "task_id",
     "scenario_id",
+    "track",
     "arm",
+    "phase",
     "host",
     "model",
     "profile",
     "language",
     "status",
+    "assignment_id",
+    "attempt_id",
+    "retry_of",
+    "cost_scope",
     "usage",
+    "artifact_refs",
+    "review_refs",
     "outcomes"
   ],
   "properties": {
     "schema_version": {
-      "const": "0.1"
+      "const": "0.2"
     },
     "run_id": {
       "type": "string",
@@ -30,17 +38,35 @@
     "scenario_id": {
       "type": "string"
     },
-    "arm": {
+    "track": {
       "enum": [
-        "A",
-        "B",
-        "C",
-        "D",
-        "C+"
+        "smoke",
+        "calibration",
+        "product_native",
+        "controlled",
+        "feedback_ablation",
+        "trigger",
+        "legacy"
+      ]
+    },
+    "arm": {
+      "type": "string",
+      "minLength": 1
+    },
+    "phase": {
+      "enum": [
+        "smoke",
+        "writer",
+        "executor",
+        "reader",
+        "trigger",
+        "judge",
+        "unknown"
       ]
     },
     "host": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1
     },
     "host_version": {
       "type": [
@@ -49,7 +75,8 @@
       ]
     },
     "model": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1
     },
     "model_version": {
       "type": [
@@ -58,6 +85,12 @@
       ]
     },
     "reasoning_effort": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "effective_reasoning_effort": {
       "type": [
         "string",
         "null"
@@ -89,34 +122,30 @@
         "failed",
         "timeout",
         "blocked",
-        "not_run"
+        "not_run",
+        "interrupted"
       ]
     },
-    "rule_hash": {
+    "assignment_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "attempt_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "retry_of": {
       "type": [
         "string",
         "null"
       ]
     },
-    "source_hash": {
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "artifact_hash": {
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "phase": {
+    "cost_scope": {
       "enum": [
-        "writer",
-        "executor",
-        "reader",
-        "trigger",
-        "judge"
+        "production_writer",
+        "downstream_executor",
+        "evaluation_only",
+        "unknown"
       ]
     },
     "usage": {
@@ -197,7 +226,108 @@
           ]
         }
       },
-      "additionalProperties": false
+      "additionalProperties": true
+    },
+    "rule_hash": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "source_hash": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "prompt_hash": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "artifact_hash": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "artifact_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "kind",
+          "path",
+          "sha256"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "minLength": 1
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "review_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "review_id",
+          "reviewer_id",
+          "path",
+          "sha256"
+        ],
+        "properties": {
+          "review_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reviewer_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "additionalProperties": false
+      }
     },
     "outcomes": {
       "type": "object",
@@ -256,7 +386,40 @@
         }
       },
       "additionalProperties": true
+    },
+    "provenance": {
+      "type": "object"
+    },
+    "legacy_original": {
+      "type": "object"
     }
   },
-  "additionalProperties": true
+  "additionalProperties": true,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "track": {
+            "not": {
+              "const": "legacy"
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "phase": {
+            "not": {
+              "const": "unknown"
+            }
+          },
+          "cost_scope": {
+            "not": {
+              "const": "unknown"
+            }
+          }
+        }
+      }
+    }
+  ]
 }

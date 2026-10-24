@@ -1,0 +1,95 @@
+{
+  "id": "agent-spec-zh-01",
+  "scenario_id": "offline-job-selection",
+  "profile": "agent-spec",
+  "language": "zh",
+  "prompt": "根据来源写一份中文 Agent 执行规范，使独立执行者仅凭规范和初始输入文件生成任务选择计划。说明读写范围、资格条件、排序、数量上限及验收。不要执行任务，也不要增加人工批准或部署限制。",
+  "sources": [
+    {
+      "id": "s1",
+      "text": "执行者初始只获得 input/jobs.json，内容为 {\"schema_version\":1,\"jobs\":[{\"id\":\"q-03\",\"priority\":2,\"ready\":true,\"requires_approval\":false},{\"id\":\"q-01\",\"priority\":1,\"ready\":true,\"requires_approval\":true},{\"id\":\"q-04\",\"priority\":1,\"ready\":false,\"requires_approval\":false},{\"id\":\"q-02\",\"priority\":1,\"ready\":true,\"requires_approval\":false},{\"id\":\"q-05\",\"priority\":2,\"ready\":true,\"requires_approval\":false},{\"id\":\"q-06\",\"priority\":0,\"ready\":true,\"requires_approval\":true}],\"approved_ids\":[\"q-01\"],\"max_selected\":3}。"
+    },
+    {
+      "id": "s2",
+      "text": "资格条件为 ready=true 且（requires_approval=false 或 id 已在 approved_ids 中）。已在 approved_ids 中表示现有批准，不需要另行等待批准。将有资格任务按 priority 数值从小到大排序；同优先级按 id 的 Unicode code point 升序排序。按此顺序选择最多 max_selected 个任务。"
+    },
+    {
+      "id": "s3",
+      "text": "可读取 input/jobs.json 及本次生成的 output/plan.json 进行复核。只写 output/plan.json，使用且仅使用三个键：schema_version（整数 1）、selected_ids（按选择顺序列出 ID）、deferred_ids（所有未选择的 ID，按 Unicode code point 升序）。保留 input/jobs.json 原样，不创建其他文件。这里只生成计划，不执行任务、不访问网络、不运行 shell。全部 ID 必须恰好出现一次，且两个列表不能重叠。"
+    }
+  ],
+  "required_facts": [
+    {
+      "id": "r1",
+      "text": "可读取 input/jobs.json 和本次 output/plan.json，只写 output/plan.json；输入保持不变且不创建其他文件。"
+    },
+    {
+      "id": "r2",
+      "text": "资格必须同时满足 ready=true，以及不需批准或已有批准；已在 approved_ids 的任务无需新增批准。"
+    },
+    {
+      "id": "r3",
+      "text": "先按 priority 数值升序，再按 id 的 Unicode code point 升序，从有资格任务中选择最多 max_selected 个。"
+    },
+    {
+      "id": "r4",
+      "text": "输出仅含 schema_version=整数1、selected_ids、deferred_ids；前者按选择顺序，后者按 ID 升序。"
+    },
+    {
+      "id": "r5",
+      "text": "所有任务 ID 必须在两个互不重叠的列表中恰好出现一次。"
+    },
+    {
+      "id": "r6",
+      "text": "只生成计划，不执行任务、不访问网络、不运行 shell。"
+    }
+  ],
+  "allowed_transformations": [
+    "用等价逻辑表达式描述资格条件。",
+    "可以给出根据初始数据计算的示例，但必须保留一般选择规则及全部约束。"
+  ],
+  "output_contract": {
+    "format": "markdown",
+    "required_headings": [
+      "目标与输入",
+      "选择规则",
+      "输出与验收",
+      "权限边界"
+    ],
+    "executor": {
+      "read_paths": [
+        "input/jobs.json",
+        "output/plan.json"
+      ],
+      "write_paths": [
+        "output/plan.json"
+      ],
+      "network": false,
+      "shell": false
+    },
+    "required_literals": [
+      "input/jobs.json",
+      "output/plan.json",
+      "selected_ids",
+      "deferred_ids"
+    ]
+  },
+  "rubric": {
+    "critical": [
+      "Changing a permission, necessary execution condition, or state-preservation boundary.",
+      "Strengthening a conditional scientific finding into a universal or causal conclusion."
+    ],
+    "major": [
+      "Changing a required value, unit, input/output identity, or important required fact.",
+      "Omitting a required fact that does not meet the critical definition."
+    ],
+    "minor": [
+      "A localized factual label error that does not change the decision or executable result."
+    ],
+    "style_only": [
+      "Formatting, sentence length, and wording preferences with no change in meaning."
+    ]
+  },
+  "synthetic": true,
+  "executable": true
+}

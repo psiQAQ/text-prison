@@ -1,0 +1,59 @@
+{
+  "procedure-en-01": {
+    "input/config.json": {
+      "schema_version": 1,
+      "timeout_seconds": 2.5,
+      "retries": 3,
+      "tls_verify": true,
+      "endpoint": "https://sandbox.example.invalid/v1",
+      "note": "keep this note"
+    }
+  },
+  "agent-spec-zh-01": {
+    "input/jobs.json": {
+      "schema_version": 1,
+      "jobs": [
+        {
+          "id": "q-03",
+          "priority": 2,
+          "ready": true,
+          "requires_approval": false
+        },
+        {
+          "id": "q-01",
+          "priority": 1,
+          "ready": true,
+          "requires_approval": true
+        },
+        {
+          "id": "q-04",
+          "priority": 1,
+          "ready": false,
+          "requires_approval": false
+        },
+        {
+          "id": "q-02",
+          "priority": 1,
+          "ready": true,
+          "requires_approval": false
+        },
+        {
+          "id": "q-05",
+          "priority": 2,
+          "ready": true,
+          "requires_approval": false
+        },
+        {
+          "id": "q-06",
+          "priority": 0,
+          "ready": true,
+          "requires_approval": true
+        }
+      ],
+      "approved_ids": [
+        "q-01"
+      ],
+      "max_selected": 3
+    }
+  }
+}

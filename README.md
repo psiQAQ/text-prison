@@ -4,6 +4,12 @@
 
 这是一个可安装的 Skill 起步原型，以及下一阶段的项目设计和 A/B 实验协议。项目名暂定 `TextPrison`，仓库和 Skill 名为 `text-prison`。未核验商标、域名或包名可用性。
 
+## 文档修订状态
+
+2026-10-24：研究与实验设计更新为文档协议 v0.2，**运行时实现和记录 schema 仍为 v0.1**。本次仅修改 Markdown，没有新增自动语义评分、原生宿主采集或实际效果数据。覆盖说明见 [DOCS_PATCH.md](DOCS_PATCH.md)。
+
+新方案引入原子事实支持+必需事实保留、独立行为测试、等修订机会对照、部署基率校正和预注册统计；原先固定百分比只保留为历史假设，不再是默认验收标准。
+
 ## 当前可用
 
 - 一份共用 `SKILL.md`，六类输出规则，英文/中文语言规则，Codex 隐式调用元数据。
@@ -11,7 +17,7 @@
 - 离线 Markdown/JSON 机械检查器，支持显式文本契约、英文句长警告、术语别名、链接文字、标题层级、JSON 和本地 JSON Schema。
 - 测试、故意含有语义错误的反例、规则来源记录、A/B 协议和记录 schema。
 
-自动触发依赖宿主按 description 选择 Skill，不能保证每次发生。当前环境没有 Codex 或 Claude Code CLI；尚未进行宿主端触发测试、模型调用、人工阅读实验或真实 Token 对比。测试通过不等于标准认证或效果提升。
+自动触发依赖宿主按 description 选择 Skill，不能保证每次发生。起步包交付时未进行宿主端触发测试、模型调用、人工阅读实验或真实 Token 对比；本次文档修订也没有执行这些实验。测试通过不等于标准认证或效果提升。
 
 ## 安装与检查
 
@@ -49,13 +55,17 @@ Codex 可显式使用 `$text-prison`，Claude Code 可显式使用 `/text-prison
 
 ## 项目资料
 
-- `docs/DESIGN.md`：规则路由、优先级、范围、Token 预算、版本与里程碑。
-- `eval/PROTOCOL.md`：四实验组、人工理解实验、下游 Agent 执行实验、触发评测、统计口径。
-- `eval/run.schema.json`：实验记录契约。未知信息必须是 null 或明确状态，不填 0。
-- `eval/prompts/semantic-review.md`：独立语义审查模板。
-- `skills/text-prison/assets/rules.json`：当前规则目录和检查能力声明。
-- `sources.json`、`NOTICE.md`：官方来源与使用边界。
-- `validation/`：本地验证记录；不是 A/B 结果。
+| 文件 | 内容 |
+|---|---|
+| [docs/DESIGN.md](docs/DESIGN.md) | 范围、路由、语义保护、规则证据与运行/评测分离 |
+| [docs/RELATED_WORK.md](docs/RELATED_WORK.md) | 相关实现、原始文献与采纳边界 |
+| [eval/PROTOCOL.md](eval/PROTOCOL.md) | 实验分组、独立验收、触发与失败处理 |
+| [eval/METRICS.md](eval/METRICS.md) | 指标公式、分母、覆盖、成本与区间 |
+| [eval/PREREGISTRATION.md](eval/PREREGISTRATION.md) | 正式测试前冻结的目标与门槛 |
+| [docs/IMPLEMENTATION_DELTA.md](docs/IMPLEMENTATION_DELTA.md) | 后续代码/配置修改及兼容性要求 |
+| [eval/prompts/semantic-review.md](eval/prompts/semantic-review.md) | 独立语义评审模板，尚非自动能力 |
+
+`eval/run.schema.json`、`skills/text-prison/assets/rules.json`、`sources.json`、`NOTICE.md` 保持起步包版本。新文献先登记在 RELATED_WORK；`validation/` 是原始本地检查记录，不是 A/B 实验结果。
 
 ## 非目标
 

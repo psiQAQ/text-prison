@@ -1,6 +1,6 @@
 # TextPrison v0.2 文档设计：有证据的表达约束
 
-日期：2026-10-24。运行记录、本地 Pi runner 和人工工作台已实现 v0.2；正式产品收益与人工阅读理解仍需实验，不从实现状态推断。来源与证据边界见 [RELATED_WORK.md](RELATED_WORK.md)，实现与待做范围见 [IMPLEMENTATION_DELTA.md](IMPLEMENTATION_DELTA.md)。
+日期：2026-10-25。当前实验流程为 v0.3：Pi/agy 六位 AI 评委，取消本轮人工门禁；运行记录保持 v0.2。正式产品收益与人工阅读理解不从实现状态推断。来源与证据边界见 [RELATED_WORK.md](RELATED_WORK.md)，实现与待做范围见 [IMPLEMENTATION_DELTA.md](IMPLEMENTATION_DELTA.md)。
 
 ## 1. 目标与成功含义
 
@@ -53,7 +53,7 @@ TextPrison 是按输出用途选择表达规则的 Skill，不是完整 ASD-STE1
 
 运行时：识别用途 → 只加载相关规则 → 按契约直接生成 → 对落盘产物做机械检查 → 在有足够来源时审查关键语义 → 最多一次局部修订。失败后如仍不能满足约定，报告限制，不循环重写到“分数好看”。
 
-实验室：独立来源清单 → 冻结评测题与 verifier → 随机成对生成 → 独立事实/人工/执行评估 → 统计与成本账本。参考文献、全部评测规则、原始审计 JSON 不默认进入生产上下文。
+实验室：独立来源清单 → 冻结评测题与 verifier → 随机成对生成 → 独立模型评审与执行评估 → 分歧、覆盖和成本账本。当前没有人工金标准；模型一致性不能替代正确性验证。参考文献、全部评测规则、原始审计 JSON 不默认进入生产上下文。
 
 完整语义评委不是低成本运行模式的强制额外模型调用。离线评测成本单列；若生产模式主动启用模型语义审查，其调用必须计入生产成本，不能移到评测账本隐藏开销。
 
@@ -93,4 +93,4 @@ TextPrison 是按输出用途选择表达规则的 Skill，不是完整 ASD-STE1
 | P2：预注册冻结 | 主要终点、界值依据、抽样、失败政策、样本量和版本哈希 | 所有关键 UNSET 字段填完，保留集未查看 |
 | P3：盲测与发布 | 全部轨迹、独立验收、置信区间、成本与适用范围 | 未触发/超时不消失；无证据则标记结论不足 |
 
-本次没有修改运行时代码、Skill 正文或 rules.json。原型的 mechanical passed、semantic not_evaluated、STE not_evaluated 区分必须保留。
+具体实施状态以 IMPLEMENTATION_DELTA 和对应版本验证记录为准。原型的 mechanical passed、semantic not_evaluated、STE not_evaluated 区分必须保留。

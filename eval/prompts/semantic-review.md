@@ -32,7 +32,7 @@ Do not see the writing arm, writer model, style rules, mechanical score, or othe
 
 The artifact-level status is `failed` when a confirmed semantic error or required omission is present; `uncertain` when no confirmed error is found but a required judgment is unresolved; `not_evaluated` when a meaningful review cannot be performed; and `passed` only when all declared required checks are complete and no semantic error is identified. `Passed` is limited to the supplied evidence and checks, not a guarantee of truth in all contexts. Style-only findings do not fail semantic review.
 
-The runner, not the reviewer, computes aggregate ratios and confidence intervals. Do not emit a single quality score. Send all critical findings and the preselected audit sample to human adjudication. A reviewer model's output is provisional evidence, not the final gold label.
+The runner, not the reviewer, computes aggregate ratios and any justified confidence intervals. Do not emit a single quality score. Report all critical findings explicitly. A reviewer model's output is provisional evidence, not a final gold label; agreement among models does not establish truth. Any human adjudication is a separate, explicitly enabled workflow, not a requirement of this review artifact.
 
 ## Mandatory calibration examples
 

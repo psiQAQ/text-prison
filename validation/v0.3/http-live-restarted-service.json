@@ -1,0 +1,10 @@
+{
+  "handler_sha256": "b4a8f29f359b6a0ddef05fa70d7ad62646329f5c7f26ad69f84a317cda7ee941",
+  "header_body_delay_seconds": 0.02,
+  "http_status": 403,
+  "mutation_executed": false,
+  "recorded_at": "2026-10-24T17:13:17.332978+00:00",
+  "response_received": true,
+  "server_pid": 5040,
+  "status": "Passed"
+}

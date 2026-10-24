@@ -1,4 +1,4 @@
-"""Versioned, blind human review storage. Model verdicts never fill human forms."""
+"""Versioned human-blind or AI-only review storage, with separate evidence."""
 
 from __future__ import annotations
 
@@ -30,6 +30,7 @@ SEVERITIES = {"critical", "major", "minor", "style_only"}
 ERROR_TYPES = {"negation", "modality", "condition", "scope", "causality", "actor_object",
                "quantity_unit", "time_version", "citation", "unsupported_addition", "required_omission",
                "permission", "execution", "other"}
+REVIEW_MODES = {"human_blind", "ai_only"}
 
 
 def _now():
@@ -56,6 +57,11 @@ def _object(value, field):
     if not isinstance(value, dict):
         raise ReviewError(f"{field} 必须是对象。")
     return value
+
+
+def _ai_progress(reviews):
+    statuses = Counter(item.get("status", "completed") for item in reviews)
+    return {"recorded": sum(statuses.values()), "completed": statuses["completed"], "statuses": dict(statuses)}
 
 
 def blank_review(task):
@@ -268,7 +274,8 @@ class ReviewStore:
             db.executescript("""
                 CREATE TABLE IF NOT EXISTS batches (
                     batch_id TEXT PRIMARY KEY, state TEXT NOT NULL DEFAULT 'open',
-                    created_at TEXT NOT NULL, frozen_at TEXT
+                    created_at TEXT NOT NULL, frozen_at TEXT,
+                    review_mode TEXT NOT NULL DEFAULT 'human_blind'
                 );
                 CREATE TABLE IF NOT EXISTS packets (
                     review_id TEXT PRIMARY KEY, public_id TEXT UNIQUE NOT NULL,
@@ -289,6 +296,10 @@ class ReviewStore:
                     request_id TEXT PRIMARY KEY, created_at TEXT NOT NULL
                 );
             """)
+        # An additive migration preserves all legacy blind batches and their records.
+        with self._connection(write=True) as db:
+            if "review_mode" not in {row["name"] for row in db.execute("PRAGMA table_info(batches)")}:
+                db.execute("ALTER TABLE batches ADD COLUMN review_mode TEXT NOT NULL DEFAULT 'human_blind'")
 
     @contextmanager
     def _connection(self, *, write=False):
@@ -312,16 +323,21 @@ class ReviewStore:
             raise NotFoundError("候选不存在。")
         return row
 
-    def import_batch(self, batch_id, packets):
+    def import_batch(self, batch_id, packets, *, review_mode="human_blind"):
         _string(batch_id, "batch_id", required=True)
+        if not isinstance(review_mode, str) or review_mode not in REVIEW_MODES:
+            raise ReviewError("review_mode 必须是 human_blind 或 ai_only。")
         normalized = [_packet(item, batch_id) for item in _list(packets, "packets")]
         if not normalized:
             raise ReviewError("不能导入空批次。")
         if len({item["review_id"] for item in normalized}) != len(normalized):
             raise ReviewError("导入批次中存在重复 review_id。")
         with self._connection(write=True) as db:
-            db.execute("INSERT OR IGNORE INTO batches(batch_id, created_at) VALUES (?, ?)", (batch_id, _now()))
+            db.execute("INSERT OR IGNORE INTO batches(batch_id, created_at, review_mode) VALUES (?, ?, ?)",
+                       (batch_id, _now(), review_mode))
             batch = db.execute("SELECT * FROM batches WHERE batch_id = ?", (batch_id,)).fetchone()
+            if batch["review_mode"] != review_mode:
+                raise ConflictError("既有批次的评审模式不能改变；请创建新批次。")
             ordinal = db.execute("SELECT COALESCE(MAX(ordinal), 0) FROM packets WHERE batch_id = ?", (batch_id,)).fetchone()[0]
             for packet in normalized:
                 old = db.execute("SELECT * FROM packets WHERE review_id = ?", (packet["review_id"],)).fetchone()
@@ -344,7 +360,7 @@ class ReviewStore:
 
     def list_batches(self):
         with self._connection() as db:
-            return [dict(row) for row in db.execute("""
+            batches = [dict(row) for row in db.execute("""
                 SELECT b.*, COUNT(p.review_id) AS total,
                     SUM(CASE WHEN i.state IN ('submitted', 'frozen') THEN 1 ELSE 0 END) AS initial_submitted,
                     SUM(CASE WHEN a.state = 'submitted' THEN 1 ELSE 0 END) AS adjudication_submitted
@@ -353,6 +369,14 @@ class ReviewStore:
                 LEFT JOIN human_reviews a ON a.review_id = p.review_id AND a.stage = 'adjudication'
                 GROUP BY b.batch_id ORDER BY b.created_at, b.batch_id
             """)]
+            for batch in batches:
+                if batch["review_mode"] == "ai_only":
+                    batch.pop("initial_submitted")
+                    batch.pop("adjudication_submitted")
+                    reviews = (item for row in db.execute("SELECT packet_json FROM packets WHERE batch_id=?", (batch["batch_id"],))
+                               for item in json.loads(row["packet_json"])["ai_reviews"])
+                    batch["ai_progress"] = _ai_progress(reviews)
+            return batches
 
     def list_packets(self, batch_id):
         with self._connection() as db:
@@ -362,10 +386,15 @@ class ReviewStore:
             rows = db.execute("SELECT * FROM packets WHERE batch_id = ? ORDER BY ordinal", (batch_id,)).fetchall()
             result = []
             for row in rows:
+                entry = {"review_id": row["public_id"], "label": f"候选 {row['ordinal']:02d}", "review_mode": batch["review_mode"]}
+                if batch["review_mode"] == "ai_only":
+                    entry["ai_progress"] = _ai_progress(json.loads(row["packet_json"])["ai_reviews"])
+                    result.append(entry)
+                    continue
                 records = {r["stage"]: dict(r) for r in db.execute("SELECT stage, revision, state FROM human_reviews WHERE review_id = ?", (row["review_id"],))}
-                result.append({"review_id": row["public_id"], "label": f"候选 {row['ordinal']:02d}",
-                               "initial": records.get("initial", {"stage": "initial", "revision": 0, "state": "empty"}),
-                               "adjudication": records.get("adjudication", {"stage": "adjudication", "revision": 0, "state": "empty"})})
+                entry.update(initial=records.get("initial", {"stage": "initial", "revision": 0, "state": "empty"}),
+                             adjudication=records.get("adjudication", {"stage": "adjudication", "revision": 0, "state": "empty"}))
+                result.append(entry)
             return {"batch": dict(batch), "packets": result}
 
     @staticmethod
@@ -380,7 +409,8 @@ class ReviewStore:
     def _view(self, db, row):
         packet = json.loads(row["packet_json"])
         batch = db.execute("SELECT * FROM batches WHERE batch_id = ?", (row["batch_id"],)).fetchone()
-        revealed = batch["state"] == "frozen"
+        ai_only = batch["review_mode"] == "ai_only"
+        revealed = ai_only or batch["state"] == "frozen"
         public_task = dict(packet["task"])
         # IDs supplied by the experiment may encode assignments; only source/fact IDs are needed for evidence.
         public_task.pop("id", None)
@@ -388,11 +418,14 @@ class ReviewStore:
         view = {"review_id": row["public_id"], "batch_id": row["batch_id"], "label": f"候选 {row['ordinal']:02d}",
                 "artifact_hash": packet["artifact_hash"], "candidate_text": packet["candidate_text"],
                 "original_text": packet["original_text"], "task": public_task,
-                "batch_state": batch["state"], "ai_revealed": revealed,
-                "initial": self._record(db, row, "initial")}
+                "batch_state": batch["state"], "review_mode": batch["review_mode"], "ai_revealed": revealed}
+        if not ai_only:
+            view["initial"] = self._record(db, row, "initial")
         if revealed:
             view["ai_reviews"] = packet["ai_reviews"]
-            view["adjudication"] = self._record(db, row, "adjudication")
+            view["ai_progress"] = _ai_progress(packet["ai_reviews"])
+            if not ai_only:
+                view["adjudication"] = self._record(db, row, "adjudication")
         return view
 
     def get_packet(self, review_id):
@@ -415,7 +448,9 @@ class ReviewStore:
             row = self._row(db, review_id)
             if artifact_hash != row["artifact_hash"]:
                 raise ConflictError("候选哈希不一致，不能保存到旧评审。")
-            batch = db.execute("SELECT state FROM batches WHERE batch_id = ?", (row["batch_id"],)).fetchone()
+            batch = db.execute("SELECT state, review_mode FROM batches WHERE batch_id = ?", (row["batch_id"],)).fetchone()
+            if batch["review_mode"] == "ai_only":
+                raise ConflictError("AI-only 批次不接受人工初判或裁决。")
             if stage == "initial" and batch["state"] == "frozen":
                 raise ConflictError("整批初判已冻结，请在最终裁决中记录更改。")
             if stage == "adjudication" and batch["state"] != "frozen":
@@ -440,6 +475,8 @@ class ReviewStore:
             batch = db.execute("SELECT * FROM batches WHERE batch_id = ?", (batch_id,)).fetchone()
             if batch is None:
                 raise NotFoundError("批次不存在。")
+            if batch["review_mode"] == "ai_only":
+                raise ConflictError("AI-only 批次直接展示模型证据，不使用人工初判冻结。")
             if batch["state"] == "frozen":
                 raise ConflictError("批次已经冻结。")
             rows = db.execute("""SELECT p.review_id, p.public_id, r.revision, r.state, r.payload_json
@@ -489,6 +526,9 @@ class ReviewStore:
                     public["task"]["id"] = packet["task"]["id"]
                     public["task"]["scenario_id"] = packet["task"]["scenario_id"]
                 packets.append(public)
+        interpretation = ("AI-only 模式直接保留模型评审及运行状态，没有人工初判或裁决；AI 一致或完成返回不代表人工金标准或语义正确。"
+                          if batch["review_mode"] == "ai_only" else
+                          "initial 为冻结的独立人工初判；adjudication 为查看 AI 后的人工裁决。AI 结果不代表人工结论。")
         return {"export_version": "0.2", "exported_at": _now(), "anonymized": not include_private,
                 "batch": dict(batch), "packets": packets,
-                "interpretation": "initial 为冻结的独立人工初判；adjudication 为查看 AI 后的人工裁决。AI 结果不代表人工结论。"}
+                "interpretation": interpretation}

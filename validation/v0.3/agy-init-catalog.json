@@ -1,0 +1,39 @@
+{
+  "binary_bytes": 207014552,
+  "binary_sha256": "22588b6d5a6f6d2d66091c73dfb9255edc7bdafe9aff9dd20d958ce116496695",
+  "command": [
+    "objdump",
+    "-d",
+    "--start-address=0x1434d7580",
+    "--stop-address=0x1434d7d20",
+    "<recorded agy binary>"
+  ],
+  "conclusion": "The init tool list is a build/catalog advertisement, not a trustworthy per-agent execution allowlist.",
+  "disassembly_sha256": "85be8951a3846e9bd989bbbfd4a4f039991667ab3fdce506b1de4de012e1b8a0",
+  "functions": {
+    "printmode.(*session).emitInit": {
+      "end_vma": "0x1434d8c40",
+      "start_vma": "0x1434d8ac0"
+    },
+    "printmode.advertisedTools": {
+      "end_vma": "0x1434d7d20",
+      "start_vma": "0x1434d79a0"
+    },
+    "printmode.buildInitPayload": {
+      "end_vma": "0x1434d79a0",
+      "start_vma": "0x1434d7580"
+    }
+  },
+  "limits": "This static inspection does not prove tool execution is disabled. Real job-local deny-hook evidence is required separately.",
+  "method": "Locate Go pclntab names and function entries, then disassemble those exact PE addresses.",
+  "observations": [
+    "buildInitPayload passes advertisedTools a boolean computed from a six-byte configuration string comparison (jetski).",
+    "advertisedTools reads a process-global tool-name map at 0x14c1c5788 and an optional static filter at 0x14c0d4d50/58.",
+    "No selected-agent tools value is passed to advertisedTools or read as a parameter in this function."
+  ],
+  "sources": [
+    "https://antigravity.google/docs/cli/headless/",
+    "https://antigravity.google/docs/changelog?tab=cli",
+    "https://antigravity.google/docs/hooks/"
+  ]
+}

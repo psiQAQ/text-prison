@@ -1,0 +1,46 @@
+{
+  "recorded_at": "2026-10-24T16:42:10.373427+00:00",
+  "git_head": "f8811a6b17b066ba934567d49887036c1ac36bcb",
+  "files": [
+    {
+      "path": "eval/web/app.js",
+      "sha256": "88ce78c8b7ca0f8cdc549350ab9d9929c8106ee5fa046b7b3a06484531c9c017",
+      "size_bytes": 27667
+    },
+    {
+      "path": "eval/web/index.html",
+      "sha256": "e5880f7a034975a5600b404146a8a0052e0da5ed3f069412b22c197d3292134b",
+      "size_bytes": 3412
+    },
+    {
+      "path": "eval/web/style.css",
+      "sha256": "6c06ec72282f7adc488e45c2cce511ee713428c6bdd533ba936e0bf4d54b70cd",
+      "size_bytes": 6538
+    },
+    {
+      "path": "runs/ui-qa-v03/01-ai-only-overview.jpg",
+      "sha256": "ecdd55922853b90a688f2bacaf978f8270c80ca9aaefac1da98d8c27156443c3",
+      "size_bytes": 100770
+    },
+    {
+      "path": "runs/ui-qa-v03/02-completed-raw-json.jpg",
+      "sha256": "4f98d1060484347ab09aef22daa4fd9cc3400babc42582e28210ffee33483800",
+      "size_bytes": 79432
+    },
+    {
+      "path": "runs/ui-qa-v03/03-not-run-models.jpg",
+      "sha256": "a125ea5ccb888e12741cd1999a3ccdc3e0ecd53c6aae0a362f334ed496d66dec",
+      "size_bytes": 64158
+    },
+    {
+      "path": "runs/ui-qa-v03/04-last-candidate-no-human-form.jpg",
+      "sha256": "f44f7a1b485d9ee78ac29610f94ef6cbd86f8d93757532b1c94707c2461e9670",
+      "size_bytes": 72368
+    },
+    {
+      "path": "runs/ui-qa-v03/dom-checks.json",
+      "sha256": "bdd36e72e9dbfa405d42af7d9f1ca4fd4aa8affd6974f8ee69796e2e7e89d815",
+      "size_bytes": 722
+    }
+  ]
+}

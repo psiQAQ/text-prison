@@ -1,4 +1,4 @@
-"""Frozen, resumable Pi experiments with a real human calibration boundary."""
+"""Frozen experiments with explicit historical human or current AI-only review modes."""
 from __future__ import annotations
 
 from copy import deepcopy
@@ -7,6 +7,7 @@ from pathlib import Path
 import random
 import re
 import shutil
+import sqlite3
 import subprocess
 import sys
 
@@ -30,14 +31,37 @@ class HumanReviewPending(RuntimeError):
     pass
 
 
+AGY_JUDGES = {
+    'gemini_argon': 'gemini-4-argon-high',
+    'gemini_flash': 'gemini-3.8-flash-high',
+    'claude_opus': 'claude-opus-5-5-high',
+    'claude_sonnet': 'claude-sonnet-5-5-high',
+}
+
+
+def plan_for(review_mode: str = 'ai_only') -> dict:
+    plan = deepcopy(PLAN)
+    if review_mode == 'human_blind':
+        return plan
+    if review_mode != 'ai_only':
+        raise ValueError('Unknown review mode')
+    plan.update(protocol_version='0.3', review_mode='ai_only', max_calls=276,
+                judge_roles=['deepseek', 'gpt', *AGY_JUDGES],
+                human_flow='disabled; AI opinions and disagreement are not human acceptance')
+    plan['judges'] += ['agy/' + model for model in AGY_JUDGES.values()]
+    plan['allocation'].update(smoke=7, calibration=72, candidate_reviews=144)
+    return plan
+
+
 def experiment_path(name: str) -> Path:
     if not re.fullmatch(r'[a-zA-Z0-9][a-zA-Z0-9_.-]{0,79}', name) or name in ('.', '..'):
         raise ValueError('Experiment name must be a short path-free identifier')
     return ROOT / 'runs' / name
 
 
-def preview() -> dict:
-    return {**PLAN, 'planned_calls': sum(PLAN['allocation'].values()),
+def preview(review_mode: str = 'ai_only') -> dict:
+    plan = plan_for(review_mode)
+    return {**plan, 'planned_calls': sum(plan['allocation'].values()),
             'tasks': [{'id': t['id'], 'profile': t['profile'], 'language': t['language']} for t in load_tasks()],
             'calibration_items': len(load_calibration_packets()), 'network_calls': 0}
 
@@ -54,14 +78,14 @@ def generation_rules(skill: Path, profile: str, language: str, *, full: bool) ->
 
 
 class Experiment:
-    def __init__(self, name: str, *, create: bool = False):
+    def __init__(self, name: str, *, create: bool = False, review_mode: str = 'human_blind'):
         self.path = experiment_path(name)
         self.name = name
         manifest_path = self.path / 'experiment.json'
         if not manifest_path.exists():
             if not create:
                 raise FileNotFoundError('Experiment not initialized; run smoke or calibration first')
-            preview()  # validate the complete data inventory before consuming model calls
+            preview(review_mode)  # validate before consuming model calls
             self.path.mkdir(parents=True, exist_ok=False)
             inputs = self.path / 'inputs'
             shutil.copytree(ROOT / 'skills' / 'text-prison', inputs / 'skill',
@@ -69,11 +93,15 @@ class Experiment:
             for folder in ('tasks', 'calibration', 'schemas', 'prompts'):
                 shutil.copytree(ROOT / 'eval' / folder, inputs / folder,
                                 ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
-            manifest = {'experiment_id': name, 'created_at': now(), 'plan': PLAN,
+            manifest = {'experiment_id': name, 'created_at': now(), 'plan': plan_for(review_mode),
                         'inputs_manifest': file_manifest(inputs)}
             write_json(manifest_path, manifest)
         self.manifest = read_json(manifest_path)
-        if self.manifest['plan'] != PLAN:
+        self.plan = self.manifest['plan']
+        self.review_mode = self.plan.get('review_mode', 'human_blind')
+        self.judge_roles = self.plan.get('judge_roles', ['deepseek', 'gpt'])
+        self.roles = ['writer', *self.judge_roles]
+        if self.plan != plan_for(self.review_mode):
             raise ValueError('Frozen experiment plan differs from this runner; do not overwrite history')
         self.inputs = self.path / 'inputs'
         if file_manifest(self.inputs) != self.manifest['inputs_manifest']:
@@ -81,7 +109,9 @@ class Experiment:
         self.skill = self.inputs / 'skill'
         self.db_path = self.path / 'reviews.sqlite'
         self.store = ReviewStore(self.db_path)
-        self.budget = Budget(self.path / 'budget.sqlite', PLAN['max_calls'], PLAN['max_seconds'])
+        if self.manifest.get('lineage') and not (self.path / 'budget.sqlite').is_file():
+            raise ValueError('Inherited budget is missing; do not resume with an empty ledger')
+        self.budget = Budget(self.path / 'budget.sqlite', self.plan['max_calls'], self.plan['max_seconds'])
         self.jobs = self.path / 'jobs'
         self.jobs.mkdir(exist_ok=True)
         self.calibration_batch = name + '-calibration'
@@ -93,6 +123,77 @@ class Experiment:
         if not inventory_path.exists():
             write_json(inventory_path, inventory)
 
+    @classmethod
+    def inherit_ai_only(cls, name: str, source_name: str):
+        """Fork frozen evidence and budget without touching the original human database."""
+        destination, source = experiment_path(name), experiment_path(source_name)
+        if destination.exists():
+            raise ValueError('Destination already exists; resume it rather than importing twice')
+        original = read_json(source / 'experiment.json')
+        if original['plan'] != PLAN or file_manifest(source / 'inputs') != original['inputs_manifest']:
+            raise ValueError('Expected an unchanged historical two-judge experiment')
+        with sqlite3.connect((source / 'budget.sqlite').resolve().as_uri() + '?mode=ro', uri=True) as db:
+            calls = db.execute('SELECT id,label,started,elapsed,timeout,status FROM calls').fetchall()
+        if any(row[5] == 'running' for row in calls):
+            raise ValueError('Source has an active or unresolved call; cannot inherit budget')
+        source_records = sorted((source / 'jobs').glob('*/run.json'))
+        if len(source_records) != len(calls):
+            raise ValueError('Source call ledger and run records do not reconcile')
+        destination.mkdir(parents=True, exist_ok=False)
+        shutil.copytree(source / 'inputs', destination / 'inputs')
+        shutil.copytree(source / 'jobs', destination / 'jobs')
+        lineage = {'source_experiment': source_name,
+                   'source_manifest_sha256': digest((source / 'experiment.json').read_bytes()),
+                   'inherited_calls': len(calls),
+                   'inherited_seconds': sum(row[3] if row[3] is not None else row[4] for row in calls),
+                   'source_run_hashes': {p.parent.name: digest(p.read_bytes()) for p in source_records},
+                   'human_records': 'preserved only in source; not imported or deleted'}
+        for original_path in source_records:
+            path = destination / 'jobs' / original_path.parent.name / 'run.json'
+            record = read_json(path)
+            record['experiment_id'] = name
+            record.setdefault('provenance', {})['inherited_from'] = {
+                'experiment_id': source_name, 'run_sha256': digest(original_path.read_bytes())}
+            write_json(path, validate_run(record))
+        plan = plan_for('ai_only')
+        budget = Budget(destination / 'budget.sqlite', plan['max_calls'], plan['max_seconds'])
+        with budget.connect() as db:
+            db.executemany('INSERT INTO calls VALUES (?,?,?,?,?,?)', calls)
+        # Publish the resumable manifest only after all inherited records and cost exist.
+        write_json(destination / 'experiment.json', {'experiment_id': name, 'created_at': now(),
+                   'plan': plan, 'inputs_manifest': original['inputs_manifest'], 'lineage': lineage})
+        return cls(name)
+
+    def _import_packets(self, batch_id: str, packets: list[dict]):
+        self.store.import_batch(batch_id, packets, review_mode=self.review_mode)
+
+    def _seed_reviews(self, packets: list[dict]) -> None:
+        latest = {row['assignment_id']: row for row in self.records()}
+        for packet in packets:
+            packet['ai_reviews'] = []
+            for role in self.judge_roles:
+                record = latest.get('judge-' + packet['review_id'] + '-' + role)
+                sidecar_path = self.jobs / record['attempt_id'] / 'semantic-review.json' if record else None
+                if sidecar_path and sidecar_path.is_file():
+                    sidecar = read_json(sidecar_path)
+                else:
+                    sidecar = {'judge_id': role, 'review': None,
+                               'status': 'not_run' if record is None else 'missing_review',
+                               'error': 'Not run yet' if record is None else 'No validated review artifact'}
+                packet['ai_reviews'].append(sidecar)
+
+    def prepare_calibration(self) -> list[dict]:
+        """Expose assigned models and inherited results without launching inference."""
+        packets = load_calibration_packets(self.inputs / 'calibration')
+        random.Random(self.plan['seed']).shuffle(packets)
+        for packet in packets:
+            packet['batch_id'] = self.calibration_batch
+            packet['review_id'] = 'cal-' + digest(packet['review_id'])[:12]
+            packet['private'] = {'arm': 'calibration', 'writer_model': 'authored synthetic material'}
+        self._seed_reviews(packets)
+        self._import_packets(self.calibration_batch, packets)
+        return packets
+
     def assignments(self) -> list[dict]:
         """Include unstarted/blocked assignments so failed generation cannot shrink denominators."""
         inventory = []
@@ -100,11 +201,11 @@ class Experiment:
             inventory.append({'assignment_id': assignment, 'task_id': task['id'],
                               'scenario_id': task['scenario_id'], 'track': track, 'arm': arm,
                               'phase': phase, 'role': role, **extra})
-        for role in MODELS:
+        for role in self.roles:
             add('smoke-' + role, self._smoke_task(), 'smoke', role, 'smoke', role)
         for packet in load_calibration_packets(self.inputs / 'calibration'):
             review_id = 'cal-' + digest(packet['review_id'])[:12]
-            for role in ('deepseek', 'gpt'):
+            for role in self.judge_roles:
                 add('judge-' + review_id + '-' + role, packet['task'], 'calibration', 'blinded', 'judge', role,
                     review_id=review_id)
         tasks = load_tasks(self.inputs / 'tasks')
@@ -114,7 +215,7 @@ class Experiment:
                 track = 'product_native' if arm in ('A', 'D') else 'controlled'
                 add(assignment, task, track, arm, 'writer')
                 review_id = 'candidate-' + digest(assignment)[:12]
-                for role in ('deepseek', 'gpt'):
+                for role in self.judge_roles:
                     add('judge-' + review_id + '-' + role, task, track, 'blinded', 'judge', role,
                         review_id=review_id, source_assignment=assignment)
                 if task.get('executable'):
@@ -123,7 +224,7 @@ class Experiment:
                 assignment = 'feedback-' + task['id'] + '-' + arm
                 add(assignment, task, 'feedback_ablation', arm, 'writer')
                 review_id = 'candidate-' + digest(assignment)[:12]
-                for role in ('deepseek', 'gpt'):
+                for role in self.judge_roles:
                     add('judge-' + review_id + '-' + role, task, 'feedback_ablation', 'blinded', 'judge', role,
                         review_id=review_id, source_assignment=assignment)
             add('trigger-' + task['id'], task, 'trigger', 'available', 'trigger', expected_trigger=True)
@@ -153,7 +254,11 @@ class Experiment:
             if result.get('receipt', {}).get('prompt_hash') != digest(prompt):
                 raise ValueError(f'Existing receipt has a different prompt: {attempt}')
         else:
-            result = invoke(job_dir=job, role=role, prompt=prompt, budget=self.budget,
+            adapter = invoke
+            if role in AGY_JUDGES:
+                from .agy_adapter import invoke as invoke_agy
+                adapter = invoke_agy
+            result = adapter(job_dir=job, role=role, prompt=prompt, budget=self.budget,
                             skill_path=self.skill if native_skill else None, tools_config=tools_config,
                             system_prompt=system_prompt)
         receipt = result['receipt']
@@ -161,7 +266,7 @@ class Experiment:
         trigger = self._trigger(result, job / 'workspace')
         record = {'schema_version': '0.2', 'experiment_id': self.name, 'run_id': attempt,
                   'task_id': task['id'], 'scenario_id': task['scenario_id'], 'track': track,
-                  'arm': arm, 'phase': phase, 'host': 'pi', 'host_version': receipt['host_version'],
+                  'arm': arm, 'phase': phase, 'host': receipt['host'], 'host_version': receipt['host_version'],
                   'model': receipt['provider'] + '/' + receipt['model'],
                   'model_version': final_message.get('responseModel'),
                   'reasoning_effort': receipt['reasoning_effort'],
@@ -211,7 +316,7 @@ class Experiment:
                 'writable_paths': paths, 'readable_paths': list(inputs) + paths,
                 'initial_files': inputs, 'allow_check': check, 'max_writes': writes,
                 'contract': contract,
-                'max_turns': PLAN['max_tool_turns']}
+                'max_turns': self.plan['max_tool_turns']}
 
     @staticmethod
     def _smoke_task() -> dict:
@@ -226,7 +331,7 @@ class Experiment:
     def smoke(self, *, retry: bool = False) -> list[dict]:
         task = self._smoke_task()
         records = []
-        for role in MODELS:
+        for role in self.roles:
             prompt = 'Return exactly this JSON object, with no markdown: {"ready":true}'
             config, skill = None, False
             if role == 'writer':
@@ -250,6 +355,8 @@ class Experiment:
             record['outcomes']['smoke_passed'] = valid
             write_json(job / 'run.json', record)
             records.append(record)
+            if not valid and self.review_mode == 'ai_only':
+                break  # Inspect shared adapter failures before spending another model's reserve.
         return records
 
     def _judge(self, packet: dict, role: str, track: str, *, retry: bool = False) -> dict:
@@ -271,6 +378,9 @@ class Experiment:
                                  prompt=prompt, system_prompt=system, retry=retry)
         sidecar = {'judge_id': role, 'model': record['model'], 'status': record['status'],
                    'attempt_id': record['attempt_id'], 'review': None}
+        failure = record['outcomes'].get('failure_reason', '')
+        if record['status'] == 'failed' and failure.startswith('invalid_review: '):
+            sidecar.update(status='invalid_review', error=failure.removeprefix('invalid_review: '))
         if record['status'] == 'completed':
             try:
                 sidecar['review'] = validate_review(loads_json((job / 'answer.txt').read_text(encoding='utf-8')),
@@ -298,22 +408,34 @@ class Experiment:
         smoke = self.smoke(retry=retry)
         if not all(r['outcomes'].get('smoke_passed') for r in smoke):
             raise RuntimeError('A real model smoke failed; inspect its trace before calibration')
-        packets = load_calibration_packets(self.inputs / 'calibration')
-        random.Random(PLAN['seed']).shuffle(packets)
+        packets = self.prepare_calibration()
         for packet in packets:
-            packet['batch_id'] = self.calibration_batch
-            packet['review_id'] = 'cal-' + digest(packet['review_id'])[:12]
-            packet['private'] = {'arm': 'calibration', 'writer_model': 'authored synthetic material'}
-            packet['ai_reviews'] = []
-        self.store.import_batch(self.calibration_batch, packets)
-        for packet in packets:
-            for role in ('deepseek', 'gpt'):
-                packet['ai_reviews'].append(self._judge(packet, role, 'calibration', retry=retry))
-            self.store.import_batch(self.calibration_batch, [packet])
-        return {'batch': self.calibration_batch, 'items': len(packets), 'human_status': 'pending',
+            for role in self.judge_roles:
+                result = self._judge(packet, role, 'calibration', retry=retry)
+                packet['ai_reviews'] = [result if item['judge_id'] == role else item for item in packet['ai_reviews']]
+                self._import_packets(self.calibration_batch, [packet])
+        return {'batch': self.calibration_batch, 'items': len(packets), 'human_status': 'not_applicable' if self.review_mode == 'ai_only' else 'pending',
                 'budget': self.budget.snapshot()}
 
     def require_calibration(self) -> None:
+        if self.review_mode == 'ai_only':
+            # This is an operational readiness check, not semantic calibration against a gold standard.
+            latest = {row['assignment_id']: row for row in self.records()}
+            required = [row for row in self.assignments() if row['track'] in ('smoke', 'calibration')]
+            unfinished = [row['assignment_id'] for row in required
+                          if latest.get(row['assignment_id'], {}).get('status') != 'completed']
+            if unfinished:
+                raise RuntimeError(f'AI readiness incomplete: {len(unfinished)} smoke/review assignments; inspect failures before pilot')
+            for row in required:
+                record = latest[row['assignment_id']]
+                if row['track'] == 'smoke':
+                    if not record['outcomes'].get('smoke_passed'):
+                        raise RuntimeError('AI smoke has not passed')
+                else:
+                    sidecar = read_json(self.jobs / record['attempt_id'] / 'semantic-review.json')
+                    if sidecar['status'] != 'completed' or not sidecar.get('review'):
+                        raise RuntimeError('AI review sidecar has not passed structural validation')
+            return
         batch = next((b for b in self.store.list_batches() if b['batch_id'] == self.calibration_batch), None)
         if not batch or batch['total'] != 12 or batch['adjudication_submitted'] != batch['total']:
             raise HumanReviewPending('Complete and freeze all 12 independent calibration reviews, then submit all final adjudications in the web app before pilot generation')
@@ -338,6 +460,11 @@ class Experiment:
                 write_json(job / 'run.json', record)
             return None
         candidate = artifact.read_text(encoding='utf-8')
+        if not candidate.strip():
+            record['status'] = 'failed'
+            record['outcomes']['failure_reason'] = 'empty_artifact'
+            write_json(job / 'run.json', validate_run(record))
+            return None
         self._record_artifact(record, job, artifact, candidate)
         return {'review_id': 'candidate-' + digest(record['assignment_id'])[:12], 'batch_id': self.pilot_batch,
                 'artifact_hash': digest(candidate), 'candidate_text': candidate, 'task': model_visible_task(task),
@@ -362,7 +489,7 @@ class Experiment:
             artifact.write_text(initial, encoding='utf-8', newline='\n')
             contract = self._tools(task)['contract']
             write_json(folder / 'contract.json', contract)
-            checked = subprocess.run([sys.executable, str(self.skill / 'scripts' / 'check.py'), str(artifact),
+            checked = subprocess.run([sys.executable, '-X', 'utf8', str(self.skill / 'scripts' / 'check.py'), str(artifact),
                                       '--profile', task['profile'], '--lang', task['language'], '--format', 'brief',
                                       '--contract', str(folder / 'contract.json'),
                                       '--report', str(folder / 'mechanical.json')], capture_output=True, encoding='utf-8')
@@ -388,6 +515,11 @@ class Experiment:
             write_json(job / 'run.json', record)
             return None
         candidate = artifact.read_text(encoding='utf-8')
+        if not candidate.strip():
+            record['status'] = 'failed'
+            record['outcomes']['failure_reason'] = 'empty_artifact'
+            write_json(job / 'run.json', validate_run(record))
+            return None
         self._record_artifact(record, job, artifact, candidate)
         return {**packet, 'review_id': 'candidate-' + digest(record['assignment_id'])[:12],
                 'candidate_text': candidate, 'artifact_hash': digest(candidate), 'original_text': initial,
@@ -438,7 +570,7 @@ class Experiment:
         cases = [(t, t['prompt'] + '\nSources:\n' + json.dumps(t['sources'], ensure_ascii=False), True, t['profile']) for t in tasks]
         for (prompt, label), task in zip(negatives, tasks):
             cases.append(({**task, 'id': 'negative-' + label, 'scenario_id': 'trigger-' + label}, prompt, False, None))
-        random.Random(PLAN['seed'] + 1).shuffle(cases)
+        random.Random(self.plan['seed'] + 1).shuffle(cases)
         for task, prompt, expected, route in cases:
             record, job = self._call('trigger-' + task['id'], task, role='writer', track='trigger', arm='available',
                                      phase='trigger', prompt=prompt, native_skill=True,
@@ -454,7 +586,7 @@ class Experiment:
             record['observed_language'] = next(iter(langs)) if len(langs) == 1 else None
             record['route_correct'] = (any(p.endswith('/' + route + '.md') for p in observed_refs)
                                        if expected and record['outcomes']['trigger_observed'] is True else None)
-            record['intent_label_source'] = 'authored synthetic design; pending human confirmation'
+            record['intent_label_source'] = 'authored synthetic design; not independently human validated'
             write_json(job / 'run.json', record)
 
     def pilot(self, *, retry: bool = False) -> dict:
@@ -466,7 +598,7 @@ class Experiment:
             return {'batch': existing, 'budget': self.budget.snapshot()}
         tasks = load_tasks(self.inputs / 'tasks')
         assignments = [(task, arm) for task in tasks for arm in ('A', 'B', 'C', 'D')]
-        random.Random(PLAN['seed']).shuffle(assignments)
+        random.Random(self.plan['seed']).shuffle(assignments)
         packets = []
         for task, arm in assignments:
             packet = self._write_candidate(task, arm, retry=retry)
@@ -482,12 +614,14 @@ class Experiment:
             if packet['task'].get('executable') and packet['private']['track'] != 'feedback_ablation':
                 self._execute(packet, retry=retry)
         self._triggers(tasks, retry=retry)
-        random.Random(PLAN['seed'] + 2).shuffle(packets)
+        random.Random(self.plan['seed'] + 2).shuffle(packets)
         if packets:
-            self.store.import_batch(self.pilot_batch, packets)
+            self._seed_reviews(packets)
+            self._import_packets(self.pilot_batch, packets)
         for packet in packets:
-            for role in ('deepseek', 'gpt'):
-                packet['ai_reviews'].append(self._judge(packet, role, packet['private']['track'], retry=retry))
-            self.store.import_batch(self.pilot_batch, [packet])
+            for role in self.judge_roles:
+                result = self._judge(packet, role, packet['private']['track'], retry=retry)
+                packet['ai_reviews'] = [result if item['judge_id'] == role else item for item in packet['ai_reviews']]
+                self._import_packets(self.pilot_batch, [packet])
         return {'batch': self.pilot_batch, 'valid_candidates': len(packets), 'assigned_candidates': 24,
-                'human_status': 'pending', 'budget': self.budget.snapshot()}
+                'human_status': 'not_applicable' if self.review_mode == 'ai_only' else 'pending', 'budget': self.budget.snapshot()}

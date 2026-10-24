@@ -1,0 +1,8 @@
+{
+  "all_match_tested_source_hashes": true,
+  "checked_at": "2026-10-24T19:37:56.567261+00:00",
+  "checked_sources": 29,
+  "scope": "Source identities match the final 358-pass full-suite run.",
+  "status": "Passed",
+  "tests_evidence_sha256": "ffcc328440853407b9b34eaec0b2445d3c8f119900a2371c9c8a50d24938a2d2"
+}

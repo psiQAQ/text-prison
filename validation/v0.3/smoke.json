@@ -1,0 +1,100 @@
+{
+  "recorded_at": "2026-10-24T17:20:53.346599+00:00",
+  "roles": [
+    {
+      "agy_isolation": {
+        "hook_runtime_verified": true,
+        "init_catalog_observed": true,
+        "zero_tool_attempts": true
+      },
+      "assignment_id": "smoke-claude_opus",
+      "attempt_id": "smoke-claude_opus--01",
+      "elapsed_seconds": 7.131570999998075,
+      "model": "anthropic/claude-opus-5-5-high",
+      "receipt_sha256": "31ede58e1fcf5c8252069f50e7a22eba043451e70be6780462eb09e1772f87c3",
+      "run_sha256": "053f83e8a4b4c889d77e98d79f8bc50ebeb35567b9086a24fb49eb76e7a74f63",
+      "smoke_passed": true,
+      "status": "completed"
+    },
+    {
+      "agy_isolation": {
+        "hook_runtime_verified": true,
+        "init_catalog_observed": true,
+        "zero_tool_attempts": true
+      },
+      "assignment_id": "smoke-claude_sonnet",
+      "attempt_id": "smoke-claude_sonnet--01",
+      "elapsed_seconds": 7.184510200000659,
+      "model": "anthropic/claude-sonnet-5-5-high",
+      "receipt_sha256": "3579a21e25bc1c2fb79026a5441f76ec8b4e8870b46e728061997cf20ab80680",
+      "run_sha256": "f95ed2ed8bca75732f7d8b5014856c1d5bdba16f85ab3a5ee0e79c40026d802e",
+      "smoke_passed": true,
+      "status": "completed"
+    },
+    {
+      "agy_isolation": null,
+      "assignment_id": "smoke-deepseek",
+      "attempt_id": "smoke-deepseek--01",
+      "elapsed_seconds": 0.8352591000002576,
+      "model": "deepseek/deepseek-flash",
+      "receipt_sha256": "24f02bff4e1eb3f6e55a8ab6faad48754fa67acb679b5bafcf6f934f97a33580",
+      "run_sha256": "39e8f69d426ae222e7eac5bcc2c11edddc10e99ee7f30bfe424e772d9a5bc82a",
+      "smoke_passed": true,
+      "status": "completed"
+    },
+    {
+      "agy_isolation": {
+        "hook_runtime_verified": true,
+        "init_catalog_observed": true,
+        "zero_tool_attempts": true
+      },
+      "assignment_id": "smoke-gemini_argon",
+      "attempt_id": "smoke-gemini_argon--03",
+      "elapsed_seconds": 12.338458800004446,
+      "model": "google/gemini-4-argon-high",
+      "receipt_sha256": "a7f0764ca5606ce5411d5ed10c106847a90cc6c4d23a32c3c6912ff171e77927",
+      "run_sha256": "c8075bdcf3f056efd5a7867026da68afc352bdbf6e19eac1284d9baddc6fa436",
+      "smoke_passed": true,
+      "status": "completed"
+    },
+    {
+      "agy_isolation": {
+        "hook_runtime_verified": true,
+        "init_catalog_observed": true,
+        "zero_tool_attempts": true
+      },
+      "assignment_id": "smoke-gemini_flash",
+      "attempt_id": "smoke-gemini_flash--01",
+      "elapsed_seconds": 8.092523100000108,
+      "model": "google/gemini-3.8-flash-high",
+      "receipt_sha256": "109f3addf8511e2626cae33df4745b357cd791edd8d1642f9e9707fd76d4061f",
+      "run_sha256": "2d6f37b9f98cc28b83916734f1d547141cf06c05a7adf1420a96a757c13afd6b",
+      "smoke_passed": true,
+      "status": "completed"
+    },
+    {
+      "agy_isolation": null,
+      "assignment_id": "smoke-gpt",
+      "attempt_id": "smoke-gpt--01",
+      "elapsed_seconds": 5.689099000002898,
+      "model": "openai-codex/gpt-6-sol",
+      "receipt_sha256": "7ef5edf69ef66e0e12473850877504cb1cbf516f8e66455bcc5304e6518c8c28",
+      "run_sha256": "c41eeed97cc3eeb39f1b6b0bb0c5524bf8890ea57368c3e49f8f6386afa952b6",
+      "smoke_passed": true,
+      "status": "completed"
+    },
+    {
+      "agy_isolation": null,
+      "assignment_id": "smoke-writer",
+      "attempt_id": "smoke-writer--01",
+      "elapsed_seconds": 12.544347700000799,
+      "model": "openai-codex/gpt-6-luna",
+      "receipt_sha256": "506f17c93baf2e779d91b959cd63301e3d691bfbbe32f93ca9916fe8f83a9c32",
+      "run_sha256": "2b249b1360aa0a65a87073bf3e979e62b624d6e1c27e94e8f5b3181fbc2aa6c6",
+      "smoke_passed": true,
+      "status": "completed"
+    }
+  ],
+  "scope": "Seven role readiness checks, including three inherited Pi smokes; not semantic acceptance or implicit Skill trigger reliability.",
+  "status": "Passed"
+}

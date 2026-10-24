@@ -1,0 +1,103 @@
+{
+  "checkedAt": "2026-10-24T19:38:12.528Z",
+  "url": "http://127.0.0.1:8765/",
+  "batch": "ai-six-20261025-pilot",
+  "progress": "24 个候选 · 已完成 108/144 份记录 · 评审格式无效 13 · 运行失败 2 · blocked 21",
+  "candidateCount": 24,
+  "candidateChecks": [
+    {
+      "candidate": "候选 01",
+      "modelIds": [
+        "deepseek",
+        "gpt",
+        "gemini_argon",
+        "gemini_flash",
+        "claude_opus",
+        "claude_sonnet"
+      ],
+      "statuses": [
+        "运行状态：已完成",
+        "运行状态：已完成",
+        "运行状态：已完成",
+        "运行状态：已完成",
+        "运行状态：已完成",
+        "运行状态：评审格式无效"
+      ]
+    },
+    {
+      "candidate": "候选 14",
+      "modelIds": [
+        "deepseek",
+        "gpt",
+        "gemini_argon",
+        "gemini_flash",
+        "claude_opus",
+        "claude_sonnet"
+      ],
+      "statuses": [
+        "运行状态：已完成",
+        "运行状态：评审格式无效",
+        "运行状态：已完成",
+        "运行状态：已完成",
+        "运行状态：blocked",
+        "运行状态：blocked"
+      ]
+    }
+  ],
+  "rawJsonChecks": [
+    {
+      "candidate": "候选 01",
+      "judgeId": "claude_sonnet",
+      "status": "invalid_review",
+      "reviewIsNull": true,
+      "expanded": true
+    },
+    {
+      "candidate": "候选 14",
+      "judgeId": "deepseek",
+      "status": "completed",
+      "reviewIsNull": false,
+      "expanded": true
+    },
+    {
+      "candidate": "候选 14",
+      "expanded": true,
+      "judgeId": "gpt",
+      "previousStatus": "failed",
+      "repairEvidence": "invalid-review-resume.json",
+      "reviewIsNull": true,
+      "status": "invalid_review"
+    },
+    {
+      "candidate": "候选 14",
+      "judgeId": "claude_opus",
+      "status": "blocked",
+      "reviewIsNull": true,
+      "expanded": true
+    }
+  ],
+  "humanFormCount": 0,
+  "freezeVisible": false,
+  "initialSubmitCount": 0,
+  "adjudicationSubmitCount": 0,
+  "consoleErrors": [],
+  "refresh": "Passed",
+  "projectionRepairRefresh": "107/144 changed to 108/144 after corrected import",
+  "scope": "Read-only browser checks; no model calls, saves, freeze, download, shutdown, database or source changes",
+  "resumeStatusRepairRefresh": {
+    "previous": {
+      "completed": 108,
+      "invalid_review": 9,
+      "failed": 6,
+      "blocked": 21
+    },
+    "current": {
+      "completed": 108,
+      "invalid_review": 13,
+      "failed": 2,
+      "blocked": 21
+    },
+    "evidence": "invalid-review-resume.json",
+    "modelCalls": 0
+  }
+}

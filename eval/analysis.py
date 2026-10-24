@@ -8,11 +8,12 @@ from __future__ import annotations
 
 from collections import Counter, defaultdict
 from copy import deepcopy
+from itertools import combinations
 import math
 from statistics import mean
 from typing import Any, Iterable
 
-from eval.contracts import derive_review_summary
+from eval.contracts import derive_review_summary, validate_review
 
 
 def ratio(numerator: int | float | None, denominator: int | float, *, assessed: int | float | None = None) -> dict[str, Any]:
@@ -130,6 +131,132 @@ def summarize_reviews(records: list[dict[str, Any]]) -> dict[str, Any]:
             "artifacts_by_error_type": dict(sorted(error_types.items())),
             "statuses": dict(Counter(row["status"] for row in rows)), "artifacts": rows,
             "note": "Possible bounds describe unresolved judgments, not statistical confidence intervals."}
+
+
+def _ai_review_rows(records: list[dict[str, Any]], judge_ids: list[str]) -> list[dict[str, Any]]:
+    if not judge_ids or len(set(judge_ids)) != len(judge_ids) or any(not isinstance(judge, str) or not judge for judge in judge_ids):
+        raise ValueError("AI judges must have distinct, nonempty configured IDs")
+    prepared, artifact_ids = [], set()
+    for record in records:
+        artifact_id = record["artifact_id"]
+        if not isinstance(artifact_id, str) or not artifact_id or artifact_id in artifact_ids:
+            raise ValueError("Assigned artifacts must have distinct, nonempty IDs")
+        artifact_ids.add(artifact_id)
+        task = record["task"]
+        fact_ids = [item["id"] for item in task["required_facts"]]
+        if not fact_ids or len(set(fact_ids)) != len(fact_ids):
+            raise ValueError("AI comparison requires a fixed, unique required-fact inventory")
+        sidecars = {}
+        for sidecar in record.get("ai_reviews", []):
+            judge_id = sidecar["judge_id"]
+            if judge_id not in judge_ids or judge_id in sidecars:
+                raise ValueError("AI sidecars must have unique configured judge IDs")
+            sidecars[judge_id] = sidecar
+        reviews, statuses, fact_states, validation_errors, models = {}, {}, {}, {}, {}
+        for judge_id in judge_ids:
+            sidecar = sidecars.get(judge_id, {})
+            status = sidecar.get("status", "not_recorded")
+            if not isinstance(status, str) or not status:
+                raise ValueError("AI review status must be a nonempty string")
+            review = None
+            if status == "completed":
+                try:
+                    # The runner validates source evidence against the frozen task. Here
+                    # retain omitted facts as unreviewed, while rejecting malformed IDs.
+                    review = validate_review(sidecar.get("review"), candidate_text=record.get("candidate_text"),
+                                             original_text=record.get("original_text"))
+                    if {fact["fact_id"] for fact in review["required_facts"]} - set(fact_ids):
+                        raise ValueError("Review contains facts outside the fixed task inventory")
+                except ValueError as exc:
+                    review, status = None, "invalid_review"
+                    validation_errors[judge_id] = str(exc)
+            reviews[judge_id], statuses[judge_id] = review, status
+            models[judge_id] = sidecar.get("model")
+            observed = {fact["fact_id"]: fact["status"] for fact in review["required_facts"]} if review is not None else {}
+            fact_states[judge_id] = {fact_id: observed.get(fact_id, "unreviewed" if review is not None else "no_review")
+                                     for fact_id in fact_ids}
+        prepared.append({"artifact_id": artifact_id, "scenario_id": record["scenario_id"], "task": task,
+                         "reviews": reviews, "statuses": statuses, "fact_states": fact_states,
+                         "validation_errors": validation_errors, "models": models})
+    return prepared
+
+
+def _compare_ai_rows(rows: list[dict[str, Any]], judge_ids: list[str]) -> dict[str, Any]:
+    determined = {"preserved", "missing", "altered"}
+    pairs = []
+    for left, right in combinations(judge_ids, 2):
+        matrix, artifacts, facts = Counter(), [], []
+        reviewed = compared = disagreements = 0
+        for row in rows:
+            row_compared = row_disagreements = 0
+            for fact_id, left_state in row["fact_states"][left].items():
+                right_state = row["fact_states"][right][fact_id]
+                matrix[(left_state, right_state)] += 1
+                reviewed += left_state not in {"no_review", "unreviewed"} and right_state not in {"no_review", "unreviewed"}
+                known = left_state in determined and right_state in determined
+                row_compared += known
+                row_disagreements += known and left_state != right_state
+                facts.append({"artifact_id": row["artifact_id"], "scenario_id": row["scenario_id"], "fact_id": fact_id,
+                              "left_status": left_state, "right_status": right_state})
+            total = len(row["fact_states"][left])
+            compared += row_compared
+            disagreements += row_disagreements
+            artifacts.append({"artifact_id": row["artifact_id"], "scenario_id": row["scenario_id"],
+                              "observed_disagreement": ratio(row_disagreements, row_compared),
+                              "disagreement_lower": ratio(row_disagreements, total, assessed=row_compared),
+                              "disagreement_upper": ratio(row_disagreements + total - row_compared, total, assessed=row_compared)})
+        assigned = len(facts)
+        pairs.append({"left_judge": left, "right_judge": right, "assigned_artifacts": len(rows),
+                      "assigned_required_facts": assigned, "both_reviewed": reviewed, "both_determined": compared,
+                      "unresolved_required_facts": assigned - compared, "determined_disagreements": disagreements,
+                      "comparison_coverage": ratio(compared, assigned, assessed=assigned),
+                      "observed_status_disagreement": ratio(disagreements, compared, assessed=compared),
+                      "disagreement_bounds": {"lower": ratio(disagreements, assigned, assessed=compared),
+                                              "upper": ratio(disagreements + assigned - compared, assigned, assessed=compared)},
+                      "scenario_macro": {key: scenario_macro(artifacts, key) for key in
+                                         ("observed_disagreement", "disagreement_lower", "disagreement_upper")},
+                      "status_matrix": [{"left_status": a, "right_status": b, "count": count}
+                                        for (a, b), count in sorted(matrix.items())],
+                      "facts": facts})
+    return {"pairs": pairs, "alignment": "Same assigned artifact and predeclared required-fact ID only",
+            "claim_agreement": None,
+            "claim_agreement_reason": "Free claims may use different segmentation; they are not aligned by list position.",
+            "interpretation": "Descriptive model disagreement only; agreement is not correctness or a human reference. No majority labels are inferred."}
+
+
+def compare_ai_reviews(records: list[dict[str, Any]], judge_ids: list[str]) -> dict[str, Any]:
+    """Compare fixed fact statuses without choosing a model or majority as truth."""
+    return _compare_ai_rows(_ai_review_rows(records, judge_ids), judge_ids)
+
+
+def summarize_ai_reviews(records: list[dict[str, Any]], judge_ids: list[str]) -> dict[str, Any]:
+    """Keep every configured model and assigned artifact, including absent reviews."""
+    rows = _ai_review_rows(records, judge_ids)
+    by_judge = {}
+    for judge_id in judge_ids:
+        records_for_judge = [{"scenario_id": row["scenario_id"], "task": row["task"],
+                              "review": row["reviews"][judge_id], "reviewer_id": judge_id} for row in rows]
+        semantic = summarize_reviews(records_for_judge)
+        for artifact, row in zip(semantic["artifacts"], rows):
+            artifact.update(artifact_id=row["artifact_id"], review_status=row["statuses"][judge_id],
+                            required_fact_statuses=row["fact_states"][judge_id])
+        counts = Counter(state for row in rows for state in row["fact_states"][judge_id].values())
+        n, determined = sum(counts.values()), sum(counts[state] for state in ("preserved", "missing", "altered"))
+        by_judge[judge_id] = {**semantic,
+                              "models": sorted({row["models"][judge_id] for row in rows if row["models"][judge_id]}),
+                              "review_statuses": dict(sorted(Counter(row["statuses"][judge_id] for row in rows).items())),
+                              "supplied_review_coverage": ratio(semantic["reviews_supplied"], len(rows), assessed=len(rows)),
+                              "fixed_required_facts": {
+                                  "assigned": n, "statuses": {state: counts[state] for state in
+                                                               ("preserved", "missing", "altered", "unassessable", "unreviewed", "no_review")},
+                                  "determined_coverage": ratio(determined, n, assessed=n)},
+                              "validation_errors": [{"artifact_id": row["artifact_id"], "error": row["validation_errors"][judge_id]}
+                                                    for row in rows if judge_id in row["validation_errors"]]}
+    return {"review_mode": "ai_only", "assigned_artifacts": len(rows), "by_judge": by_judge,
+            "required_fact_comparison": _compare_ai_rows(rows, judge_ids),
+            "human_reference": None, "human_acceptance": "not_run",
+            "missingness": "missing is a model judgment of omitted content; unreviewed/no_review mean absent judgments and never count as preserved.",
+            "interpretation": "Independent model opinions. Semantic status and scores are model assessments, not accuracy, human calibration, or acceptance."}
 
 
 def _first_attempts(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:

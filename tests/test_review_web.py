@@ -5,12 +5,15 @@ import hashlib
 import http.client
 import json
 from pathlib import Path
+import socket
+import sqlite3
 import threading
+import time
 
 import pytest
 
 from eval.review_store import ConflictError, ReviewError, ReviewStore, blank_review
-from eval.web import build_server
+from eval.web import MAX_BODY_BYTES, build_server
 
 
 def packet(review_id="hidden-arm-A", candidate="The synthetic timeout is 30 s."):
@@ -70,6 +73,113 @@ def test_blind_views_exclude_ai_and_assignment_server_side(store):
     for secret in ("hidden-arm-A", "private-arm-A", "private-model", "hidden-ai-judge", "hidden-ai-claim", "private-task-identity", "private-scenario-identity"):
         assert secret not in exports
     assert "ai_reviews" not in view and "adjudication" not in view
+    assert view["review_mode"] == listing["batch"]["review_mode"] == "human_blind"
+
+
+def test_ai_only_reveals_multiple_models_without_human_records(store):
+    source = packet()
+    source["ai_reviews"] = [
+        {"judge_id": "synthetic-codex", "status": "completed", "review": {"claims": [{"text": "Synthetic first evidence."}]}},
+        {"judge_id": "synthetic-deepseek", "status": "completed", "review": {"claims": [{"text": "Synthetic second evidence."}]}},
+        {"judge_id": "synthetic-gemini", "status": "invalid_review", "review": None, "error": "Synthetic malformed response."},
+        {"judge_id": "synthetic-claude", "status": "pending", "review": None},
+    ]
+    listing = store.import_batch("synthetic-test", [source], review_mode="ai_only")
+    view = store.get_packet(listing["packets"][0]["review_id"])
+    progress = {"recorded": 4, "completed": 2, "statuses": {"completed": 2, "invalid_review": 1, "pending": 1}}
+    assert listing["batch"]["state"] == "open"
+    assert listing["batch"]["frozen_at"] is None
+    assert view["review_mode"] == listing["batch"]["review_mode"] == "ai_only"
+    assert view["ai_revealed"] and view["ai_reviews"] == source["ai_reviews"]
+    assert view["ai_progress"] == listing["packets"][0]["ai_progress"] == progress
+    assert store.list_batches()[0]["ai_progress"] == progress
+    assert "initial_submitted" not in store.list_batches()[0]
+    for item in (view, listing["packets"][0]):
+        assert "initial" not in item and "adjudication" not in item
+    for stage in ("initial", "adjudication"):
+        with pytest.raises(ConflictError, match="AI-only"):
+            save(store, source, stage=stage, request_id=f"synthetic-{stage}")
+    with pytest.raises(ConflictError, match="AI-only"):
+        store.freeze_batch("synthetic-test")
+    assert store.history(source["review_id"]) == []
+    with sqlite3.connect(store.db_path) as db:
+        for table in ("human_reviews", "review_history", "requests"):
+            assert db.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0] == 0
+    exported = store.export_batch("synthetic-test")
+    assert exported["batch"]["review_mode"] == "ai_only"
+    assert exported["packets"][0]["ai_reviews"] == source["ai_reviews"]
+    assert exported["packets"][0]["history"] == []
+    assert "initial" not in exported["packets"][0] and "adjudication" not in exported["packets"][0]
+    assert "没有人工初判或裁决" in exported["interpretation"]
+    assert "private-model" not in json.dumps(exported)
+
+
+def test_ai_only_progress_updates_and_empty_evidence_are_not_success(store):
+    source = packet()
+    source["ai_reviews"] = []
+    store.import_batch("synthetic-test", [source], review_mode="ai_only")
+    assert store.get_packet(source["review_id"])["ai_progress"] == {"recorded": 0, "completed": 0, "statuses": {}}
+    source["ai_reviews"] = [{"judge_id": "synthetic-judge", "status": "pending", "review": None}]
+    store.import_batch("synthetic-test", [source], review_mode="ai_only")
+    assert store.get_packet(source["review_id"])["ai_progress"]["completed"] == 0
+    source["ai_reviews"][0].update(status="completed", review={"claims": []})
+    store.import_batch("synthetic-test", [source], review_mode="ai_only")
+    assert store.get_packet(source["review_id"])["ai_progress"]["completed"] == 1
+    assert store.history(source["review_id"]) == []
+
+
+@pytest.mark.parametrize("initial_mode,new_mode", [("human_blind", "ai_only"), ("ai_only", "human_blind")])
+def test_existing_batch_mode_cannot_change(store, initial_mode, new_mode):
+    source = packet()
+    store.import_batch("synthetic-test", [source], review_mode=initial_mode)
+    before = store.export_batch("synthetic-test")
+    with pytest.raises(ConflictError, match="模式不能改变"):
+        store.import_batch("synthetic-test", [source], review_mode=new_mode)
+    after = store.export_batch("synthetic-test")
+    assert after["batch"] == before["batch"] and after["packets"] == before["packets"]
+
+
+def test_import_rejects_unknown_review_mode(store):
+    with pytest.raises(ReviewError, match="review_mode"):
+        store.import_batch("synthetic-test", [packet()], review_mode="unknown")
+    assert store.list_batches() == []
+
+
+def test_legacy_database_migration_preserves_human_batch_and_records(tmp_path):
+    path = tmp_path / "synthetic-legacy.sqlite3"
+    source = packet()
+    source["original_text"] = ""
+    review = completed_review(source)
+    with sqlite3.connect(path) as db:
+        db.executescript("""
+            CREATE TABLE batches (batch_id TEXT PRIMARY KEY, state TEXT NOT NULL DEFAULT 'open',
+                                  created_at TEXT NOT NULL, frozen_at TEXT);
+            CREATE TABLE packets (review_id TEXT PRIMARY KEY, public_id TEXT UNIQUE NOT NULL,
+                                  batch_id TEXT NOT NULL REFERENCES batches(batch_id),
+                                  artifact_hash TEXT NOT NULL, packet_json TEXT NOT NULL, ordinal INTEGER NOT NULL);
+            CREATE TABLE human_reviews (review_id TEXT NOT NULL REFERENCES packets(review_id), stage TEXT NOT NULL,
+                                        revision INTEGER NOT NULL, state TEXT NOT NULL, payload_json TEXT NOT NULL,
+                                        updated_at TEXT NOT NULL, PRIMARY KEY (review_id, stage));
+            CREATE TABLE review_history (history_id INTEGER PRIMARY KEY AUTOINCREMENT, review_id TEXT NOT NULL,
+                                         stage TEXT NOT NULL, revision INTEGER NOT NULL, action TEXT NOT NULL,
+                                         payload_json TEXT NOT NULL, created_at TEXT NOT NULL);
+        """)
+        db.execute("INSERT INTO batches VALUES (?, 'frozen', ?, ?)", ("synthetic-test", "synthetic-created", "synthetic-frozen"))
+        db.execute("INSERT INTO packets VALUES (?, 'legacy-public', ?, ?, ?, 1)",
+                   (source["review_id"], "synthetic-test", source["artifact_hash"], json.dumps(source)))
+        db.execute("INSERT INTO human_reviews VALUES (?, 'initial', 7, 'frozen', ?, 'synthetic-frozen')",
+                   (source["review_id"], json.dumps(review)))
+        db.execute("INSERT INTO review_history(review_id,stage,revision,action,payload_json,created_at) VALUES (?, 'initial', 7, 'freeze', ?, 'synthetic-frozen')",
+                   (source["review_id"], json.dumps(review)))
+    migrated = ReviewStore(path)
+    exported = migrated.export_batch("synthetic-test")
+    assert exported["batch"] == {"batch_id": "synthetic-test", "state": "frozen", "created_at": "synthetic-created",
+                                 "frozen_at": "synthetic-frozen", "review_mode": "human_blind"}
+    assert exported["packets"][0]["review_id"] == "legacy-public"
+    assert exported["packets"][0]["initial"]["review"] == review
+    assert exported["packets"][0]["initial"]["revision"] == 7
+    assert exported["packets"][0]["history"][0]["review"] == review
+    assert ReviewStore(path).get_packet("legacy-public")["initial"]["review"] == review
 
 
 def test_freeze_requires_every_initial_then_preserves_independence(store):
@@ -313,6 +423,28 @@ def test_http_blind_contract_and_export(service):
     assert "frame-ancestors 'none'" in headers["Content-Security-Policy"]
 
 
+def test_http_ai_only_exposes_evidence_and_rejects_human_operations(service):
+    source = packet("synthetic-ai-only")
+    source["batch_id"] = "synthetic-ai-only"
+    listing = service.store.import_batch("synthetic-ai-only", [source], review_mode="ai_only")
+    public_id = listing["packets"][0]["review_id"]
+    status, _, content = request(service, "GET", f"/api/reviews/{public_id}")
+    view = json.loads(content)
+    assert status == 200 and view["review_mode"] == "ai_only" and view["ai_revealed"]
+    assert view["ai_reviews"] == source["ai_reviews"]
+    assert "initial" not in view and "adjudication" not in view
+    payload = {"artifact_hash": source["artifact_hash"], "expected_revision": 0, "request_id": "synthetic-ai-only-save",
+               "submit": True, "review": completed_review(source)}
+    for stage in ("initial", "adjudication"):
+        assert request(service, "POST", f"/api/reviews/{public_id}/{stage}", payload)[0] == 409
+    assert request(service, "POST", "/api/batches/synthetic-ai-only/freeze", {"expected_revisions": {}})[0] == 409
+    status, _, content = request(service, "GET", "/api/batches/synthetic-ai-only/export")
+    exported = json.loads(content)
+    assert status == 200 and exported["packets"][0]["ai_reviews"] == source["ai_reviews"]
+    assert exported["packets"][0]["history"] == []
+    assert not service.store.get_packet("hidden-arm-A")["ai_revealed"]
+
+
 def test_http_valid_save_and_stale_conflict(service):
     source = packet()
     public_id = service.store.list_packets("synthetic-test")["packets"][0]["review_id"]
@@ -336,6 +468,43 @@ def test_http_valid_save_and_stale_conflict(service):
 ])
 def test_http_mutations_require_local_origin_and_token(service, options):
     assert request(service, "POST", "/api/batches/synthetic-test/freeze", {}, **options)[0] == 403
+    assert service.store.list_packets("synthetic-test")["batch"]["state"] == "open"
+
+
+def test_cross_site_post_with_delayed_body_returns_403_without_socket_reset(service):
+    connection = http.client.HTTPConnection("127.0.0.1", service.server_port, timeout=3)
+    try:
+        # A client can send headers before the body reaches the server, including on loopback.
+        connection.putrequest("POST", "/api/batches/synthetic-test/freeze")
+        connection.putheader("Content-Type", "application/json")
+        connection.putheader("Content-Length", "2")
+        connection.putheader("Origin", service.origin)
+        connection.putheader("X-Review-Token", service.csrf_token)
+        connection.putheader("Sec-Fetch-Site", "cross-site")
+        connection.endheaders()
+        time.sleep(0.02)
+        connection.send(b"{}")
+        response = connection.getresponse()
+        assert response.status == 403
+        assert json.loads(response.read())["error"] == "拒绝跨站请求。"
+    finally:
+        connection.close()
+    assert service.store.list_packets("synthetic-test")["batch"]["state"] == "open"
+
+
+@pytest.mark.parametrize("length", ["2", "invalid", "-1", str(MAX_BODY_BYTES + 1)])
+def test_rejected_post_does_not_wait_indefinitely_for_body(service, length):
+    # Read through EOF: a 403 alone does not prove the handler stopped waiting for a body.
+    with socket.create_connection(("127.0.0.1", service.server_port), timeout=1.5) as connection:
+        headers = (f"POST /api/batches/synthetic-test/freeze HTTP/1.1\r\n"
+                   f"Host: {service.authority}\r\nContent-Type: application/json\r\n"
+                   f"Content-Length: {length}\r\nSec-Fetch-Site: cross-site\r\n\r\n")
+        connection.sendall(headers.encode("ascii"))
+        response = bytearray()
+        while chunk := connection.recv(4096):
+            response.extend(chunk)
+    assert response.startswith(b"HTTP/1.0 403 ")
+    assert json.loads(response.split(b"\r\n\r\n", 1)[1])["error"] == "拒绝跨站请求。"
     assert service.store.list_packets("synthetic-test")["batch"]["state"] == "open"
 
 

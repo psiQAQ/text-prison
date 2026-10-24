@@ -1,0 +1,127 @@
+{
+  "assignments": [
+    {
+      "assignment_id": "write-procedure-en-01-C",
+      "attempts": [
+        {
+          "attempt_id": "write-procedure-en-01-C--01",
+          "prompt_sha256": "e0bfa7b5cb283fa11034c51a8e4313f0a7b608b36f0ed65b3511c5d4865d9e88",
+          "retry_of": null,
+          "run_sha256": "7151dd400b8d6985e3aca418321b702a2fe70a9c27cf79a7baa7903b6edf4928",
+          "status": "failed"
+        },
+        {
+          "attempt_id": "write-procedure-en-01-C--02",
+          "prompt_sha256": "e0bfa7b5cb283fa11034c51a8e4313f0a7b608b36f0ed65b3511c5d4865d9e88",
+          "retry_of": "write-procedure-en-01-C--01",
+          "run_sha256": "cfb7ed09dc1f5b277e0a1a6fd030ad4850b958de86bc551eef28bb14a8b23986",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "assignment_id": "judge-candidate-0a8d0e744201-gemini_argon",
+      "attempts": [
+        {
+          "attempt_id": "judge-candidate-0a8d0e744201-gemini_argon--01",
+          "prompt_sha256": "6d533dd13003f18ebdc16fd916b3ada80e7e676460a65e60af9417b6cc7651ea",
+          "retry_of": null,
+          "run_sha256": "36ccf661b623eb2b4879a213428da5ca816a212e41976b6c34694f14e500102f",
+          "status": "failed"
+        },
+        {
+          "attempt_id": "judge-candidate-0a8d0e744201-gemini_argon--02",
+          "prompt_sha256": "6d533dd13003f18ebdc16fd916b3ada80e7e676460a65e60af9417b6cc7651ea",
+          "retry_of": "judge-candidate-0a8d0e744201-gemini_argon--01",
+          "run_sha256": "748f4862a5f0f0261d0ec1b6a8e9b7ff33fc1c40c624e7a1dfd018a4e2d7d6a2",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "assignment_id": "judge-candidate-0a8d0e744201-gpt",
+      "attempts": [
+        {
+          "attempt_id": "judge-candidate-0a8d0e744201-gpt--01",
+          "prompt_sha256": "6d533dd13003f18ebdc16fd916b3ada80e7e676460a65e60af9417b6cc7651ea",
+          "retry_of": null,
+          "run_sha256": "f250669dbe56ed08f2b1d2b5c36b661b0292747458cf6984f922bc8841bbb50b",
+          "status": "failed"
+        },
+        {
+          "attempt_id": "judge-candidate-0a8d0e744201-gpt--02",
+          "prompt_sha256": "6d533dd13003f18ebdc16fd916b3ada80e7e676460a65e60af9417b6cc7651ea",
+          "retry_of": "judge-candidate-0a8d0e744201-gpt--01",
+          "run_sha256": "afdc16df3b3b8053166cfab97db2269a7336e58bf7755b5c83f56e9d94613665",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "assignment_id": "judge-candidate-4c260923c98d-deepseek",
+      "attempts": [
+        {
+          "attempt_id": "judge-candidate-4c260923c98d-deepseek--01",
+          "prompt_sha256": "2b3a50d450c52a7f5b4372999b5eaeba0f841f9495a10d78249747c4342fa745",
+          "retry_of": null,
+          "run_sha256": "c89ff077a9ba428b31adb4a22cb95a7c90c2c6ec93b39f11cc204872127575d1",
+          "status": "failed"
+        },
+        {
+          "attempt_id": "judge-candidate-4c260923c98d-deepseek--02",
+          "prompt_sha256": "2b3a50d450c52a7f5b4372999b5eaeba0f841f9495a10d78249747c4342fa745",
+          "retry_of": "judge-candidate-4c260923c98d-deepseek--01",
+          "run_sha256": "2c1a1afdc5f74b250af6bb1220aedbcc88a425197dfbed47fb0d4e7b79146ff1",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "assignment_id": "judge-candidate-53788d83957b-deepseek",
+      "attempts": [
+        {
+          "attempt_id": "judge-candidate-53788d83957b-deepseek--01",
+          "prompt_sha256": "b407996e7e1610414f88ab92477311d34a0e38b0d798b49301d7b8b507616bd0",
+          "retry_of": null,
+          "run_sha256": "49c20560b1dbbbb68f5bde7d395cef9b5122b7050d44053d24dad5cbf4719c9b",
+          "status": "failed"
+        },
+        {
+          "attempt_id": "judge-candidate-53788d83957b-deepseek--02",
+          "prompt_sha256": "b407996e7e1610414f88ab92477311d34a0e38b0d798b49301d7b8b507616bd0",
+          "retry_of": "judge-candidate-53788d83957b-deepseek--01",
+          "run_sha256": "141ebf40ac1cd3f7b505170fae8444025eacd83ce74534802d509829a7d8e0c8",
+          "status": "failed"
+        }
+      ]
+    },
+    {
+      "assignment_id": "judge-candidate-697542d604a1-gemini_flash",
+      "attempts": [
+        {
+          "attempt_id": "judge-candidate-697542d604a1-gemini_flash--01",
+          "prompt_sha256": "1dbb2364fb9897feffa332f5d8e4610fe6e38154d0560980be8756b040cdeb29",
+          "retry_of": null,
+          "run_sha256": "b86dffeae7501e273d0d3a0eaef777e064387a1ea19273c3753561a1fb04456c",
+          "status": "failed"
+        },
+        {
+          "attempt_id": "judge-candidate-697542d604a1-gemini_flash--02",
+          "prompt_sha256": "1dbb2364fb9897feffa332f5d8e4610fe6e38154d0560980be8756b040cdeb29",
+          "retry_of": "judge-candidate-697542d604a1-gemini_flash--01",
+          "run_sha256": "b38c56ce38acdc714862819d9f754b5f8b25db95d76397f67721ace9d9b8f9cb",
+          "status": "completed"
+        }
+      ]
+    }
+  ],
+  "blocked_roles_excluded": [
+    "claude_opus",
+    "claude_sonnet"
+  ],
+  "policy": "First five failed available-model assignments in frozen assignment order; no semantic-score selection.",
+  "projection_repair": "projection-repair.json",
+  "recorded_at": "2026-10-24T19:32:33.333641+00:00",
+  "retry_helper_sha256": "f97afcdfb6e1e3ec64230235b5dd3ca2089609d9320b0f4bf419d6c69e8b5384",
+  "same_prompt_verified": true
+}

@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TextPrison · 人工评审</title>
+  <title>TextPrison · 评审证据</title>
   <link rel="stylesheet" href="/style.css">
   <script src="/app.js" defer></script>
 </head>
 <body>
   <header class="topbar">
-    <div><span class="eyebrow">TEXTPRISON / LOCAL REVIEW</span><h1>人工评审工作台</h1></div>
+    <div><span class="eyebrow">TEXTPRISON / LOCAL REVIEW</span><h1 id="workspace-title">评审证据工作台</h1></div>
     <button id="stop-service" class="quiet">停止服务</button>
   </header>
   <div id="notice" role="status" aria-live="polite"></div>
@@ -19,14 +19,19 @@
       <p id="batch-progress" class="muted"></p>
       <nav id="packet-list" aria-label="候选列表"></nav>
       <button id="freeze-batch" class="primary" disabled>冻结整批初判，查看 AI 证据</button>
-      <p class="small muted">请先独立提交本批次全部候选。冻结后初判永久保留，后续更改写入最终裁决。</p>
+      <p id="freeze-help" class="small muted">请先独立提交本批次全部候选。冻结后初判永久保留，后续更改写入最终裁决。</p>
+      <button id="refresh-batch" class="quiet" disabled>刷新当前批次</button>
       <button id="export-batch" class="quiet" disabled>导出当前批次 JSON</button>
-      <details class="guide"><summary>判定说明</summary>
+      <details id="human-guide" class="guide"><summary>人工判定说明</summary>
         <p>每条事实声明同时保留主体、条件、否定、模态、单位和版本。来源中未支持不等于现实中为假。</p>
         <p><strong>有来源支持</strong>：完整声明受到所给来源支持。<strong>与来源矛盾</strong>：所给来源直接反对。<strong>无来源支持</strong>：来源足以评价，但未支持此声明。<strong>无法判定</strong>：证据不足或任务有歧义。</p>
         <p>必需事实逐项判断保留、缺失、改变或无法判定。声明都正确也可能遗漏必需信息。</p>
         <p>严重程度按任务定义：critical 影响关键结果或权限；major 明显改变含义；minor 局部语义问题；style_only 仅表达问题。事实矛盾或遗漏始终使语义结果失败，不能以风格标签抵消。</p>
         <p>所有引文必须直接复制候选或来源原文。没有错误也需说明支持依据。汇总由已提交明细自动计算。</p>
+      </details>
+      <details id="ai-guide" class="guide" hidden><summary>AI 结果说明</summary>
+        <p>各模型的评审独立保留。页面显示已导入记录的完成情况，不将运行成功等同于语义通过，也不通过多数票代替证据核查。</p>
+        <p>失败、未运行和待处理记录均单独显示。原始记录 JSON 保留模型返回的证据和状态。此模式没有人工初判或裁决。</p>
       </details>
     </aside>
     <main id="workspace"><div class="empty"><h2>等待载入评审批次</h2><p>此处只显示已导入的真实候选；不会代填人工判断。</p></div></main>

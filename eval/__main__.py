@@ -13,22 +13,25 @@ from .runner import Experiment, HumanReviewPending, preview
 
 
 def main(argv=None) -> int:
-    parser = argparse.ArgumentParser(description='TextPrison local evaluation and human review')
+    parser = argparse.ArgumentParser(description='TextPrison model evaluation and evidence workbench')
     commands = parser.add_subparsers(dest='command', required=True)
     commands.add_parser('doctor', help='Read-only installation and credential readiness; no inference')
     commands.add_parser('validate', help='Validate task and calibration inventory against versioned schemas offline')
     commands.add_parser('plan', help='Preview the frozen pilot allocation without model calls')
+    inherit = commands.add_parser('init-ai', help='Create the approved six-judge experiment, preserving prior calls and human history')
+    inherit.add_argument('--experiment', default='ai-six-20261025')
+    inherit.add_argument('--inherit-from', default='pilot-20261024')
     run = commands.add_parser('run', help='Explicitly consume model budget; resumable completed assignments')
     run.add_argument('phase', choices=['smoke', 'calibration', 'pilot'])
-    run.add_argument('--experiment', default='pilot-20261024')
+    run.add_argument('--experiment', default='ai-six-20261025')
     run.add_argument('--retry-failed', action='store_true', help='Retain originals and retry failed assignments only')
-    serve = commands.add_parser('serve', help='Start local human review workbench')
-    serve.add_argument('--experiment', default='pilot-20261024')
+    serve = commands.add_parser('serve', help='Start local model evidence workbench (historical human batches remain supported)')
+    serve.add_argument('--experiment', default='ai-six-20261025')
     serve.add_argument('--port', type=int, default=8765)
     summary = commands.add_parser('summarize', help='Produce JSON and Markdown from actual records')
-    summary.add_argument('--experiment', default='pilot-20261024')
+    summary.add_argument('--experiment', default='ai-six-20261025')
     tokens = commands.add_parser('tokens', help='Offline o200k_base size proxy; not provider-billed usage')
-    tokens.add_argument('--experiment', default='pilot-20261024')
+    tokens.add_argument('--experiment', default='ai-six-20261025')
     tokens.add_argument('--fetch-tokenizer', action='store_true', help='Explicitly fetch the pinned public tokenizer asset if missing')
     load = commands.add_parser('import', help='Convert a legacy record or inspect a Pi JSONL log offline')
     load.add_argument('path', type=Path)
@@ -37,7 +40,8 @@ def main(argv=None) -> int:
     args = parser.parse_args(argv)
     try:
         if args.command == 'doctor':
-            output = doctor()
+            from .agy_adapter import doctor as agy_doctor
+            output = {'pi': doctor(), 'agy': agy_doctor()}
         elif args.command == 'validate':
             tasks, calibration = load_tasks(), load_calibration_packets()
             for item in calibration:
@@ -47,8 +51,12 @@ def main(argv=None) -> int:
                       'human_acceptance': 'not_run'}
         elif args.command == 'plan':
             output = preview()
+        elif args.command == 'init-ai':
+            exp = Experiment.inherit_ai_only(args.experiment, args.inherit_from)
+            output = {'experiment': exp.name, 'plan': exp.plan, 'budget': exp.budget.snapshot(),
+                      'lineage': exp.manifest['lineage']}
         elif args.command == 'run':
-            exp = Experiment(args.experiment, create=args.phase != 'pilot')
+            exp = Experiment(args.experiment)
             output = getattr(exp, args.phase)(retry=args.retry_failed)
         elif args.command == 'serve':
             from .web import serve
@@ -66,6 +74,8 @@ def main(argv=None) -> int:
             write_json(args.output, output)
             output = {'saved': str(args.output), 'status': output.get('status')}
         print(json.dumps(output, ensure_ascii=False, indent=2, allow_nan=False))
+        if args.command == 'run' and args.phase == 'smoke':
+            return 0 if output and all(row['outcomes'].get('smoke_passed') for row in output) else 1
         return 0
     except HumanReviewPending as exc:
         print(json.dumps({'status': 'human_review_pending', 'message': str(exc)}, ensure_ascii=False), file=sys.stderr)

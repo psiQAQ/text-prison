@@ -1,0 +1,28 @@
+{
+  "checkedAt": "2026-10-24T16:40:51.582Z",
+  "url": "http://127.0.0.1:8765/",
+  "batch": "ai-six-20261025-calibration · AI 评审",
+  "progress": "12 个候选 · 已完成 24/72 份记录 · 未运行 48",
+  "selectedCandidate": "候选 12",
+  "modelIds": [
+    "deepseek",
+    "gpt",
+    "gemini_argon",
+    "gemini_flash",
+    "claude_opus",
+    "claude_sonnet"
+  ],
+  "modelStatuses": [
+    "运行状态：已完成",
+    "运行状态：已完成",
+    "运行状态：未运行",
+    "运行状态：未运行",
+    "运行状态：未运行",
+    "运行状态：未运行"
+  ],
+  "humanFormCount": 0,
+  "freezeVisible": false,
+  "initialSubmitCount": 0,
+  "adjudicationSubmitCount": 0,
+  "consoleErrors": []
+}

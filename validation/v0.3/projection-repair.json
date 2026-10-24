@@ -1,0 +1,14 @@
+{
+  "attempt_id": "judge-candidate-0a8d0e744201-gemini_argon--02",
+  "cause": "Local retry helper reused a stale in-memory packet for two retries of one candidate; second import reverted the first model projection. Original model evidence remained intact.",
+  "final_db_statuses": {
+    "blocked": 21,
+    "completed": 108,
+    "failed": 6,
+    "invalid_review": 9
+  },
+  "model_calls": 0,
+  "recorded_at": "2026-10-24T19:29:35.670759+00:00",
+  "repair": "Updated helper to carry forward imported model state; reimported hash-verified latest Gemini Argon sidecar without a model call.",
+  "sidecar_sha256": "0316a8de41f1750ffe415c1f0c10e552c5d846a00cc477104a2e6b87c513b1b0"
+}

@@ -8,6 +8,14 @@ const factOptions = [["", "请选择"], ["preserved", "完整保留"], ["missing
 const severityOptions = [["", "无错误 / 未定级"], ["critical", "critical · 关键错误"], ["major", "major · 重大错误"], ["minor", "minor · 局部错误"], ["style_only", "style_only · 仅风格"]];
 const errorTypeOptions = [["negation", "否定"], ["modality", "模态 / 必须与建议"], ["condition", "条件"], ["scope", "范围"], ["causality", "因果"], ["actor_object", "主体 / 对象"], ["quantity_unit", "数值 / 单位"], ["time_version", "时间 / 版本"], ["citation", "引用"], ["unsupported_addition", "无来源新增"], ["required_omission", "必需信息遗漏"], ["permission", "权限"], ["execution", "执行要求"], ["other", "其他（请在依据中说明）"]];
 const errorStatuses = new Set(["contradicted", "unsupported", "missing", "altered"]);
+const aiStatusNames = {completed: "已完成", pending: "待运行", running: "运行中", failed: "运行失败", invalid_review: "评审格式无效", not_run: "未运行", budget_skipped: "预算内未运行"};
+
+function aiOnly() { return state.batch?.review_mode === "ai_only"; }
+function aiProgressText(progress) {
+  if (!progress.recorded) return "尚无 AI 评审记录";
+  const details = Object.entries(progress.statuses).filter(([status]) => status !== "completed").map(([status, count]) => `${aiStatusNames[status] || status} ${count}`);
+  return [`已完成 ${progress.completed}/${progress.recorded} 份记录`, ...details].join(" · ");
+}
 
 function el(tag, text, cls) {
   const node = document.createElement(tag);
@@ -78,9 +86,10 @@ async function guarded(action) {
 async function loadBatches(preferred) {
   const data = await api("/api/batches");
   const select = $("batch-select"); select.replaceChildren();
-  for (const batch of data.batches) { const option = el("option", batch.batch_id); option.value = batch.batch_id; select.append(option); }
+  for (const batch of data.batches) { const option = el("option", `${batch.batch_id} · ${batch.review_mode === "ai_only" ? "AI 评审" : "人工盲评"}`); option.value = batch.batch_id; select.append(option); }
   if (!data.batches.length) { $("workspace").replaceChildren(el("div", "尚未导入评审批次。请等待实验数据准备完成。", "empty")); return; }
-  select.value = preferred && data.batches.some((b) => b.batch_id === preferred) ? preferred : data.batches[0].batch_id;
+  const latestAI = [...data.batches].reverse().find((batch) => batch.review_mode === "ai_only");
+  select.value = preferred && data.batches.some((b) => b.batch_id === preferred) ? preferred : (latestAI || data.batches[0]).batch_id;
   await loadBatch(select.value);
 }
 async function loadBatch(batchId, keepReviewId) {
@@ -91,26 +100,42 @@ async function loadBatch(batchId, keepReviewId) {
   if (selected) await loadPacket(selected.review_id);
 }
 function renderSidebar() {
-  const submitted = state.packets.filter((p) => ["submitted", "frozen"].includes(p.initial.state)).length;
-  const adjudicated = state.packets.filter((p) => p.adjudication.state === "submitted").length;
-  $("batch-progress").textContent = `独立初判 ${submitted}/${state.packets.length} · 最终裁决 ${adjudicated}/${state.packets.length}`;
+  const isAIOnly = aiOnly();
+  $("workspace-title").textContent = isAIOnly ? "AI 评审证据工作台" : "人工评审工作台";
+  document.title = `TextPrison · ${isAIOnly ? "AI 评审" : "人工评审"}`;
+  $("freeze-batch").hidden = isAIOnly;
+  $("freeze-help").hidden = isAIOnly;
+  $("human-guide").hidden = isAIOnly;
+  $("ai-guide").hidden = !isAIOnly;
+  const submitted = state.packets.filter((p) => ["submitted", "frozen"].includes(p.initial?.state)).length;
+  const adjudicated = state.packets.filter((p) => p.adjudication?.state === "submitted").length;
+  if (isAIOnly) {
+    const progress = state.packets.reduce((total, packet) => {
+      total.recorded += packet.ai_progress.recorded; total.completed += packet.ai_progress.completed;
+      for (const [status, count] of Object.entries(packet.ai_progress.statuses)) total.statuses[status] = (total.statuses[status] || 0) + count;
+      return total;
+    }, {recorded: 0, completed: 0, statuses: {}});
+    $("batch-progress").textContent = `${state.packets.length} 个候选 · ${aiProgressText(progress)}`;
+  } else $("batch-progress").textContent = `独立初判 ${submitted}/${state.packets.length} · 最终裁决 ${adjudicated}/${state.packets.length}`;
   const list = $("packet-list"); list.replaceChildren();
   for (const packet of state.packets) {
     const node = button(packet.label, () => guarded(async () => { if (await abandonUnsaved()) await loadPacket(packet.review_id); }), "packet-button");
     if (state.packet?.review_id === packet.review_id) node.classList.add("active");
-    node.append(el("span", `初判：${statusNames[packet.initial.state]}${state.batch.state === "frozen" ? ` / 裁决：${statusNames[packet.adjudication.state]}` : ""}`, "status"));
+    const progress = isAIOnly ? aiProgressText(packet.ai_progress) : `初判：${statusNames[packet.initial.state]}${state.batch.state === "frozen" ? ` / 裁决：${statusNames[packet.adjudication.state]}` : ""}`;
+    node.append(el("span", progress, "status"));
     list.append(node);
   }
-  $("freeze-batch").disabled = state.batch.state === "frozen" || submitted !== state.packets.length || !submitted;
+  $("freeze-batch").disabled = isAIOnly || state.batch.state === "frozen" || submitted !== state.packets.length || !submitted;
   $("freeze-batch").textContent = state.batch.state === "frozen" ? "初判已冻结 · AI 已可见" : "冻结整批初判，查看 AI 证据";
   $("export-batch").disabled = false;
+  $("refresh-batch").disabled = false;
 }
 async function loadPacket(reviewId) {
   const packet = await api(`/api/reviews/${encodeURIComponent(reviewId)}`);
   state.packet = packet;
-  state.stage = packet.ai_revealed ? "adjudication" : "initial";
-  const record = packet[state.stage];
-  state.revision = record.revision; state.review = structuredClone(record.review); state.dirty = false;
+  state.stage = packet.review_mode === "ai_only" ? null : packet.ai_revealed ? "adjudication" : "initial";
+  const record = state.stage ? packet[state.stage] : null;
+  state.revision = record?.revision || 0; state.review = record ? structuredClone(record.review) : null; state.dirty = false;
   notice(""); renderSidebar(); renderWorkspace();
 }
 function renderReading() {
@@ -210,15 +235,20 @@ function renderForm() {
   const status = el("span", state.dirty ? "有未保存修改" : `已载入版本 ${state.revision} · ${statusNames[state.packet[state.stage].state]}`, "save-status"); status.id = "save-status"; actions.append(status); form.append(actions);
 }
 function renderAI() {
-  const container = el("section"); container.append(el("h2", "AI 评审证据"), el("p", "这些是两位 AI 的原始判断，可能遗漏或误判。请对照来源作出自己的裁决；不采用多数票。", "ai-note"));
-  const initial = el("details", null, "panel initial-panel"); initial.append(el("summary", "查看已冻结的独立初判"), el("pre", JSON.stringify(state.packet.initial.review, null, 2), "json-evidence")); container.append(initial);
+  const container = el("section"); container.append(el("h2", "AI 评审证据"), el("p", aiOnly() ? "各模型独立展示原始判断和运行状态。已完成表示返回了评审记录，不代表候选通过；模型一致也不构成人工金标准。" : "这些是各 AI 的原始判断，可能遗漏或误判。请对照来源作出自己的裁决；不采用多数票。", "ai-note"));
+  if (!aiOnly()) {
+    const initial = el("details", null, "panel initial-panel"); initial.append(el("summary", "查看已冻结的独立初判"), el("pre", JSON.stringify(state.packet.initial.review, null, 2), "json-evidence")); container.append(initial);
+  }
   const grid = el("div", null, "judges-grid");
   for (const item of state.packet.ai_reviews) {
     const panel = el("article", null, "panel judge-panel"); panel.append(el("h3", item.judge_id));
+    panel.append(el("p", `运行状态：${aiStatusNames[item.status || "completed"] || item.status}`, "tag"));
+    if (item.provider || item.model) panel.append(el("p", [item.provider, item.model].filter(Boolean).join(" / "), "muted small"));
+    const raw = el("details"); raw.append(el("summary", "完整原始记录 JSON"), el("pre", JSON.stringify(item, null, 2), "json-evidence"));
     const review = item.review;
     if (item.status && item.status !== "completed") {
       panel.append(el("p", `未获得有效评审 · ${item.status}`, "ai-note"), el("p", item.error || "本次评审未完成或未通过格式校验。该记录不提供可采用的判断，也不记作通过。", "task-text"));
-      grid.append(panel); continue;
+      panel.append(raw); grid.append(panel); continue;
     }
     for (const [key, heading] of [["claims", "事实声明"], ["required_facts", "必需事实"], ["edits", "语义编辑"], ["uncertain_items", "不确定项"]]) {
       const entries = review[key]; if (!Array.isArray(entries) || !entries.length) continue;
@@ -235,16 +265,17 @@ function renderAI() {
         panel.append(block);
       }
     }
-    const raw = el("details"); raw.append(el("summary", "完整原始评审 JSON"), el("pre", JSON.stringify(review, null, 2), "json-evidence")); panel.append(raw); grid.append(panel);
+    panel.append(raw); grid.append(panel);
   }
-  if (!state.packet.ai_reviews.length) grid.append(el("p", "本候选没有可用的 AI 评审；请在裁决理由中记录这一限制。", "muted"));
+  if (!state.packet.ai_reviews.length) grid.append(el("p", aiOnly() ? "本候选尚无 AI 评审记录。刷新批次可查看新导入的结果。" : "本候选没有可用的 AI 评审；请在裁决理由中记录这一限制。", "muted"));
   container.append(grid); return container;
 }
 function renderWorkspace() {
   const workspace = $("workspace"); workspace.replaceChildren();
-  const heading = el("div", null, "review-heading"); const title = el("div"); title.append(el("span", state.packet.ai_revealed ? "第二阶段 · 参考 AI 后裁决" : "第一阶段 · 独立初判", "tag"), el("h2", state.packet.label), el("p", `${state.packet.task.profile} · ${state.packet.task.language}`, "muted"));
-  heading.append(title, el("p", state.packet.ai_revealed ? "初判已冻结并独立保存" : "AI 结论与实验分组尚未揭示", "context-note")); workspace.append(heading, renderReading());
+  const heading = el("div", null, "review-heading"); const title = el("div"); title.append(el("span", aiOnly() ? "AI-only · 模型证据" : state.packet.ai_revealed ? "第二阶段 · 参考 AI 后裁决" : "第一阶段 · 独立初判", "tag"), el("h2", state.packet.label), el("p", `${state.packet.task.profile} · ${state.packet.task.language}`, "muted"));
+  heading.append(title, el("p", aiOnly() ? "直接展示 AI 结果 · 无人工评审阶段" : state.packet.ai_revealed ? "初判已冻结并独立保存" : "AI 结论与实验分组尚未揭示", "context-note")); workspace.append(heading, renderReading());
   if (state.packet.ai_revealed) workspace.append(renderAI());
+  if (aiOnly()) return;
   const form = el("section", null, "panel review-form"); form.id = "human-form"; workspace.append(form); renderForm();
 }
 async function save(submit) {
@@ -261,6 +292,7 @@ async function showHistory() {
   if (!data.history.length) content.append(el("p", "尚无保存记录。")); $("history-dialog").showModal();
 }
 $("batch-select").addEventListener("change", () => guarded(async () => { if (await abandonUnsaved()) await loadBatch($("batch-select").value); else $("batch-select").value = state.batchId; }));
+$("refresh-batch").addEventListener("click", () => guarded(async () => { if (await abandonUnsaved()) await loadBatch(state.batchId, state.packet?.review_id); }));
 $("freeze-batch").addEventListener("click", () => guarded(async () => {
   if (state.dirty) throw new Error("请先保存或提交当前修改，再冻结批次。");
   if (!await confirmAction("冻结后，本批次全部独立初判将无法修改，AI 证据随后可见。继续冻结？")) return;
@@ -270,7 +302,7 @@ $("freeze-batch").addEventListener("click", () => guarded(async () => {
 $("export-batch").addEventListener("click", () => guarded(async () => {
   const data = await api(`/api/batches/${encodeURIComponent(state.batchId)}/export`); const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], {type: "application/json"}));
   const anchor = el("a"); anchor.href = url; anchor.download = `textprison-${state.batchId.replace(/[^a-zA-Z0-9_-]/g, "_")}-review.json`; anchor.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
-  notice("已导出当前保存版本。未冻结批次的导出仍隐藏 AI 结果；未保存的表单修改不在导出中。");
+  notice(aiOnly() ? "已导出当前 AI 评审、运行状态和来源证据。本批次没有人工初判或裁决记录。" : "已导出当前保存版本。未冻结批次的导出仍隐藏 AI 结果；未保存的表单修改不在导出中。");
 }));
 $("stop-service").addEventListener("click", () => guarded(async () => {
   if (!await abandonUnsaved() || !await confirmAction("停止本地评审服务？已保存的数据会保留，可在重启后继续。")) return;

@@ -9,6 +9,7 @@ import logging
 from pathlib import Path
 import secrets
 import threading
+import time
 from urllib.parse import unquote, urlsplit
 
 from ..review_store import ReviewError, ReviewStore
@@ -16,6 +17,7 @@ from ..review_store import ReviewError, ReviewStore
 
 ASSETS = Path(__file__).parent
 MAX_BODY_BYTES = 2 * 1024 * 1024
+REJECT_BODY_TIMEOUT_SECONDS = 0.25
 
 
 def _unique_object(pairs):
@@ -66,24 +68,59 @@ class ReviewHandler(BaseHTTPRequestHandler):
 
     def _security(self, *, mutation=False):
         if self.headers.get("Host") != self.server.authority:
-            self._send(403, {"error": "Host 与本地评审服务不匹配。"})
-            return False
+            return self._reject_request("Host 与本地评审服务不匹配。", mutation=mutation)
         origin = self.headers.get("Origin")
         if origin is not None and origin != self.server.origin:
-            self._send(403, {"error": "仅允许同源请求。"})
-            return False
+            return self._reject_request("仅允许同源请求。", mutation=mutation)
         top_level_navigation = (not mutation and self.command == "GET" and urlsplit(self.path).path == "/"
                                 and self.headers.get("Sec-Fetch-Mode") == "navigate"
                                 and self.headers.get("Sec-Fetch-Dest") == "document")
         if self.headers.get("Sec-Fetch-Site") not in {None, "same-origin", "none"} and not top_level_navigation:
-            self._send(403, {"error": "拒绝跨站请求。"})
-            return False
+            return self._reject_request("拒绝跨站请求。", mutation=mutation)
         if mutation:
             token = self.headers.get("X-Review-Token", "")
             if origin != self.server.origin or not hmac.compare_digest(token.encode("utf-8"), self.server.csrf_token.encode("ascii")):
-                self._send(403, {"error": "写入请求缺少有效的同源会话令牌，请刷新页面。"})
-                return False
+                return self._reject_request("写入请求缺少有效的同源会话令牌，请刷新页面。", mutation=mutation)
         return True
+
+    def _reject_request(self, message, *, mutation):
+        self.close_connection = True
+        self._send(403, {"error": message})
+        if mutation:
+            self._discard_rejected_body()
+        return False
+
+    def _discard_rejected_body(self):
+        # Closing while a separately sent POST body arrives can reset the socket on Windows.
+        # Do not parse rejected data or wait indefinitely for an untrusted sender.
+        lengths = self.headers.get_all("Content-Length", [])
+        if len(lengths) != 1 or self.headers.get("Transfer-Encoding"):
+            return
+        try:
+            remaining = int(lengths[0])
+        except ValueError:
+            return
+        if not 0 < remaining <= MAX_BODY_BYTES:
+            return
+        deadline = time.monotonic() + REJECT_BODY_TIMEOUT_SECONDS
+        previous_timeout = self.connection.gettimeout()
+        try:
+            while remaining:
+                timeout = deadline - time.monotonic()
+                if timeout <= 0:
+                    self.log_message("Rejected request body exceeded discard deadline")
+                    return
+                self.connection.settimeout(timeout)
+                try:
+                    chunk = self.rfile.read1(min(remaining, 64 * 1024))
+                except TimeoutError:
+                    self.log_message("Rejected request body did not arrive before discard deadline")
+                    return
+                if not chunk:
+                    return
+                remaining -= len(chunk)
+        finally:
+            self.connection.settimeout(previous_timeout)
 
     def _parts(self):
         parsed = urlsplit(self.path)
@@ -174,14 +211,14 @@ class ReviewHandler(BaseHTTPRequestHandler):
 def build_server(db_path, host="127.0.0.1", port=8765):
     """Build without starting; port=0 is useful for isolated HTTP tests."""
     if host != "127.0.0.1":
-        raise ValueError("人工评审服务仅允许绑定 127.0.0.1。")
+        raise ValueError("评审服务仅允许绑定 127.0.0.1。")
     return ReviewHTTPServer((host, port), ReviewStore(db_path))
 
 
 def serve(db_path, host="127.0.0.1", port=8765):
     """Serve until Ctrl+C or the authenticated local shutdown request."""
     with build_server(db_path, host, port) as server:
-        print(f"TextPrison 人工评审：{server.origin}（Ctrl+C 停止）", flush=True)
+        print(f"TextPrison 评审证据：{server.origin}（Ctrl+C 停止）", flush=True)
         try:
             server.serve_forever(poll_interval=0.25)
         except KeyboardInterrupt:

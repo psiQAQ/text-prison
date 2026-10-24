@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import re
 import sys
 from pathlib import Path
@@ -10,7 +11,7 @@ from typing import Any
 from markdown_it import MarkdownIt
 from jsonschema import Draft202012Validator, validators
 
-VERSION = '0.1.0'
+VERSION = '0.2.0'
 RULES = json.loads((Path(__file__).resolve().parents[1]/'assets/rules.json').read_text(encoding='utf-8'))
 PROFILES = tuple(RULES['english_sentence_warning'])
 WORD = re.compile(r"[A-Za-z]+(?:['’-][A-Za-z]+)*|\d+(?:\.\d+)?")
@@ -27,7 +28,13 @@ def strict_json(text: str) -> Any:
         return result
     def constant(value):
         raise ValueError(f'Non-finite JSON constant: {value}')
-    return json.loads(text, object_pairs_hook=pairs, parse_constant=constant)
+    def finite_float(value):
+        number = float(value)
+        if not math.isfinite(number):
+            raise ValueError(f'JSON number exceeds the supported finite range: {value}')
+        return number
+    return json.loads(text, object_pairs_hook=pairs, parse_constant=constant,
+                      parse_float=finite_float)
 
 
 def read_text(path: Path) -> str:
@@ -69,7 +76,8 @@ def local_refs(value: Any) -> None:
 def parse_prose(text: str) -> tuple[list, list, list]:
     def blank(match):
         return ''.join('\n' if c == '\n' else ' ' for c in match.group())
-    masked = re.sub(r'(?s)\$\$.*?\$\$|\\\[.*?\\\]', blank, text)
+    # CommonMark consumes the escapes in \(...\), so mask them before parsing.
+    masked = re.sub(r'(?s)\$\$.*?\$\$|\\\[.*?\\\]|\\\(.*?\\\)', blank, text)
     tokens = MarkdownIt('commonmark', {'html':True}).enable('table').parse(masked)
     paragraphs, headings, links = [], [], []
     quote_depth = 0

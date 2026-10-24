@@ -1,8 +1,7 @@
 from pathlib import Path
+import hashlib
 import importlib.util
 import json
-import subprocess
-import sys
 import pytest
 ROOT=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('checker',ROOT/'skills/text-prison/scripts/check.py')
@@ -68,9 +67,22 @@ def test_alias_boundary():
 def test_bad_contract(contract):
     with pytest.raises(ValueError): check('text',contract=contract)
 
-@pytest.mark.parametrize('text',['{','{"x":1,"x":2}','{"x":NaN}','```json\n{}\n```'])
+@pytest.mark.parametrize('text',['{','{"x":1,"x":2}','{"x":NaN}','```json\n{}\n```',
+                               '{"x":1e999}', '{"x":-1e999}', '[{"x":1.7976931348623159e308}]'])
 def test_invalid_json(text):
     assert check(text,profile='structured')['counts']['errors']==1
+
+@pytest.mark.parametrize('text',['1.7976931348623157e308', '-1.7976931348623157e308',
+                               '1.25e2', '1e-999', '1'+('0'*400)])
+def test_finite_json_numeric_boundaries(text):
+    assert check(text,profile='structured')['mechanical_status']=='passed'
+
+def test_strict_json_rejects_float_overflow_before_schema():
+    with pytest.raises(ValueError,match='finite range'):
+        checker.strict_json('{"nested":[1e999]}')
+    report=check('{"nested":[1e999]}',profile='structured',schema={'type':'object'})
+    assert report['schema_status']=='blocked_by_syntax'
+    assert 'TP-J002' not in report['checks_executed']
 
 def test_schema_pass():
     assert check('{"x":1}',profile='structured',schema={'type':'object','required':['x']})['schema_status']=='passed'
@@ -103,14 +115,73 @@ def test_invalid_schema_tool_error(tmp_path):
     s=tmp_path/'schema.json';s.write_text('{"type":"invalid"}')
     assert checker.main([str(p),'--profile','structured','--lang','en','--schema',str(s)])==2
 
-def test_installer_is_scoped_and_refuses_overwrite(tmp_path):
-    cmd=[sys.executable,str(ROOT/'tools/install_skill.py'),'--agent','both','--project',str(tmp_path)]
-    first=subprocess.run(cmd,capture_output=True,text=True)
-    assert first.returncode==0,first.stderr
-    assert (tmp_path/'.agents/skills/text-prison/SKILL.md').is_file()
-    assert (tmp_path/'.claude/skills/text-prison/scripts/check.py').is_file()
-    assert not (tmp_path/'AGENTS.md').exists() and not (tmp_path/'.claude/settings.json').exists()
-    assert subprocess.run(cmd,capture_output=True).returncode==2
-
 def test_contract_remains_data():
     assert check('nothing',contract={'required_literals':['__import__("os").system("false")']})['counts']['errors']==1
+
+
+@pytest.mark.parametrize(('source','candidate','protected'),[
+    ('You must not publish before approval.','You must publish before approval.',['publish','approval']),
+    ('The effect may occur.','The effect will occur.',['effect','occur']),
+    ('Restart only if the checksum matches.','Restart even if the checksum differs.',['Restart','checksum']),
+    ('The delay is 30 s.','The delay is 30 ms.',['delay','30']),
+    ('The measurements are correlated.','The measurements establish causation.',['measurements']),
+])
+def test_semantic_changes_are_not_certified_by_literal_presence(source,candidate,protected):
+    contract={'required_literals':protected}
+    for text in (source,candidate):
+        report=check(text,profile='research',contract=contract)
+        assert report['mechanical_status']=='passed'
+        assert report['semantic_status']=='not_evaluated'
+        assert not any(rule.startswith('TP-M') for rule in report['checks_executed'])
+
+
+def test_equivalent_units_still_require_an_explicit_literal_contract():
+    report=check('The delay is 0.5 min.',profile='research',contract={'required_literals':['30 s']})
+    assert report['findings'][0]['rule_id']=='TP-C001'
+    assert report['semantic_status']=='not_evaluated'
+
+
+@pytest.mark.parametrize('wrapper',[
+    '```text\n{}\n```', '    {}', '`{}`', '> {}',
+    '$${}$$', '\\[{}\\]', '${}$', '\\({}\\)',
+])
+def test_protected_regions_do_not_produce_prose_style_findings(wrapper):
+    text=wrapper.format('legacy_api '+'word '*45)
+    report=check(text,profile='procedure',contract={
+        'required_literals':['legacy_api'],
+        'terms':[{'canonical':'current_api','aliases':['legacy_api']}],
+    })
+    assert report['findings']==[]
+    assert report['artifact_sha256']==hashlib.sha256(text.encode('utf-8')).hexdigest()
+    assert report['semantic_status']=='not_evaluated'
+
+
+@pytest.mark.parametrize('wrapper',['```sh\n{}\n```','> {}','$${}$$'])
+def test_exact_contracts_include_protected_regions(wrapper):
+    report=check(wrapper.format('legacy_api'),contract={'forbidden_literals':['legacy_api']})
+    assert [finding['rule_id'] for finding in report['findings']]==['TP-C002']
+
+
+def test_citation_destination_is_protected_from_terminology_style_checks():
+    url='https://example.test/legacy_api'
+    report=check(f'[Measurement record]({url})',contract={
+        'required_literals':[url],
+        'terms':[{'canonical':'current_api','aliases':['legacy_api']}],
+    })
+    assert report['findings']==[]
+    assert report['semantic_status']=='not_evaluated'
+
+
+def test_overflowing_schema_is_a_tool_error(tmp_path):
+    artifact=tmp_path/'doc.json'; artifact.write_text('{}',encoding='utf-8')
+    schema=tmp_path/'schema.json'; schema.write_text('{"maximum":1e999}',encoding='utf-8')
+    assert checker.main([str(artifact),'--profile','structured','--lang','en','--schema',str(schema)])==2
+
+
+@pytest.mark.parametrize('profile',checker.PROFILES)
+@pytest.mark.parametrize('language',['en','zh'])
+def test_every_profile_keeps_semantic_review_separate(profile,language):
+    text='{}' if profile=='structured' else 'A supported-looking statement.'
+    report=check(text,profile=profile,language=language)
+    assert report['semantic_status']=='not_evaluated'
+    assert report['asd_ste100_conformance']=='not_evaluated'

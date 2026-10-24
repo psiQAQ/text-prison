@@ -1,0 +1,15 @@
+[submodule "submodules/asd-ste100-skill"]
+	path = submodules/asd-ste100-skill
+	url = https://github.com/danyuchn/asd-ste100-skill.git
+[submodule "submodules/SimpleEnglish"]
+	path = submodules/SimpleEnglish
+	url = https://github.com/AminBlg/SimpleEnglish.git
+[submodule "submodules/ste-prompt"]
+	path = submodules/ste-prompt
+	url = https://github.com/menonpg/ste-prompt.git
+[submodule "submodules/ste"]
+	path = submodules/ste
+	url = https://github.com/stazelabs/ste.git
+[submodule "submodules/vale"]
+	path = submodules/vale
+	url = https://github.com/stuffbucket/vale.git

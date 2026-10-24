@@ -1,90 +1,1362 @@
 {
+  "schema_version": "0.2",
   "checked_date": "2026-10-24",
-  "snapshot_policy": "URLs and access notes only; live sources are not frozen source snapshots. Freeze permitted snapshots or hashes before a benchmark.",
+  "snapshot_policy": "Five explicitly listed local Git submodules are pinned reference snapshots. Other URLs are bibliographic entries, not frozen or newly verified source contents. No reference project was executed or installed into runtime.",
+  "catalog": "docs/RELATED_WORK.md",
+  "role_definitions": {
+    "normative_guidance": "A specification or guide supports a rule or interface description, not an effect size.",
+    "engineering_reference": "An implementation or declared interface informs design; README inspection is not execution or code audit.",
+    "empirical_method": "Research informs measurement design; transfer to TextPrison still needs calibration.",
+    "project_hypothesis": "A project-specific choice or adaptation that requires its own evidence."
+  },
+  "verification_status_definitions": {
+    "bibliography_only": "Metadata entered from the local catalog; external original not newly read.",
+    "local_snapshot_reviewed": "Listed files or sections at the recorded local commit were read; code and outcomes were not executed."
+  },
+  "hash_policy": "SHA-256 covers raw local checkout bytes. Git commit and blob OID identify upstream content independently of checkout line-ending conversion.",
   "sources": [
     {
       "id": "openai-skills",
       "title": "OpenAI: Build skills",
       "url": "https://learn.chatgpt.com/docs/build-skills",
-      "use": "Codex discovery paths, progressive disclosure, and implicit invocation policy."
+      "use": "Codex discovery paths, progressive disclosure, and implicit invocation policy.",
+      "record_kind": "legacy_compatibility",
+      "bibliography_ids": [
+        "R27"
+      ],
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "v0.1 record preserved for existing source IDs. Its old access/use notes were not reverified in this indexing pass."
+      },
+      "roles": [
+        "normative_guidance"
+      ]
     },
     {
       "id": "claude-skills",
       "title": "Anthropic: Extend Claude with skills",
       "url": "https://code.claude.com/docs/en/skills",
-      "use": "Claude Code discovery paths, automatic invocation, and context lifecycle."
+      "use": "Claude Code discovery paths, automatic invocation, and context lifecycle.",
+      "record_kind": "legacy_compatibility",
+      "bibliography_ids": [
+        "R28"
+      ],
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "v0.1 record preserved for existing source IDs. Its old access/use notes were not reverified in this indexing pass."
+      },
+      "roles": [
+        "normative_guidance"
+      ]
     },
     {
       "id": "skills-spec",
       "title": "Agent Skills specification",
       "url": "https://agentskills.io/specification",
-      "use": "Portable SKILL.md format and progressive disclosure."
+      "use": "Portable SKILL.md format and progressive disclosure.",
+      "record_kind": "legacy_compatibility",
+      "bibliography_ids": [
+        "R26"
+      ],
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "v0.1 record preserved for existing source IDs. Its old access/use notes were not reverified in this indexing pass."
+      },
+      "roles": [
+        "normative_guidance"
+      ]
     },
     {
       "id": "google",
       "title": "Google developer documentation style highlights",
       "url": "https://developers.google.com/style/highlights",
-      "use": "Clarity, active voice, conditions before actions, formatting."
+      "use": "Clarity, active voice, conditions before actions, formatting.",
+      "record_kind": "legacy_compatibility",
+      "bibliography_ids": [
+        "R09"
+      ],
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "v0.1 record preserved for existing source IDs. Its old access/use notes were not reverified in this indexing pass."
+      },
+      "roles": [
+        "normative_guidance"
+      ]
     },
     {
       "id": "microsoft",
       "title": "Microsoft: Scannable content",
       "url": "https://learn.microsoft.com/en-us/style-guide/scannable-content/",
-      "use": "Information priority, structure and scanning."
+      "use": "Information priority, structure and scanning.",
+      "record_kind": "legacy_compatibility",
+      "bibliography_ids": [
+        "R10"
+      ],
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "v0.1 record preserved for existing source IDs. Its old access/use notes were not reverified in this indexing pass."
+      },
+      "roles": [
+        "normative_guidance"
+      ]
     },
     {
       "id": "microsoft-procedure",
       "title": "Microsoft: Writing step-by-step instructions",
       "url": "https://learn.microsoft.com/en-us/style-guide/procedures-instructions/writing-step-by-step-instructions",
-      "use": "Separate steps with context-sensitive exceptions."
+      "use": "Separate steps with context-sensitive exceptions.",
+      "record_kind": "legacy_compatibility",
+      "bibliography_ids": [
+        "R10"
+      ],
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "v0.1 record preserved for existing source IDs. Its old access/use notes were not reverified in this indexing pass."
+      },
+      "roles": [
+        "normative_guidance"
+      ]
     },
     {
       "id": "ste",
       "title": "ASD-STE100: About STE",
       "url": "https://www.asd-ste100.org/about_STE.html",
-      "use": "Controlled-language concept; full page fetch was blocked in this session; indexed official excerpt was available."
+      "use": "Controlled-language concept; full page fetch was blocked in this session; indexed official excerpt was available.",
+      "record_kind": "legacy_compatibility",
+      "bibliography_ids": [
+        "R08"
+      ],
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "v0.1 record preserved for existing source IDs. Its old access/use notes were not reverified in this indexing pass."
+      },
+      "roles": [
+        "normative_guidance"
+      ]
     },
     {
       "id": "ste-faq",
       "title": "ASD-STE100: FAQ",
       "url": "https://www.asd-ste100.org/STE_faq.html",
-      "use": "Official status and third-party limitations; full fetch was blocked; do not infer a redistribution license."
+      "use": "Official status and third-party limitations; full fetch was blocked; do not infer a redistribution license.",
+      "record_kind": "legacy_compatibility",
+      "bibliography_ids": [
+        "R08"
+      ],
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "v0.1 record preserved for existing source IDs. Its old access/use notes were not reverified in this indexing pass."
+      },
+      "roles": [
+        "normative_guidance"
+      ]
     },
     {
       "id": "openai-exec",
       "title": "OpenAI: Non-interactive mode",
       "url": "https://learn.chatgpt.com/docs/non-interactive-mode",
-      "use": "JSONL events and usage."
+      "use": "JSONL events and usage.",
+      "record_kind": "legacy_compatibility",
+      "bibliography_ids": [],
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "v0.1 record preserved for existing source IDs. Its old access/use notes were not reverified in this indexing pass."
+      },
+      "roles": [
+        "normative_guidance"
+      ]
     },
     {
       "id": "claude-headless",
       "title": "Anthropic: Run Claude Code programmatically",
       "url": "https://code.claude.com/docs/en/headless",
-      "use": "Programmatic CLI and structured output."
+      "use": "Programmatic CLI and structured output.",
+      "record_kind": "legacy_compatibility",
+      "bibliography_ids": [],
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "v0.1 record preserved for existing source IDs. Its old access/use notes were not reverified in this indexing pass."
+      },
+      "roles": [
+        "normative_guidance"
+      ]
     },
     {
       "id": "openai-usage",
       "title": "OpenAI: Observability and usage",
       "url": "https://developers.openai.com/api/docs/guides/agents-api/observability",
-      "use": "Cached input and reasoning are included in parent categories; missing usage is not zero."
+      "use": "Cached input and reasoning are included in parent categories; missing usage is not zero.",
+      "record_kind": "legacy_compatibility",
+      "bibliography_ids": [
+        "R29"
+      ],
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "v0.1 record preserved for existing source IDs. Its old access/use notes were not reverified in this indexing pass."
+      },
+      "roles": [
+        "normative_guidance"
+      ]
     },
     {
       "id": "claude-cache",
       "title": "Anthropic: Prompt caching",
       "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
-      "use": "Uncached input, cache writes, and cache reads are separate categories."
+      "use": "Uncached input, cache writes, and cache reads are separate categories.",
+      "record_kind": "legacy_compatibility",
+      "bibliography_ids": [
+        "R30"
+      ],
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "v0.1 record preserved for existing source IDs. Its old access/use notes were not reverified in this indexing pass."
+      },
+      "roles": [
+        "normative_guidance"
+      ]
     },
     {
       "id": "claude-cost",
       "title": "Anthropic: Track cost and usage",
       "url": "https://code.claude.com/docs/en/agent-sdk/cost-tracking",
-      "use": "Message/session accounting and cumulative usage."
+      "use": "Message/session accounting and cumulative usage.",
+      "record_kind": "legacy_compatibility",
+      "bibliography_ids": [],
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "v0.1 record preserved for existing source IDs. Its old access/use notes were not reverified in this indexing pass."
+      },
+      "roles": [
+        "normative_guidance"
+      ]
     },
     {
       "id": "vale",
       "title": "Vale styles",
       "url": "https://docs.vale.sh/topics/styles",
-      "use": "Possible later integration; not installed or bundled in this prototype."
+      "use": "Possible later integration; not installed or bundled in this prototype.",
+      "record_kind": "legacy_compatibility",
+      "bibliography_ids": [
+        "R04"
+      ],
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "v0.1 record preserved for existing source IDs. Its old access/use notes were not reverified in this indexing pass."
+      },
+      "separate_from": [
+        "R32"
+      ],
+      "roles": [
+        "engineering_reference"
+      ]
+    },
+    {
+      "id": "R01",
+      "title": "ASD-STE100 Skill（社区实现）",
+      "url": "https://github.com/danyuchn/asd-ste100-skill",
+      "links": [
+        {
+          "label": "仓库",
+          "url": "https://github.com/danyuchn/asd-ste100-skill"
+        },
+        {
+          "label": "固定版本 SKILL.md",
+          "url": "https://github.com/danyuchn/asd-ste100-skill/blob/cd62d297d5ef7cf9f59718cadc233ab2876ea013/SKILL.md"
+        }
+      ],
+      "roles": [
+        "engineering_reference"
+      ],
+      "use": "Separate modes, preserve qualifiers, and state checker scope.",
+      "catalog_entry": "docs/RELATED_WORK.md#r01",
+      "verification": {
+        "status": "local_snapshot_reviewed",
+        "recorded_date": "2026-10-24",
+        "scope": "Local HEAD, README, root license, and explicitly listed file sections were inspected. Repository behavior and author results were not executed or independently reproduced.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run",
+        "checked_files": [
+          {
+            "path": "submodules/asd-ste100-skill/README.md",
+            "url": "https://github.com/danyuchn/asd-ste100-skill/blob/cd62d297d5ef7cf9f59718cadc233ab2876ea013/README.md",
+            "sha256": "5f40646211fffffc8e745cfa8c4b7bd5e19356225070f097233d4d9a47817519",
+            "hash_basis": "local_checkout_bytes",
+            "git_blob_oid": "999809c615a07a803dc639708146b0cc75fcba9b",
+            "bytes": 9824,
+            "read_scope": "Declared purpose, interfaces, scope, limitations, and licensing notes; no implementation audit."
+          },
+          {
+            "path": "submodules/asd-ste100-skill/LICENSE",
+            "url": "https://github.com/danyuchn/asd-ste100-skill/blob/cd62d297d5ef7cf9f59718cadc233ab2876ea013/LICENSE",
+            "sha256": "c3ce5e692278b6e23e17120bb1813c35b2193a71e6705aa2aea5de6761f65e07",
+            "hash_basis": "local_checkout_bytes",
+            "git_blob_oid": "cf3b9052d36f05227a3e3c364910b9f96c86cc5f",
+            "bytes": 1096,
+            "read_scope": "Complete repository-root license text."
+          },
+          {
+            "path": "submodules/asd-ste100-skill/SKILL.md",
+            "url": "https://github.com/danyuchn/asd-ste100-skill/blob/cd62d297d5ef7cf9f59718cadc233ab2876ea013/SKILL.md",
+            "sha256": "f9438cec8c97cf336558fda3159a9bfc93a392b37d96acf45149a13052a63eb2",
+            "hash_basis": "local_checkout_bytes",
+            "git_blob_oid": "f100b709038129b83d85b3d9f5f9707965956894",
+            "bytes": 16557,
+            "read_scope": "Front-matter version and modality/meaning-preservation guidance."
+          }
+        ]
+      },
+      "snapshot": {
+        "kind": "git_submodule",
+        "path": "submodules/asd-ste100-skill",
+        "commit": "cd62d297d5ef7cf9f59718cadc233ab2876ea013",
+        "repository": "https://github.com/danyuchn/asd-ste100-skill",
+        "runtime_dependency": false
+      },
+      "license": {
+        "declared_spdx": "MIT",
+        "copyright_holder": "Dustin Yuchen Teng",
+        "path": "submodules/asd-ste100-skill/LICENSE",
+        "sha256": "c3ce5e692278b6e23e17120bb1813c35b2193a71e6705aa2aea5de6761f65e07",
+        "scope": "Repository-root license declaration only; not a license to redistribute ASD-STE100 standard text or its dictionary."
+      }
+    },
+    {
+      "id": "R02",
+      "title": "SimpleEnglish（社区实现与作者自评）",
+      "url": "https://github.com/AminBlg/SimpleEnglish",
+      "links": [
+        {
+          "label": "仓库",
+          "url": "https://github.com/AminBlg/SimpleEnglish"
+        },
+        {
+          "label": "固定版本 SKILL.md",
+          "url": "https://github.com/AminBlg/SimpleEnglish/blob/a6fcb4fde098b33617cc1578d151ebf58774b883/skills/simple-english/SKILL.md"
+        },
+        {
+          "label": "固定版本历史实验入口",
+          "url": "https://github.com/AminBlg/SimpleEnglish/blob/a6fcb4fde098b33617cc1578d151ebf58774b883/evals/results/RESULTS.md"
+        }
+      ],
+      "roles": [
+        "engineering_reference"
+      ],
+      "use": "Candidate English baseline and routing design; assess the risks of global modal restrictions.",
+      "catalog_entry": "docs/RELATED_WORK.md#r02",
+      "verification": {
+        "status": "local_snapshot_reviewed",
+        "recorded_date": "2026-10-24",
+        "scope": "Local HEAD, README, root license, and explicitly listed file sections were inspected. Repository behavior and author results were not executed or independently reproduced.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run",
+        "checked_files": [
+          {
+            "path": "submodules/SimpleEnglish/README.md",
+            "url": "https://github.com/AminBlg/SimpleEnglish/blob/a6fcb4fde098b33617cc1578d151ebf58774b883/README.md",
+            "sha256": "cbba9c85cacf39a5c3aa8a0701d80038eaeb6341a61cc38a8ca5b6d7539d6263",
+            "hash_basis": "local_checkout_bytes",
+            "git_blob_oid": "42a08467e53e9aa644a78724691cf05364948217",
+            "bytes": 10258,
+            "read_scope": "Declared purpose, interfaces, scope, limitations, and licensing notes; no implementation audit."
+          },
+          {
+            "path": "submodules/SimpleEnglish/LICENSE",
+            "url": "https://github.com/AminBlg/SimpleEnglish/blob/a6fcb4fde098b33617cc1578d151ebf58774b883/LICENSE",
+            "sha256": "8fc44dc771a9d34d1c658cd067f5d9f34e1e51fc9bcbd4c67dbaab48ee6cfe7e",
+            "hash_basis": "local_checkout_bytes",
+            "git_blob_oid": "e3dd42a3e6dc3ba07a742a83d27b5377a719e814",
+            "bytes": 1085,
+            "read_scope": "Complete repository-root license text."
+          },
+          {
+            "path": "submodules/SimpleEnglish/skills/simple-english/SKILL.md",
+            "url": "https://github.com/AminBlg/SimpleEnglish/blob/a6fcb4fde098b33617cc1578d151ebf58774b883/skills/simple-english/SKILL.md",
+            "sha256": "fb1eebc5e6bedbc958cde05b2be2d756155afb575b614a1206e996fbdeb6cde8",
+            "hash_basis": "local_checkout_bytes",
+            "git_blob_oid": "18968a8a2c631b577327fde0271940335c6a375c",
+            "bytes": 7780,
+            "read_scope": "Front-matter version and modal-verb restrictions."
+          }
+        ]
+      },
+      "snapshot": {
+        "kind": "git_submodule",
+        "path": "submodules/SimpleEnglish",
+        "commit": "a6fcb4fde098b33617cc1578d151ebf58774b883",
+        "repository": "https://github.com/AminBlg/SimpleEnglish",
+        "runtime_dependency": false
+      },
+      "license": {
+        "declared_spdx": "MIT",
+        "copyright_holder": "AminBlg",
+        "path": "submodules/SimpleEnglish/LICENSE",
+        "sha256": "8fc44dc771a9d34d1c658cd067f5d9f34e1e51fc9bcbd4c67dbaab48ee6cfe7e",
+        "scope": "Repository-root license declaration only; not a license to redistribute ASD-STE100 standard text or its dictionary."
+      }
+    },
+    {
+      "id": "R03",
+      "title": "ste（社区检查器与作者自评）",
+      "url": "https://github.com/stazelabs/ste",
+      "links": [
+        {
+          "label": "仓库",
+          "url": "https://github.com/stazelabs/ste"
+        },
+        {
+          "label": "固定版本实验结果入口",
+          "url": "https://github.com/stazelabs/ste/blob/922c9773d0004f4c40b2e1373db9ed949321373d/docs/experiment-results.md"
+        }
+      ],
+      "roles": [
+        "engineering_reference"
+      ],
+      "use": "Mechanical diagnostics and checker limitations; author-reported style measurements are not task outcomes.",
+      "catalog_entry": "docs/RELATED_WORK.md#r03",
+      "verification": {
+        "status": "local_snapshot_reviewed",
+        "recorded_date": "2026-10-24",
+        "scope": "Local HEAD, README, root license, and explicitly listed file sections were inspected. Repository behavior and author results were not executed or independently reproduced.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run",
+        "checked_files": [
+          {
+            "path": "submodules/ste/README.md",
+            "url": "https://github.com/stazelabs/ste/blob/922c9773d0004f4c40b2e1373db9ed949321373d/README.md",
+            "sha256": "d6fb7c047104789bd706bd66eb479ad898a095344424d6d80916a78d71db28eb",
+            "hash_basis": "local_checkout_bytes",
+            "git_blob_oid": "17bd5f0f34d571b9eddade333d7ec5c47190dbe1",
+            "bytes": 6620,
+            "read_scope": "Declared purpose, interfaces, scope, limitations, and licensing notes; no implementation audit."
+          },
+          {
+            "path": "submodules/ste/LICENSE",
+            "url": "https://github.com/stazelabs/ste/blob/922c9773d0004f4c40b2e1373db9ed949321373d/LICENSE",
+            "sha256": "c0b0854720103771dd01693d2531e9d3af2a637ca9f77afdc5d9d0e9bd582ee8",
+            "hash_basis": "local_checkout_bytes",
+            "git_blob_oid": "23eb4354ea2b9c1600af813e0ef5a45539d2d8b2",
+            "bytes": 1091,
+            "read_scope": "Complete repository-root license text."
+          }
+        ]
+      },
+      "snapshot": {
+        "kind": "git_submodule",
+        "path": "submodules/ste",
+        "commit": "922c9773d0004f4c40b2e1373db9ed949321373d",
+        "repository": "https://github.com/stazelabs/ste",
+        "runtime_dependency": false
+      },
+      "license": {
+        "declared_spdx": "MIT",
+        "copyright_holder": "Chris Staszak",
+        "path": "submodules/ste/LICENSE",
+        "sha256": "c0b0854720103771dd01693d2531e9d3af2a637ca9f77afdc5d9d0e9bd582ee8",
+        "scope": "Repository-root license declaration only; not a license to redistribute ASD-STE100 standard text or its dictionary."
+      }
+    },
+    {
+      "id": "R04",
+      "title": "Vale（官方工具文档与 vale-cli 社区风格包）",
+      "url": "https://docs.vale.sh/topics/styles",
+      "links": [
+        {
+          "label": "Styles",
+          "url": "https://docs.vale.sh/topics/styles"
+        },
+        {
+          "label": "Scopes",
+          "url": "https://docs.vale.sh/topics/scopes"
+        },
+        {
+          "label": "Vocabularies",
+          "url": "https://docs.vale.sh/keys/vocabularies"
+        },
+        {
+          "label": "Google 包",
+          "url": "https://github.com/vale-cli/Google"
+        },
+        {
+          "label": "Microsoft 包",
+          "url": "https://github.com/vale-cli/Microsoft"
+        }
+      ],
+      "roles": [
+        "engineering_reference"
+      ],
+      "use": "Vale ecosystem scopes, modular style packages, and an optional future adapter; separate identity from R32.",
+      "catalog_entry": "docs/RELATED_WORK.md#r04",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R05",
+      "title": "skill-creator（Anthropic 官方示例）",
+      "url": "https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md",
+      "links": [
+        {
+          "label": "SKILL.md",
+          "url": "https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md"
+        }
+      ],
+      "roles": [
+        "engineering_reference"
+      ],
+      "use": "Development-set with/without Skill comparisons, assertions, timing, and trigger iteration.",
+      "catalog_entry": "docs/RELATED_WORK.md#r05",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R06",
+      "title": "SkillsBench: Benchmarking How Well Agent Skills Work Across Diverse Tasks.",
+      "url": "https://arxiv.org/abs/2602.12670v4",
+      "links": [
+        {
+          "label": "固定版本",
+          "url": "https://arxiv.org/abs/2602.12670v4"
+        },
+        {
+          "label": "全文",
+          "url": "https://arxiv.org/html/2602.12670v4"
+        },
+        {
+          "label": "项目代码",
+          "url": "https://github.com/benchflow-ai/skillsbench"
+        }
+      ],
+      "roles": [
+        "empirical_method"
+      ],
+      "use": "Paired tasks, isolated execution, independent verifiers, scenario aggregation, and selection-policy scrutiny.",
+      "catalog_entry": "docs/RELATED_WORK.md#r06",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R07",
+      "title": "Inspect",
+      "url": "https://inspect.aisi.org.uk/",
+      "links": [
+        {
+          "label": "官方文档",
+          "url": "https://inspect.aisi.org.uk/"
+        }
+      ],
+      "roles": [
+        "engineering_reference"
+      ],
+      "use": "Separate datasets, execution, and scoring without making Inspect a required dependency.",
+      "catalog_entry": "docs/RELATED_WORK.md#r07",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R08",
+      "title": "ASD-STE100",
+      "url": "https://www.asd-ste100.org/",
+      "links": [
+        {
+          "label": "官方网站",
+          "url": "https://www.asd-ste100.org/"
+        }
+      ],
+      "roles": [
+        "normative_guidance"
+      ],
+      "use": "Controlled-language concept and compliance boundary; complete standard not obtained.",
+      "catalog_entry": "docs/RELATED_WORK.md#r08",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R09",
+      "title": "Google Developer Documentation Style Guide",
+      "url": "https://developers.google.com/style/highlights",
+      "links": [
+        {
+          "label": "Highlights",
+          "url": "https://developers.google.com/style/highlights"
+        }
+      ],
+      "roles": [
+        "normative_guidance"
+      ],
+      "use": "Technical clarity, active voice, and consistent formatting; no project performance threshold.",
+      "catalog_entry": "docs/RELATED_WORK.md#r09",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R10",
+      "title": "Microsoft Writing Style Guide",
+      "url": "https://learn.microsoft.com/en-us/style-guide/scannable-content/",
+      "links": [
+        {
+          "label": "Scannable content",
+          "url": "https://learn.microsoft.com/en-us/style-guide/scannable-content/"
+        }
+      ],
+      "roles": [
+        "normative_guidance"
+      ],
+      "use": "Information priority and scanning without forcing all content into lists.",
+      "catalog_entry": "docs/RELATED_WORK.md#r10",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R11",
+      "title": "ISO 24495-1:2023, Plain language — Part 1: Governing principles and guidelines",
+      "url": "https://www.iso.org/standard/78907.html",
+      "links": [
+        {
+          "label": "官方摘要",
+          "url": "https://www.iso.org/standard/78907.html"
+        }
+      ],
+      "roles": [
+        "normative_guidance"
+      ],
+      "use": "Plain-language principles from public bibliographic information; full standard not reviewed.",
+      "catalog_entry": "docs/RELATED_WORK.md#r11",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R12",
+      "title": "ISO 9241-11:2018, Usability: Definitions and concepts",
+      "url": "https://www.iso.org/standard/63500.html",
+      "links": [
+        {
+          "label": "官方摘要",
+          "url": "https://www.iso.org/standard/63500.html"
+        }
+      ],
+      "roles": [
+        "normative_guidance"
+      ],
+      "use": "Usability in an explicit context of use; not a project-specific measurement recipe.",
+      "catalog_entry": "docs/RELATED_WORK.md#r12",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R13",
+      "title": "Issues in Conducting Empirical Evaluations of Controlled Languages",
+      "url": "https://mt-archive.net/90/CLAW-1996-Holmback.pdf",
+      "links": [
+        {
+          "label": "原始论文存档",
+          "url": "https://mt-archive.net/90/CLAW-1996-Holmback.pdf"
+        }
+      ],
+      "roles": [
+        "empirical_method"
+      ],
+      "use": "Real-reader task design and variation by language background and task complexity.",
+      "catalog_entry": "docs/RELATED_WORK.md#r13",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R14",
+      "title": "FActScore: Fine-grained Atomic Evaluation of Factual Precision in Long Form Text Generation",
+      "url": "https://aclanthology.org/2023.emnlp-main.741/",
+      "links": [
+        {
+          "label": "出版页",
+          "url": "https://aclanthology.org/2023.emnlp-main.741/"
+        },
+        {
+          "label": "全文",
+          "url": "https://arxiv.org/html/2305.14251"
+        }
+      ],
+      "roles": [
+        "empirical_method"
+      ],
+      "use": "Source-supported atomic claims; required-fact retention is a separate TextPrison adaptation.",
+      "catalog_entry": "docs/RELATED_WORK.md#r14",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R15",
+      "title": "Edit-level Simplification Evaluation using SALSA",
+      "url": "https://aclanthology.org/2023.emnlp-main.211/",
+      "links": [
+        {
+          "label": "出版页",
+          "url": "https://aclanthology.org/2023.emnlp-main.211/"
+        },
+        {
+          "label": "全文版本",
+          "url": "https://arxiv.org/html/2305.14458v2"
+        }
+      ],
+      "roles": [
+        "empirical_method"
+      ],
+      "use": "Locate meaning-changing edits and severity without claiming full SALSA reproduction.",
+      "catalog_entry": "docs/RELATED_WORK.md#r15",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R16",
+      "title": "Instruction-Following Evaluation for Large Language Models（IFEval）",
+      "url": "https://arxiv.org/abs/2311.07911",
+      "links": [
+        {
+          "label": "论文",
+          "url": "https://arxiv.org/abs/2311.07911"
+        }
+      ],
+      "roles": [
+        "empirical_method"
+      ],
+      "use": "Instruction-level and whole-output verifiable constraint rates.",
+      "catalog_entry": "docs/RELATED_WORK.md#r16",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R17",
+      "title": "Beyond Accuracy: Behavioral Testing of NLP Models with CheckList",
+      "url": "https://aclanthology.org/2020.acl-main.442/",
+      "links": [
+        {
+          "label": "出版页",
+          "url": "https://aclanthology.org/2020.acl-main.442/"
+        },
+        {
+          "label": "全文",
+          "url": "https://arxiv.org/html/2005.04118"
+        }
+      ],
+      "roles": [
+        "empirical_method"
+      ],
+      "use": "Minimal functional, invariance, and directional behavioral tests.",
+      "catalog_entry": "docs/RELATED_WORK.md#r17",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R18",
+      "title": "Optimizing Statistical Machine Translation for Text Simplification（SARI）",
+      "url": "https://aclanthology.org/Q16-1029/",
+      "links": [
+        {
+          "label": "出版页",
+          "url": "https://aclanthology.org/Q16-1029/"
+        }
+      ],
+      "roles": [
+        "empirical_method"
+      ],
+      "use": "Reference-based auxiliary simplification metric in applicable domains only.",
+      "catalog_entry": "docs/RELATED_WORK.md#r18",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R19",
+      "title": "LENS: A Learnable Evaluation Metric for Text Simplification",
+      "url": "https://aclanthology.org/2023.acl-long.905/",
+      "links": [
+        {
+          "label": "出版页",
+          "url": "https://aclanthology.org/2023.acl-long.905/"
+        }
+      ],
+      "roles": [
+        "empirical_method"
+      ],
+      "use": "Learned auxiliary simplification metric requiring domain validation.",
+      "catalog_entry": "docs/RELATED_WORK.md#r19",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R20",
+      "title": "Adapting Sentence-level Automatic Metrics for Document-level Simplification Evaluation",
+      "url": "https://aclanthology.org/2025.naacl-long.327/",
+      "links": [
+        {
+          "label": "出版页",
+          "url": "https://aclanthology.org/2025.naacl-long.327/"
+        },
+        {
+          "label": "PDF",
+          "url": "https://aclanthology.org/2025.naacl-long.327.pdf"
+        }
+      ],
+      "roles": [
+        "empirical_method"
+      ],
+      "use": "Risks when sentence-level metrics are applied to document-level simplification.",
+      "catalog_entry": "docs/RELATED_WORK.md#r20",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R21",
+      "title": "AI Agents That Matter",
+      "url": "https://arxiv.org/abs/2407.01502",
+      "links": [
+        {
+          "label": "论文",
+          "url": "https://arxiv.org/abs/2407.01502"
+        },
+        {
+          "label": "研究项目",
+          "url": "https://agents.cs.princeton.edu/"
+        }
+      ],
+      "roles": [
+        "empirical_method"
+      ],
+      "use": "Joint cost/success reporting and reproducibility.",
+      "catalog_entry": "docs/RELATED_WORK.md#r21",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R22",
+      "title": "Demystifying evals for AI agents",
+      "url": "https://www.anthropic.com/research/demystifying-evals-for-ai-agents",
+      "links": [
+        {
+          "label": "官方文章",
+          "url": "https://www.anthropic.com/research/demystifying-evals-for-ai-agents"
+        }
+      ],
+      "roles": [
+        "empirical_method"
+      ],
+      "use": "Separate graders, traces, outcomes, and repeated reliability.",
+      "catalog_entry": "docs/RELATED_WORK.md#r22",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R23",
+      "title": "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena",
+      "url": "https://arxiv.org/abs/2306.05685",
+      "links": [
+        {
+          "label": "论文",
+          "url": "https://arxiv.org/abs/2306.05685"
+        }
+      ],
+      "roles": [
+        "empirical_method"
+      ],
+      "use": "Judge position, verbosity, and self-preference biases; no borrowed agreement guarantee.",
+      "catalog_entry": "docs/RELATED_WORK.md#r23",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R24",
+      "title": "Sample Size Justification",
+      "url": "https://online.ucpress.edu/collabra/article/8/1/33267/120491/Sample-Size-Justification",
+      "links": [
+        {
+          "label": "正文",
+          "url": "https://online.ucpress.edu/collabra/article/8/1/33267/120491/Sample-Size-Justification"
+        }
+      ],
+      "roles": [
+        "empirical_method"
+      ],
+      "use": "Sample-size justification from meaningful differences, precision, and risk.",
+      "catalog_entry": "docs/RELATED_WORK.md#r24",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R25",
+      "title": "NIST/SEMATECH 比例置信区间与精确二项区间",
+      "url": "https://www.itl.nist.gov/div898/handbook/prc/section2/prc241.htm",
+      "links": [
+        {
+          "label": "比例区间",
+          "url": "https://www.itl.nist.gov/div898/handbook/prc/section2/prc241.htm"
+        },
+        {
+          "label": "精确区间",
+          "url": "https://www.itl.nist.gov/div898/software/dataplot/refman2/auxillar/exacbici.htm"
+        }
+      ],
+      "roles": [
+        "empirical_method"
+      ],
+      "use": "Proportion uncertainty and exact binomial intervals under declared assumptions.",
+      "catalog_entry": "docs/RELATED_WORK.md#r25",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R26",
+      "title": "Agent Skills specification",
+      "url": "https://agentskills.io/specification",
+      "links": [
+        {
+          "label": "官方规范",
+          "url": "https://agentskills.io/specification"
+        }
+      ],
+      "roles": [
+        "normative_guidance"
+      ],
+      "use": "Portable Skill metadata and progressive disclosure without a guaranteed invocation claim.",
+      "catalog_entry": "docs/RELATED_WORK.md#r26",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R27",
+      "title": "Codex Skills",
+      "url": "https://learn.chatgpt.com/docs/build-skills",
+      "links": [
+        {
+          "label": "OpenAI 官方文档",
+          "url": "https://learn.chatgpt.com/docs/build-skills"
+        }
+      ],
+      "roles": [
+        "normative_guidance"
+      ],
+      "use": "Codex Skill interfaces; native host behavior requires versioned actual runs.",
+      "catalog_entry": "docs/RELATED_WORK.md#r27",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R28",
+      "title": "Claude Code Skills",
+      "url": "https://code.claude.com/docs/en/skills",
+      "links": [
+        {
+          "label": "官方文档",
+          "url": "https://code.claude.com/docs/en/skills"
+        }
+      ],
+      "roles": [
+        "normative_guidance"
+      ],
+      "use": "Claude Code Skill interfaces; static file size is not session cost.",
+      "catalog_entry": "docs/RELATED_WORK.md#r28",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R29",
+      "title": "OpenAI usage / caching / reasoning",
+      "url": "https://developers.openai.com/api/docs/guides/agents-api/observability",
+      "links": [
+        {
+          "label": "Usage",
+          "url": "https://developers.openai.com/api/docs/guides/agents-api/observability"
+        },
+        {
+          "label": "Prompt caching",
+          "url": "https://developers.openai.com/api/docs/guides/prompt-caching"
+        },
+        {
+          "label": "Reasoning",
+          "url": "https://developers.openai.com/api/docs/guides/reasoning"
+        }
+      ],
+      "roles": [
+        "normative_guidance"
+      ],
+      "use": "Provider-specific usage accounting with raw fields retained and overlapping totals deduplicated.",
+      "catalog_entry": "docs/RELATED_WORK.md#r29",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R30",
+      "title": "Anthropic Prompt caching",
+      "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+      "links": [
+        {
+          "label": "官方文档",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        }
+      ],
+      "roles": [
+        "normative_guidance"
+      ],
+      "use": "Messages API uncached, cache-write, and cache-read categories; CLI aggregation separately verified.",
+      "catalog_entry": "docs/RELATED_WORK.md#r30",
+      "verification": {
+        "status": "bibliography_only",
+        "recorded_date": "2026-10-24",
+        "scope": "Bibliographic metadata and project-use notes synchronized from RELATED_WORK.md; external originals were not reopened in this indexing pass.",
+        "prior_review_notes": "Historical reading claims remain in the catalog; they are not new verification in this pass.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "R31",
+      "title": "STE-Prompt（menonpg/ste-prompt，社区提示词与插件）",
+      "url": "https://github.com/menonpg/ste-prompt",
+      "links": [
+        {
+          "label": "仓库",
+          "url": "https://github.com/menonpg/ste-prompt"
+        },
+        {
+          "label": "固定 README",
+          "url": "https://github.com/menonpg/ste-prompt/blob/f59ae8de5497c81ece60e0a8fac11fe6a54d3777/README.md"
+        }
+      ],
+      "roles": [
+        "engineering_reference"
+      ],
+      "use": "Compare on-demand command/Skill and persistent instructions, with explicit task-scope exceptions.",
+      "catalog_entry": "docs/RELATED_WORK.md#r31",
+      "verification": {
+        "status": "local_snapshot_reviewed",
+        "recorded_date": "2026-10-24",
+        "scope": "Local HEAD, README, root license, and explicitly listed file sections were inspected. Repository behavior and author results were not executed or independently reproduced.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run",
+        "checked_files": [
+          {
+            "path": "submodules/ste-prompt/README.md",
+            "url": "https://github.com/menonpg/ste-prompt/blob/f59ae8de5497c81ece60e0a8fac11fe6a54d3777/README.md",
+            "sha256": "e2c1da9cd612a57463de2b559a359222c355ca170519007bedc043f25505c88d",
+            "hash_basis": "local_checkout_bytes",
+            "git_blob_oid": "cb0b11bb4540a96aa4f7c9553a6f7cf8fd7e2807",
+            "bytes": 4984,
+            "read_scope": "Declared purpose, interfaces, scope, limitations, and licensing notes; no implementation audit."
+          },
+          {
+            "path": "submodules/ste-prompt/LICENSE",
+            "url": "https://github.com/menonpg/ste-prompt/blob/f59ae8de5497c81ece60e0a8fac11fe6a54d3777/LICENSE",
+            "sha256": "f819ffe777f5bee185c3e31256b92d8f619761f7537f29043649f6f262e8cee4",
+            "hash_basis": "local_checkout_bytes",
+            "git_blob_oid": "deddc560e90b6e11ad0e0e759e24d8744cd9517d",
+            "bytes": 1110,
+            "read_scope": "Complete repository-root license text."
+          }
+        ]
+      },
+      "snapshot": {
+        "kind": "git_submodule",
+        "path": "submodules/ste-prompt",
+        "commit": "f59ae8de5497c81ece60e0a8fac11fe6a54d3777",
+        "repository": "https://github.com/menonpg/ste-prompt",
+        "runtime_dependency": false
+      },
+      "license": {
+        "declared_spdx": "MIT",
+        "copyright_holder": "Prahlad G. Menon / The Menon Lab",
+        "path": "submodules/ste-prompt/LICENSE",
+        "sha256": "f819ffe777f5bee185c3e31256b92d8f619761f7537f29043649f6f262e8cee4",
+        "scope": "Repository-root license declaration only; not a license to redistribute ASD-STE100 standard text or its dictionary."
+      }
+    },
+    {
+      "id": "R32",
+      "title": "vale（stuffbucket/vale，独立 Go STE 检查器与 MCP 实现）",
+      "url": "https://github.com/stuffbucket/vale",
+      "links": [
+        {
+          "label": "仓库",
+          "url": "https://github.com/stuffbucket/vale"
+        },
+        {
+          "label": "固定 README",
+          "url": "https://github.com/stuffbucket/vale/blob/d96df3eb63f174b6933e29f3d97d4f17e74ab7c3/README.md"
+        }
+      ],
+      "roles": [
+        "engineering_reference"
+      ],
+      "use": "Independent Go STE checker/MCP design, prose scoping, diagnostics, and declared OpenSTE provenance.",
+      "catalog_entry": "docs/RELATED_WORK.md#r32",
+      "verification": {
+        "status": "local_snapshot_reviewed",
+        "recorded_date": "2026-10-24",
+        "scope": "Local HEAD, README, root license, and explicitly listed file sections were inspected. Repository behavior and author results were not executed or independently reproduced.",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run",
+        "checked_files": [
+          {
+            "path": "submodules/vale/README.md",
+            "url": "https://github.com/stuffbucket/vale/blob/d96df3eb63f174b6933e29f3d97d4f17e74ab7c3/README.md",
+            "sha256": "355dd1ee133d58649bc06b8a42cdfe6ee15285a54f59db9d3b554fa5b21c3258",
+            "hash_basis": "local_checkout_bytes",
+            "git_blob_oid": "799df87a784dc35b49105ab4fbb19172e66005fd",
+            "bytes": 22771,
+            "read_scope": "Declared purpose, interfaces, scope, limitations, and licensing notes; no implementation audit."
+          },
+          {
+            "path": "submodules/vale/LICENSE",
+            "url": "https://github.com/stuffbucket/vale/blob/d96df3eb63f174b6933e29f3d97d4f17e74ab7c3/LICENSE",
+            "sha256": "20a369520f67d21188c482f068bab5d4d5ba41df14779fce75acbd300b92f8a8",
+            "hash_basis": "local_checkout_bytes",
+            "git_blob_oid": "233a4ec0a4d09d822e8d45079e5f690301c0c11b",
+            "bytes": 1291,
+            "read_scope": "Complete repository-root license text."
+          },
+          {
+            "path": "submodules/vale/third_party/openste/LICENSE",
+            "url": "https://github.com/stuffbucket/vale/blob/d96df3eb63f174b6933e29f3d97d4f17e74ab7c3/third_party/openste/LICENSE",
+            "sha256": "4d4e550c48ba0c65127d178d7cb960624951f518af6c754d91227bf07920e424",
+            "hash_basis": "local_checkout_bytes",
+            "git_blob_oid": "1e404de482aea0e315d18fb3b319765f9f469e43",
+            "bytes": 1089,
+            "read_scope": "Complete local vendored license text."
+          },
+          {
+            "path": "submodules/vale/third_party/openste/PROVENANCE.txt",
+            "url": "https://github.com/stuffbucket/vale/blob/d96df3eb63f174b6933e29f3d97d4f17e74ab7c3/third_party/openste/PROVENANCE.txt",
+            "sha256": "bb4fa0b474023a93a580d161ebff486e67a8d2b450ebf6af38837e89c777af51",
+            "hash_basis": "local_checkout_bytes",
+            "git_blob_oid": "a3aad3bfd832c76bfc0f6c3d31ffc8f400d3bf1f",
+            "bytes": 46,
+            "read_scope": "Complete local provenance statement; upstream commit not independently fetched."
+          }
+        ]
+      },
+      "snapshot": {
+        "kind": "git_submodule",
+        "path": "submodules/vale",
+        "commit": "d96df3eb63f174b6933e29f3d97d4f17e74ab7c3",
+        "repository": "https://github.com/stuffbucket/vale",
+        "runtime_dependency": false
+      },
+      "license": {
+        "declared_spdx": "MIT",
+        "copyright_holder": "stuffbucket",
+        "path": "submodules/vale/LICENSE",
+        "sha256": "20a369520f67d21188c482f068bab5d4d5ba41df14779fce75acbd300b92f8a8",
+        "scope": "Repository-root license declaration only; not a license to redistribute ASD-STE100 standard text or its dictionary."
+      },
+      "separate_from": [
+        "R04"
+      ],
+      "third_party_license_notes": [
+        {
+          "component": "OpenSTE wordset",
+          "declared_spdx": "MIT",
+          "license_path": "submodules/vale/third_party/openste/LICENSE",
+          "provenance_path": "submodules/vale/third_party/openste/PROVENANCE.txt",
+          "declared_upstream_commit": "19f01781a6162246ac56d4cab84835842609a31c",
+          "verification_scope": "Read local vendored license and provenance statement only; upstream identity and full wordset not independently audited."
+        }
+      ]
+    }
+  ],
+  "project_assumptions": [
+    {
+      "id": "P01",
+      "role": "project_hypothesis",
+      "claim": "FSP with separate required-fact retention is a TextPrison measurement adaptation; it is not an unchanged implementation of FActScore.",
+      "status": "requires_project_calibration",
+      "related_sources": [
+        "R14",
+        "R15"
+      ]
+    },
+    {
+      "id": "P02",
+      "role": "project_hypothesis",
+      "claim": "The four synthetic scenarios and fixed pilot budget support exploratory engineering observations, not formal efficacy or noninferiority thresholds.",
+      "status": "exploratory_only",
+      "related_sources": [
+        "R24",
+        "R25"
+      ]
+    },
+    {
+      "id": "P03",
+      "role": "project_hypothesis",
+      "claim": "Two AI judges provide provisional evidence; independent human initial judgments and final adjudication remain separate records.",
+      "status": "requires_human_calibration",
+      "related_sources": [
+        "R22",
+        "R23"
+      ]
     }
   ]
 }

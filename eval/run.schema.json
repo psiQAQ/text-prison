@@ -1,0 +1,262 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TextPrison experiment record v0.1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "task_id",
+    "scenario_id",
+    "arm",
+    "host",
+    "model",
+    "profile",
+    "language",
+    "status",
+    "usage",
+    "outcomes"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "scenario_id": {
+      "type": "string"
+    },
+    "arm": {
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "C+"
+      ]
+    },
+    "host": {
+      "type": "string"
+    },
+    "host_version": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "model": {
+      "type": "string"
+    },
+    "model_version": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reasoning_effort": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "repeat": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "profile": {
+      "enum": [
+        "explanation",
+        "procedure",
+        "reference",
+        "research",
+        "agent-spec",
+        "structured"
+      ]
+    },
+    "language": {
+      "enum": [
+        "en",
+        "zh"
+      ]
+    },
+    "status": {
+      "enum": [
+        "completed",
+        "failed",
+        "timeout",
+        "blocked",
+        "not_run"
+      ]
+    },
+    "rule_hash": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source_hash": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "artifact_hash": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "phase": {
+      "enum": [
+        "writer",
+        "executor",
+        "reader",
+        "trigger",
+        "judge"
+      ]
+    },
+    "usage": {
+      "type": "object",
+      "required": [
+        "coverage",
+        "input_total",
+        "output_total",
+        "raw_log"
+      ],
+      "properties": {
+        "coverage": {
+          "enum": [
+            "complete",
+            "partial",
+            "unknown"
+          ]
+        },
+        "input_total": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "input_cached": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "input_cache_write": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "output_total": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "output_reasoning": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "model_calls": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "raw_log": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "estimated_cost_usd": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "pricing_snapshot": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "outcomes": {
+      "type": "object",
+      "required": [
+        "semantic_status",
+        "agent_success",
+        "trigger_observed"
+      ],
+      "properties": {
+        "semantic_status": {
+          "enum": [
+            "passed",
+            "failed",
+            "uncertain",
+            "not_evaluated"
+          ]
+        },
+        "agent_success": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "trigger_observed": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "critical_errors": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "mechanical_errors": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "elapsed_ms": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "failure_reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

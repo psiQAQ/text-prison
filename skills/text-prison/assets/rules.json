@@ -1,0 +1,111 @@
+{
+  "version": "0.1.0",
+  "notice": "Original implementation notes inspired by public guidance, not a reproduction of the three complete guides.",
+  "rules": [
+    {
+      "id": "TP-C001",
+      "name": "Required literals",
+      "severity": "error",
+      "checkability": "exact",
+      "source": "project",
+      "description": "Verify explicitly supplied protected strings; presence does not prove meaning."
+    },
+    {
+      "id": "TP-C002",
+      "name": "Forbidden literals",
+      "severity": "error",
+      "checkability": "exact",
+      "source": "project",
+      "description": "Flag explicitly forbidden strings without executing or interpreting them."
+    },
+    {
+      "id": "TP-C003",
+      "name": "Required headings",
+      "severity": "error",
+      "checkability": "exact",
+      "source": "project",
+      "description": "Check explicitly supplied headings; do not invent a universal template."
+    },
+    {
+      "id": "TP-S001",
+      "name": "English sentence length",
+      "severity": "warning",
+      "checkability": "heuristic",
+      "source": "ste",
+      "description": "Advisory prose segmentation; not the official STE counting procedure."
+    },
+    {
+      "id": "TP-G001",
+      "name": "Descriptive links",
+      "severity": "warning",
+      "checkability": "deterministic",
+      "source": "google",
+      "description": "Flag a small configured set of vague link labels."
+    },
+    {
+      "id": "TP-G002",
+      "name": "Heading jumps",
+      "severity": "warning",
+      "checkability": "deterministic",
+      "source": "project",
+      "description": "Flag jumps of more than one heading level after the first heading."
+    },
+    {
+      "id": "TP-T001",
+      "name": "Terminology aliases",
+      "severity": "warning",
+      "checkability": "deterministic",
+      "source": "project",
+      "description": "Match only aliases explicitly supplied by the project contract."
+    },
+    {
+      "id": "TP-J001",
+      "name": "JSON syntax",
+      "severity": "error",
+      "checkability": "exact",
+      "source": "project",
+      "description": "Reject invalid JSON, duplicate keys, and non-finite constants."
+    },
+    {
+      "id": "TP-J002",
+      "name": "JSON Schema",
+      "severity": "error",
+      "checkability": "exact",
+      "source": "project",
+      "description": "Validate against a local schema; do not retrieve external references."
+    },
+    {
+      "id": "TP-M001",
+      "name": "Semantic preservation",
+      "severity": "review",
+      "checkability": "semantic",
+      "source": "project",
+      "description": "Review actors, predicates, negation, modality, conditions, quantities and causality. Not implemented by the mechanical checker."
+    },
+    {
+      "id": "TP-M002",
+      "name": "Information priority",
+      "severity": "review",
+      "checkability": "semantic",
+      "source": "microsoft",
+      "description": "Review whether the task-relevant result is easy to find; not implemented by the mechanical checker."
+    },
+    {
+      "id": "TP-M003",
+      "name": "Conditional action clarity",
+      "severity": "review",
+      "checkability": "semantic",
+      "source": "google+ste",
+      "description": "Review conditions and action boundaries without adding behavior; not implemented by the mechanical checker."
+    }
+  ],
+  "english_sentence_warning": {
+    "explanation": 35,
+    "procedure": 20,
+    "reference": 35,
+    "research": null,
+    "agent-spec": 25,
+    "structured": null
+  },
+  "threshold_status": "Project-selected provisional thresholds; only warnings, no claimed STE conformance."
+}

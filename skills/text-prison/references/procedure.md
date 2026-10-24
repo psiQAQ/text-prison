@@ -1,0 +1,2 @@
+# Procedure
+State source-supported prerequisites before the actions that depend on them. Put conditions before conditional actions. Use one independently executable action per step when possible. Name the object and location when ambiguity is possible. Keep executable commands intact. Include expected results, failure handling, and verification only when supported by the source or the task. Flag missing information instead of inventing it. Prefer numbered steps for a sequence. English sentence-length warnings are STE-inspired heuristics, not conformance checks.

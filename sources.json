@@ -1,0 +1,90 @@
+{
+  "checked_date": "2026-10-24",
+  "snapshot_policy": "URLs and access notes only; live sources are not frozen source snapshots. Freeze permitted snapshots or hashes before a benchmark.",
+  "sources": [
+    {
+      "id": "openai-skills",
+      "title": "OpenAI: Build skills",
+      "url": "https://learn.chatgpt.com/docs/build-skills",
+      "use": "Codex discovery paths, progressive disclosure, and implicit invocation policy."
+    },
+    {
+      "id": "claude-skills",
+      "title": "Anthropic: Extend Claude with skills",
+      "url": "https://code.claude.com/docs/en/skills",
+      "use": "Claude Code discovery paths, automatic invocation, and context lifecycle."
+    },
+    {
+      "id": "skills-spec",
+      "title": "Agent Skills specification",
+      "url": "https://agentskills.io/specification",
+      "use": "Portable SKILL.md format and progressive disclosure."
+    },
+    {
+      "id": "google",
+      "title": "Google developer documentation style highlights",
+      "url": "https://developers.google.com/style/highlights",
+      "use": "Clarity, active voice, conditions before actions, formatting."
+    },
+    {
+      "id": "microsoft",
+      "title": "Microsoft: Scannable content",
+      "url": "https://learn.microsoft.com/en-us/style-guide/scannable-content/",
+      "use": "Information priority, structure and scanning."
+    },
+    {
+      "id": "microsoft-procedure",
+      "title": "Microsoft: Writing step-by-step instructions",
+      "url": "https://learn.microsoft.com/en-us/style-guide/procedures-instructions/writing-step-by-step-instructions",
+      "use": "Separate steps with context-sensitive exceptions."
+    },
+    {
+      "id": "ste",
+      "title": "ASD-STE100: About STE",
+      "url": "https://www.asd-ste100.org/about_STE.html",
+      "use": "Controlled-language concept; full page fetch was blocked in this session; indexed official excerpt was available."
+    },
+    {
+      "id": "ste-faq",
+      "title": "ASD-STE100: FAQ",
+      "url": "https://www.asd-ste100.org/STE_faq.html",
+      "use": "Official status and third-party limitations; full fetch was blocked; do not infer a redistribution license."
+    },
+    {
+      "id": "openai-exec",
+      "title": "OpenAI: Non-interactive mode",
+      "url": "https://learn.chatgpt.com/docs/non-interactive-mode",
+      "use": "JSONL events and usage."
+    },
+    {
+      "id": "claude-headless",
+      "title": "Anthropic: Run Claude Code programmatically",
+      "url": "https://code.claude.com/docs/en/headless",
+      "use": "Programmatic CLI and structured output."
+    },
+    {
+      "id": "openai-usage",
+      "title": "OpenAI: Observability and usage",
+      "url": "https://developers.openai.com/api/docs/guides/agents-api/observability",
+      "use": "Cached input and reasoning are included in parent categories; missing usage is not zero."
+    },
+    {
+      "id": "claude-cache",
+      "title": "Anthropic: Prompt caching",
+      "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+      "use": "Uncached input, cache writes, and cache reads are separate categories."
+    },
+    {
+      "id": "claude-cost",
+      "title": "Anthropic: Track cost and usage",
+      "url": "https://code.claude.com/docs/en/agent-sdk/cost-tracking",
+      "use": "Message/session accounting and cumulative usage."
+    },
+    {
+      "id": "vale",
+      "title": "Vale styles",
+      "url": "https://docs.vale.sh/topics/styles",
+      "use": "Possible later integration; not installed or bundled in this prototype."
+    }
+  ]
+}

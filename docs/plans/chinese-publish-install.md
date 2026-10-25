@@ -1,6 +1,6 @@
 # 中文支持、GitHub 发布与项目安装计划
 
-日期：2026-10-25。起点：`9f68938`。状态：已完成一次 agy Claude Opus 审阅、修订、实施、GitHub 发布、npx 项目安装和 Vale CLI 核验。AutoCorrect 仅完成可选集成，未安装或运行；结果见第 10 节。
+日期：2026-10-25。起点：`9f68938`。状态：已完成一次 agy Claude Opus 审阅、修订、实施、GitHub 发布、npx 项目安装和 Vale CLI 核验；用户后续批准的 AutoCorrect 安装与 CLI 核验也已完成。首次交付见第 10 节，后续安装见第 11 节。
 
 ## 1. 目标与授权
 
@@ -8,7 +8,7 @@
 
 本轮已授权计划、一次 Opus 文档审阅、修订后的实施、本地提交和 GitHub 发布、npx 项目安装以及 Vale 安装与必要的实际可用性核对。此前“不安装、不推送”的限制只属于上一批交付，不阻止本轮明确要求。
 
-AutoCorrect 属于额外本机工具，已另询问是否一并安装。无论答复如何，都可以完成可选集成和文档；未经明确答复不安装该工具。若批准，则补充下载、安装和有限 CLI 核对；否则其实际运行记 `Not Run`。不安装 zhlint，不创建第二套中文引擎。
+AutoCorrect 属于额外本机工具，最初另询问是否一并安装。首次交付时只完成可选集成和文档，实际运行记 `Not Run`；用户随后明确选择“一并安装并验证”，已据此补充安装和有限 CLI 核对，见第 11 节。不安装 zhlint，不创建第二套中文引擎。
 
 不恢复 Agent 实战、模型评分、A/B、触发实验或测试框架，不修改 QCBlender 产品代码或文档，不执行 Blender 操作，不替用户选择项目开源许可证。不发布 npm 包；npx 使用已有的 Vercel Skills CLI 获取 GitHub 中的 Skill。
 
@@ -125,7 +125,7 @@ QCBlender 的改动限于新 Skill、它的已授权规则包及根 `skills-lock
 
 主 Agent 对上述 CLI 事实补读固定版本源码；这不是第二次模型审阅，也不是运行验收。新增来源和实际执行结果随实施记录，不将本次文档审阅当成产品质量认证。
 
-## 10. 执行结果（2026-10-25）
+## 10. 首次交付结果（2026-10-25）
 
 实现与安装固定提交为 `fcf06ce9579eca380ac87b9d8a32dfe9b6ba7f72`；本节是其后的交付记录，未更改 Skill 文件树。仓库公开入口为 [psiQAQ/text-prison](https://github.com/psiQAQ/text-prison)，默认分支为 `main`。SSH 代理命令在当前 shell 下失败，发布改用同一仓库的 HTTPS 与已有 GitHub CLI 凭据连接；没有修改 remote 或 SSH 配置。
 
@@ -146,3 +146,18 @@ QCBlender 的改动限于新 Skill、它的已授权规则包及根 `skills-lock
 六套配置的结果顺序为 conservative、dev-en、procedure-en、product-en、research-en、zh。包摘要分别为 Google `4b67fca1f2a88595b2a578ab98bbf3017a23af677b04f93e862843f3ea1a9a0b`、Microsoft `0b37660b244a9399d7f10225895773291d27b2967ed0d239a1d379b633e8cd16`。安装文件比对在同步包前完成；同步后再次确认这 29 个源文件未变，生成目录按随 Skill 分发的规则被忽略。
 
 完整机器路径、PATH 备份、下载原件、命令输出及逐文件摘要保留在忽略目录 `.local/deployment-20261025/`。npx 缓存也在该目录；安装器自行管理的系统临时克隆是其既定行为，没有用它存放手动中间产物。没有升级 npm 或修改全局 Skill 锁。
+
+## 11. 获准后的 AutoCorrect 安装（2026-10-25）
+
+用户在首次交付后回复“一并安装并验证”。已安装官方 AutoCorrect 2.16.3 Windows amd64 二进制；发布 ZIP 的 SHA-256 与 GitHub 官方资产摘要一致：`64ca1c11b6c002cf9617e672df8dcba091e912994ee80d101289ef7849a533d8`。安装于独立用户版本目录，保留 PATH 原有条目和 `REG_EXPAND_SZ` 类型。刷新环境后的 Windows PowerShell 与 PowerShell 7 均能找到 AutoCorrect，已有 Vale 3.25.1 也仍可启动；旧宿主仍需重启才能继承新 PATH。
+
+以下均为 **Passed** 的有限 CLI 核验，使用 QCBlender 已安装副本中的 `autocorrect/conservative.yml`：
+
+- Markdown 正文 `请使用Python处理数据。` 产生一条 warning，建议为 `请使用 Python 处理数据。`；围栏代码及行内代码中的相同混排没有产生提示。
+- 纯散文 stdin 的有建议、无建议输入分别取得一条 warning 和空消息列表；二者均退出 0，验证了不能用退出码区分“有建议”和“无建议”。
+- 将目录故意作为配置路径时，CLI 以 101 退出并明确报告配置读取错误。正常使用必须在调用前拒绝非文件路径；此次仅用于确认实际错误行为。
+- 原输入未被改写；QCBlender 原有 Skill、锁条目以及已安装 TextPrison 的 29 个文件保持不变。没有重新安装 Skill、运行 `--fix` 或改写项目文档。
+
+另观察到一个限制：临时配置只含损坏的 YAML 文本 `rules: [` 时，该 CLI 仍退出 0 且没有报告解析错误。源码采用多格式配置解析，本轮未进一步定位该片段被接受的具体分支；不能把退出 0 当成任意 YAML 配置有效的证明。本次保守配置已有语法核对，实际 warning 级别与代码保护也与所选设置相符。需要更换或编辑配置时，应先核对其语法、键值与实际生效规则。
+
+当前 AutoCorrect 安装与上述有限 CLI 核验状态为 **Passed**；宿主自动触发、Agent 实战和写作效果仍为 **Not Run**。下载记录、PATH 备份、原始输出与验收收据保留在 `.local/deployment-20261025/autocorrect/`，未覆盖首次交付记录。

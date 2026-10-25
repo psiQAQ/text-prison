@@ -1,0 +1,7 @@
+extends: existence
+message: "链接文字“%s”没有说明目标；有来源依据时改用具体名称，保留链接地址。"
+level: suggestion
+scope: link
+nonword: true
+tokens:
+  - '^\s*(?:点击这里|点此|这里|此处|了解更多|查看详情|更多)\s*[。！？]?\s*$'

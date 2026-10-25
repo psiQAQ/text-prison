@@ -1,0 +1,8 @@
+extends: existence
+message: "Replace the generic link text '%s' with a description of its destination, if the source supports one."
+level: suggestion
+scope: link
+ignorecase: true
+nonword: true
+tokens:
+  - '^\s*(?:click here|here|read more|learn more)\s*[.!?]?\s*$'

@@ -1358,5 +1358,98 @@
         "R23"
       ]
     }
+  ],
+  "project_assumptions_scope": "Historical assumptions from the retired evaluation phase; not current execution plans or validated effects.",
+  "runtime_sources": [
+    {
+      "status": "documentation_read_no_execution",
+      "checked_date": "2026-10-25",
+      "id": "runtime-vale-docs",
+      "urls": [
+        "https://docs.vale.sh/topics/installation",
+        "https://docs.vale.sh/topics/cli",
+        "https://docs.vale.sh/keys/stylespath",
+        "https://docs.vale.sh/keys/packages",
+        "https://docs.vale.sh/keys/basedonstyles",
+        "https://docs.vale.sh/keys/minalertlevel",
+        "https://docs.vale.sh/checks/existence",
+        "https://docs.vale.sh/topics/scopes",
+        "https://docs.vale.sh/keys/skippedscopes",
+        "https://docs.vale.sh/keys/ignoredscopes",
+        "https://docs.vale.sh/formats/markdown",
+        "https://github.com/vale-cli/vale/releases/tag/v3.25.1"
+      ],
+      "scope": "Installation commands, CLI input and exit semantics, configuration and package selection, regex word boundaries, scope exclusions, and the 3.25.1 release baseline. No CLI or package sync executed."
+    },
+    {
+      "status": "documentation_read_no_execution",
+      "checked_date": "2026-10-25",
+      "id": "runtime-google-guidance",
+      "urls": [
+        "https://developers.google.com/style/highlights"
+      ],
+      "scope": "Style highlights: reader-facing wording, action subjects, conditions, lists, links and technical formatting. Original adaptation; not full guide compliance."
+    },
+    {
+      "status": "documentation_read_no_execution",
+      "checked_date": "2026-10-25",
+      "id": "runtime-microsoft-guidance",
+      "urls": [
+        "https://learn.microsoft.com/en-us/style-guide/top-10-tips-style-voice",
+        "https://learn.microsoft.com/en-us/style-guide/procedures-instructions/describing-interactions-with-ui"
+      ],
+      "scope": "Style and voice tips, information order, task wording and device-neutral UI verbs. Original adaptation protects technical conditions and required gestures."
+    },
+    {
+      "status": "documentation_read_no_execution",
+      "checked_date": "2026-10-25",
+      "id": "runtime-ste-inspired",
+      "urls": [
+        "https://github.com/danyuchn/asd-ste100-skill/blob/cd62d297d5ef7cf9f59718cadc233ab2876ea013/SKILL.md"
+      ],
+      "scope": "Uses the previously read fixed community snapshot and its scope and meaning-preservation clauses. No full ASD-STE100 standard or dictionary obtained or verified."
+    },
+    {
+      "status": "documentation_read_no_execution",
+      "checked_date": "2026-10-25",
+      "id": "runtime-google-package",
+      "selected_version": "v0.7.1",
+      "package_url": "https://github.com/vale-cli/Google/releases/download/v0.7.1/Google.zip",
+      "read_urls": [
+        "https://github.com/vale-cli/Google/blob/v0.7.1/Google/HeadingPunctuation.yml",
+        "https://github.com/vale-cli/Google/blob/v0.7.1/Google/Spacing.yml",
+        "https://github.com/vale-cli/Google/blob/v0.7.1/Google/Exclamation.yml",
+        "https://github.com/vale-cli/Google/blob/v0.7.1/Google/meta.json",
+        "https://github.com/vale-cli/Google/blob/v0.7.1/.github/workflows/main.yml"
+      ],
+      "selected_rules": [
+        "Google.HeadingPunctuation",
+        "Google.Spacing",
+        "Google.Exclamation"
+      ],
+      "scope": "Read selected rule files, metadata and fixed-tag packaging workflow. Selected rules are enabled individually at suggestion severity; the package is not vendored.",
+      "limitations": "Release ZIP not downloaded or integrity-verified; no rule execution. meta.json records a feed and Vale constraint but not the package release version."
+    },
+    {
+      "status": "documentation_read_no_execution",
+      "checked_date": "2026-10-25",
+      "id": "runtime-microsoft-package",
+      "selected_version": "v0.15.1",
+      "package_url": "https://github.com/vale-cli/Microsoft/releases/download/v0.15.1/Microsoft.zip",
+      "read_urls": [
+        "https://github.com/vale-cli/Microsoft/blob/v0.15.1/Microsoft/HeadingPunctuation.yml",
+        "https://github.com/vale-cli/Microsoft/blob/v0.15.1/Microsoft/Spacing.yml",
+        "https://github.com/vale-cli/Microsoft/blob/v0.15.1/Microsoft/UIVerbs.yml",
+        "https://github.com/vale-cli/Microsoft/blob/v0.15.1/Microsoft/meta.json",
+        "https://github.com/vale-cli/Microsoft/blob/v0.15.1/.github/workflows/main.yml"
+      ],
+      "selected_rules": [
+        "Microsoft.HeadingPunctuation",
+        "Microsoft.Spacing",
+        "Microsoft.UIVerbs"
+      ],
+      "scope": "Read selected rule files, metadata and fixed-tag packaging workflow. Selected rules are enabled individually at suggestion severity; the package is not vendored.",
+      "limitations": "Release ZIP not downloaded or integrity-verified; no rule execution. meta.json records a feed and Vale constraint but not the package release version."
+    }
   ]
 }

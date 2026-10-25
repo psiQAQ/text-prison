@@ -1,2 +1,0 @@
-# Structured artifact
-Return exactly the requested machine-readable format. For JSON, use the supplied JSON Schema when available. Do not add Markdown fences, introductions, explanations, comments, or unsupported keys. Preserve exact enum values and identifiers. Do not apply sentence-length or conversational-style rules. A syntax pass is not a schema pass, and a schema pass is not a factuality pass. Keep audit output in a separate report.

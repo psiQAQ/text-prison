@@ -47,13 +47,20 @@ def main(argv: list[str] | None = None) -> int:
     source = Path(__file__).resolve().parents[1] / 'skills' / 'text-prison'
     agents = ['codex', 'claude'] if args.agent == 'both' else [args.agent]
     targets = [project / AGENT_ROOTS[a] / 'skills' / 'text-prison' for a in agents]
+    generated_patterns = shutil.ignore_patterns('__pycache__', '*.pyc', 'install-manifest.json')
+
+    def ignore_generated(directory: str, names: list[str]) -> set[str]:
+        ignored = set(generated_patterns(directory, names))
+        if Path(directory) == source / 'vale' / 'styles':
+            ignored.update(set(names) & {'Google', 'Microsoft', '.vale-config'})
+        return ignored
+
     try:
         # Preflight every destination before copying either member of "both".
         for target in targets:
             check_target(project, target)
         for target in targets:
-            shutil.copytree(source, target, ignore=shutil.ignore_patterns(
-                '__pycache__', '*.pyc', 'install-manifest.json'))
+            shutil.copytree(source, target, ignore=ignore_generated)
             files = sorted((p for p in target.rglob('*') if p.is_file()),
                            key=lambda p: p.relative_to(target).as_posix())
             manifest = {p.relative_to(target).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()

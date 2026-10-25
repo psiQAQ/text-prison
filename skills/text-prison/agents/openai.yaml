@@ -1,5 +1,5 @@
 interface:
   display_name: "TextPrison"
-  short_description: "Output-specific writing rules that preserve meaning"
+  short_description: "Task-specific writing choices and optional Vale checks"
 policy:
   allow_implicit_invocation: true

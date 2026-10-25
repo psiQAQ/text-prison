@@ -65,12 +65,16 @@ flowchart TD
     options --> a["A：保留结构，局部清晰化"]
     options --> b["B：按读者任务重组"]
     options --> c["C：仅审阅"]
-    a --> permission
-    b --> permission
-    c --> permission
-    choice -->|"动作已明确"| permission{"请求或所选方案允许修改？"}
-    permission -->|"否"| audit["按用途和语言加载参考，核对原文"]
-    permission -->|"是"| draft["按用途和语言加载参考，形成初稿并核对原意"]
+    a --> references
+    b --> references
+    c --> references
+    choice -->|"动作已明确"| references["按用途和语言加载参考"]
+    references --> ambiguity{"存在术语、指代、条件或结构歧义？"}
+    ambiguity -->|"有"| ste["加载 ASD-STE100 启发的 STE-inspired 指导：术语一致、明确对象、厘清条件与动作"]
+    ambiguity -->|"无"| permission
+    ste --> permission{"请求或所选方案允许修改？"}
+    permission -->|"否"| audit["结合已加载指导核对原文，只输出问题与依据"]
+    permission -->|"是"| draft["结合已加载指导形成初稿，澄清歧义并核对原意"]
     audit --> select
     draft --> select{"需要哪些机械检查？"}
     select -->|"Vale"| vale["选择适用 Vale 配置"]
@@ -89,6 +93,8 @@ flowchart TD
     recheck -->|"是"| once["已运行的所选工具各至多复查一次；残留提示不触发循环"]
     once --> output
 ```
+
+ASD-STE100 的作用体现在改写或审阅前按需加载的 [STE-inspired 指导](skills/text-prison/references/ste-inspired.md)：Agent 据此澄清术语、对象、指代和条件关系。仅审阅时只指出问题；允许改写时才调整文字。即使不运行 Vale 或 AutoCorrect，这些写作原则仍可使用。完整介绍见 [STE 思想如何参与写作](#ste-思想如何参与写作)。
 
 工具提示只影响已获准修改的内容。缺少工具时说明 `Not Run`，不自动下载；同一轮两个工具最多各运行一次，共用一次修订，必要时至多再各复查一次。自动发现取决于宿主；上图说明 Skill 的约定流程，不证明宿主触发或写作效果已通过实测。更多局部修改与科研保护示例见[使用说明](docs/USAGE.md)。
 

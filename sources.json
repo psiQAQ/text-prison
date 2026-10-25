@@ -1510,6 +1510,64 @@
       "scope": "Read project .agents/skills discovery from current directory to repository root and refresh/restart guidance. No host invocation or trigger experiment.",
       "checked_date": "2026-10-25",
       "status": "documentation_read_no_execution"
+    },
+    {
+      "id": "runtime-readme-tool-install-docs",
+      "checked_date": "2026-10-25",
+      "status": "documentation_read_no_new_execution",
+      "urls": [
+        "https://github.com/vercel-labs/skills",
+        "https://github.com/vercel-labs/skills/blob/main/docs/commands.md",
+        "https://github.com/vercel-labs/skills/blob/main/docs/agents.md",
+        "https://github.com/vale-cli/vale",
+        "https://docs.vale.sh/topics/styles",
+        "https://github.com/huacnlee/autocorrect"
+      ],
+      "scope": "Read current upstream installation scopes, interactive methods, host paths and tool mechanisms for the README. Main-branch documentation has no asserted tested CLI version. Historical 1.7.4 installation evidence and recorded Vale/AutoCorrect examples remain separate; no npx, dependency installation, package sync or new tool execution for this documentation update.",
+      "delivery_record": "docs/plans/readme-user-guide-ste.md"
+    },
+    {
+      "id": "runtime-ste-language-independent",
+      "checked_date": "2026-10-25",
+      "status": "official_pages_and_fixed_snapshot_read",
+      "official_pages": [
+        {
+          "name": "about",
+          "url": "https://www.asd-ste100.org/about_STE.html",
+          "retrieved_date": "2026-10-25",
+          "status": 200,
+          "sha256": "39825477eb96bac272fc8ab5c829747e3f7273673af8b6ced366381c6f9a1f76",
+          "bytes": 23860
+        },
+        {
+          "name": "faq",
+          "url": "https://www.asd-ste100.org/STE_faq.html",
+          "retrieved_date": "2026-10-25",
+          "status": 200,
+          "sha256": "9c7f4507fbaa83fb777dad33e1547c28665ee2f712aac0860dcb7af38452b2f6",
+          "bytes": 61093
+        }
+      ],
+      "fixed_community_snapshot": {
+        "commit": "cd62d297d5ef7cf9f59718cadc233ab2876ea013",
+        "read_files": [
+          {
+            "path": "SKILL.md",
+            "url": "https://github.com/danyuchn/asd-ste100-skill/blob/cd62d297d5ef7cf9f59718cadc233ab2876ea013/SKILL.md",
+            "sha256": "f9438cec8c97cf336558fda3159a9bfc93a392b37d96acf45149a13052a63eb2",
+            "hash_basis": "local_checkout_bytes"
+          },
+          {
+            "path": "references/writing-rules.md",
+            "url": "https://github.com/danyuchn/asd-ste100-skill/blob/cd62d297d5ef7cf9f59718cadc233ab2876ea013/references/writing-rules.md",
+            "sha256": "38bfeaf928089ba52f52600ab04ba534ac2ef1751a2406fb53a1343f5cd2a183",
+            "hash_basis": "local_checkout_bytes"
+          }
+        ]
+      },
+      "scope": "Read official About STE and FAQ sections on rule/dictionary structure, technical terms, application beyond procedures, reader-required conditions and tool limitations. Read the fixed community Skill and writing-rule summary. Adapt terminology consistency, explicit referents, condition/action ordering and document structure across purposes; retain TextPrison meaning and authorization safeguards. No English-specific word limits, grammar restrictions, controlled dictionary or new checker rules.",
+      "limitations": "Full ASD-STE100 standard and dictionary not obtained or verified. Official HTML retained only in ignored local working records. Community guidance is not the official standard. No upstream code, Agent field tests or effect measurements executed.",
+      "runtime_reference": "skills/text-prison/references/ste-inspired.md"
     }
   ]
 }

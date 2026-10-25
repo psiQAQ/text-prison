@@ -4,17 +4,19 @@
 
 完整机器记录见 [sources.json](../sources.json)。固定提交和 README 阅读不代表代码审计、效果复现或第三方内容许可已全部核实。除已记录的有限核验范围外，不把登记链接当作重新阅读原文。
 
-日常写作参考 STE 的指令消歧、Google 的读者任务组织及 Microsoft 的信息呈现原则。中文部分增加微软简体中文本地化指南与社区排版约定，机械排版可选用 AutoCorrect。来源不提供 TextPrison 的收益保证，不采用固定节省率、理解提升率或模型评分作为产品承诺。
+日常写作按需参考 STE 的术语、指代和条件消歧、Google 的读者任务组织及 Microsoft 的信息呈现原则。中文部分增加微软简体中文本地化指南与社区排版约定，机械排版可选用 AutoCorrect。来源不提供 TextPrison 的收益保证，不采用固定节省率、理解提升率或模型评分作为产品承诺。
 
 ## 当前运行材料的来源
 
-2026-10-25 新增阅读范围记录在 `sources.json` 的 `runtime_sources`，不改变下方历史书目的核验状态。Vale CLI 官方文档支持配置、作用域、stdin、退出码和包同步的说明；固定标签 Google v0.7.1、Microsoft v0.15.1 的所选规则、元数据及发布脚本支持当前配置。未下载核验发布 ZIP，也未执行 CLI 或规则。
+2026-10-25 新增阅读范围记录在 `sources.json` 的 `runtime_sources`，不改变下方历史书目的核验状态。Vale CLI 官方文档支持配置、作用域、stdin、退出码和包同步的说明；固定标签 Google v0.7.1、Microsoft v0.15.1 的所选规则、元数据及发布脚本支持当前配置。这些条目最初只记录文档和源码阅读；后续获准的发布资产核验及 CLI 实际运行另见[安装交付记录](plans/chinese-publish-install.md#10-首次交付结果2026-10-25)。
 
-Google 和 Microsoft 写作指导为官方页面的自主概括；STE-inspired 仅借鉴已记录的社区快照，不声称重新阅读完整 ASD 标准。实际规则及逐项来源见 [Vale 目录](../skills/text-prison/vale/README.md)，写作指导入口见 [规则索引](../skills/text-prison/references/index.md)。
+Google 和 Microsoft 写作指导为官方页面的自主概括。STE-inspired 最初借鉴已记录的社区快照；2026-10-25 又读取 [ASD 官方介绍](https://www.asd-ste100.org/about_STE.html)和 [FAQ](https://www.asd-ste100.org/STE_faq.html)，据此将语言无关的消歧方法用于各类文档。新读取范围包括规则与词典的区别、技术词例外、可借鉴原则和条件先于动作的适用情形；没有取得完整标准或词典。适配原则集中在 [STE-inspired](../skills/text-prison/references/ste-inspired.md)，不增加机械检查规则。实际规则及逐项来源见 [Vale 目录](../skills/text-prison/vale/README.md)，写作指导入口见 [规则索引](../skills/text-prison/references/index.md)。
 
 中文补充阅读范围：Microsoft 简体中文 PDF 的第 4–8、11、27–28、35–38、43–44 页；中文文案排版指北的空格、标点、全半角、名词及争议部分。只分发自主摘要，不附完整原文。AutoCorrect 固定 v2.16.3 的参数、配置合并、stdin 与 JSON 分支，以及 Skills CLI v1.7.4 的复制、锁文件、提交 SHA 和遥测行为已做源码核对；实际安装另记，不能由来源登记推定运行成功。来源指针及限制见机器索引新增条目和 [AutoCorrect 目录](../skills/text-prison/autocorrect/README.md)。
 
 注意同名项目：R04 指官方 Vale CLI 及 Google/Microsoft 风格包；R32 的 `stuffbucket/vale` 是另一个独立的 STE 检查器，只保留为参考，不能作为 Vale CLI 的安装来源。
+
+README 安装主线另核对了 [Skills CLI 当前命令说明](https://github.com/vercel-labs/skills/blob/main/docs/commands.md)和[宿主表](https://github.com/vercel-labs/skills/blob/main/docs/agents.md)中的项目/全局范围、交互安装方式与路径，查阅日期为 2026-10-25。当前文档核对不等于重新执行安装，历史 1.7.4 的实际复制行为仍单独保留。README 的工具案例复用当日 Vale/AutoCorrect 的已存运行记录，核对依据和本次整理状态见[README 完善计划](plans/readme-user-guide-ste.md)。
 
 ## 1. 原始来源目录
 
@@ -42,7 +44,7 @@ Google 和 Microsoft 写作指导为官方页面的自主概括；STE-inspired �
 **R07 — Inspect。** [官方文档](https://inspect.aisi.org.uk/)。用途：评测编排职责分离，候选而非强制依赖。
 
 <a id="r08"></a>
-**R08 — ASD-STE100。** [官方网站](https://www.asd-ste100.org/)。此前文献审阅记录部分官方说明页返回 403，未取得完整标准正文；本次未重新请求该网站，不宣称完整规范核验。保留前版 STE-inspired 定位。
+**R08 — ASD-STE100。** [官方网站](https://www.asd-ste100.org/)。2026-10-24 的文献审阅记录部分官方说明页返回 403，未取得完整标准正文；该历史状态保留在机器索引。2026-10-25 直接读取官方介绍和 FAQ 成功，新增阅读范围见上方及机器索引的独立运行时来源条目；仍不宣称完整规范核验。
 
 <a id="r09"></a>
 **R09 — Google Developer Documentation Style Guide。** [Highlights](https://developers.google.com/style/highlights)。用途：技术写作与一致性原则，不提供本项目效果阈值。

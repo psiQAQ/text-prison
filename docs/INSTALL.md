@@ -2,34 +2,52 @@
 
 TextPrison 的写作指导无需运行时依赖。Vale 提供已选规则的机械诊断；AutoCorrect 是可选的中文排版建议工具，两者分别安装。本文提供安装步骤；实际安装、配置加载和宿主调用状态需要按当时执行结果核对。
 
-## 1. 将 Skill 安装到已有项目
+## 1. 选择安装范围与途径
 
-先选择一种安装途径：从 GitHub 获取 Skill 使用 npx；已有本地仓库且不需要 Node.js 时，可使用标准库 Python 安装器。两者都只安装 Skill，不安装 Vale、AutoCorrect、hooks 或 MCP。
+希望只在一个项目中使用，选择项目安装；希望当前用户在多个项目中使用，选择全局安装。两种范围都只安装 Skill，Vale、AutoCorrect 分别按需准备。
+
+| 安装途径 | 支持范围 | 前提 | 已有同名目标 |
+|---|---|---|---|
+| npx 从 GitHub 获取 | 项目、全局 | 符合 Skills CLI 要求的 Node.js/npm，可访问来源 | 可能覆盖，先检查并保全 |
+| 本仓库 Python 安装器 | 项目 | Python 3.10+，本地已有仓库 | 拒绝覆盖 |
+
+安装不同时设置 hooks、MCP 或全局指令，也不证明宿主已加载 Skill。
 
 ### 从 GitHub 安装：npx
 
-前提是已有 Node.js >=22.20.0、目标项目已存在，并已授权下载 Skills CLI 及写入该项目。以下命令固定使用 [Vercel Skills CLI](https://github.com/vercel-labs/skills) `1.7.4`，不会发布 npm 包。
+使用 [Vercel Skills CLI](https://github.com/vercel-labs/skills)，以下命令不固定 CLI 版本。先确认已有 Node.js/npm 满足其当前要求，并允许下载 CLI、读取来源及写入所选安装范围。npx 可能先询问是否下载 `skills` 包；随后按 CLI 当前提示选择宿主和安装方式。本项目不发布同名 npm 包。
 
-**npx 的复制模式会覆盖同名目标目录。** 先检查目标项目的 Git 状态、已有 Skill、安装路径是否经过链接以及根目录 `skills-lock.json`；若目标已存在，先按[更新流程](#4-更新时保全旧副本)保全并取得替换授权，不直接运行非交互命令。下例中的存在性检查只阻止直接覆盖，不替代上述核对。
+**npx 能覆盖同名安装。** 项目安装前检查 Git 状态、目标 Skill 和根目录 `skills-lock.json`；全局安装前检查所选宿主的用户目录及已有安装记录。两者均需识别链接实际指向的位置。目标已有内容时先按[更新流程](#4-更新时保全旧副本)保全，不把交互确认当作内容备份。
 
-在 Windows PowerShell 中，将项目路径换成实际目录，并从项目根目录执行；不要进入 `.agents` 后执行：
+项目安装：在已有目标项目的根目录运行，不要进入宿主的 Skill 子目录后执行。PowerShell 示例：
 
 ```powershell
 $projectRoot = 'D:/path/to/your-project'
 Set-Location -LiteralPath $projectRoot
-$skillRoot = Join-Path $projectRoot '.agents/skills/text-prison'
-if (Test-Path -LiteralPath $skillRoot) {
-    throw "目标已存在，先保全并确认替换：$skillRoot"
-}
-$skillSource = 'psiQAQ/text-prison'
-npx --yes skills@1.7.4 add $skillSource --skill text-prison --agent codex --copy --yes
+npx skills add psiQAQ/text-prison
 ```
 
-该示例只安装一个项目级 Codex Skill，不使用 `--global` 或 `--all`。npx 生成或合并项目根的 `skills-lock.json`，应保留其他 Skill 的锁条目；它不会生成 Python 安装器的 `install-manifest.json`。安装后核对实际目标、退出状态、锁条目及其他 Skill 是否保持不变，不因命令输出成功就认定宿主已加载。
+全局安装：在普通工作目录运行下面这一条，不再执行上面的项目安装命令：
 
-仓库简写跟随默认分支。需要精确复现某次发布时，先取得该次发布的完整 40 字符提交 SHA，将上面的 `$skillSource` 改为 `https://github.com/psiQAQ/text-prison/tree/<完整40字符SHA>/skills/text-prison`，再运行同一条安装命令。固定的 CLI 版本支持按该 SHA fetch；不要把占位文字原样交给命令，也不要在一次安装后紧接着重复执行另一种来源的安装。
+```powershell
+npx skills add psiQAQ/text-prison --global
+```
 
-**先比对安装文件，再同步 Vale 包。** 对照所选发布 SHA 的 Skill 文件树，核对全部相对路径、内容和锁中的 ref/哈希；明确记录 Git 换行转换，不能宽泛忽略差异。之后再同步必要规则，将新增包目录单独记录。安装器的缓存或系统临时文件不属于 Skill 内容；需要限制遥测时可仅为安装进程设置 `DISABLE_TELEMETRY=1`，不写入全局环境。
+按需选择一种范围即可。CLI 支持将宿主目录链接到公共副本，也支持独立复制；链接会共享实际文件，独立复制则分别维护。选择前核对它将写入哪些宿主，安装后记录实际目标、方式、退出状态和锁记录，并确认其他 Skill 未变。项目安装的 `skills-lock.json` 与全局安装状态应分别核对，不把项目锁路径套到全局范围；npx 不生成本项目 Python 安装器的 `install-manifest.json`。
+
+以下是 2026-10-25 对 [CLI 命令说明](https://github.com/vercel-labs/skills/blob/main/docs/commands.md)及[宿主路径表](https://github.com/vercel-labs/skills/blob/main/docs/agents.md)的文档核对，列出安装容器路径，实际 Skill 名称为 `text-prison`。这不是未固定版本 CLI 的新安装实测；具体目标以当前 CLI 预览和安装结果为准。此前 CLI 1.7.4 的项目复制实测单独保留在[安装交付记录](plans/chinese-publish-install.md#10-首次交付结果2026-10-25)。
+
+| npx 宿主 | 项目路径 | 全局路径 |
+|---|---|---|
+| Codex | `.agents/skills/text-prison/` | `~/.agents/skills/text-prison/` |
+| Claude Code | `.claude/skills/text-prison/` | `~/.claude/skills/text-prison/` |
+| Pi | `.agents/skills/text-prison/` | `~/.agents/skills/text-prison/` |
+
+`~` 表示当前用户主目录。尤其注意 npx 的 Pi 路径与下方 Python 安装器不同。链接可能将这些路径指向公共副本，不能仅凭表格认定内容独立。
+
+仓库简写跟随默认分支。需要精确复现时，取得发布的完整提交 SHA，并采用当前 CLI 支持的 GitHub tree 来源，例如 `https://github.com/psiQAQ/text-prison/tree/<完整40字符SHA>/skills/text-prison`。该形式已在此前 1.7.4 安装中验证，使用其他 CLI 版本时仍需核对实际解析的提交；不要把占位文字原样执行，也不要在一次安装后重复安装另一种来源。
+
+**先比对安装文件，再同步 Vale 包。** 对照所选发布 SHA 的 Skill 文件树，核对全部相对路径、内容和锁中的 ref/哈希；明确记录 Git 换行转换，不能宽泛忽略差异。之后再同步必要规则，将新增包目录单独记录。安装器的缓存或系统临时文件不属于 Skill 内容。此前实测的 CLI 1.7.4 支持进程级 `DISABLE_TELEMETRY=1`；如需限制其他版本的遥测，先核对该版本说明，不将历史结论泛化，也不写入全局环境。
 
 ### 从本地仓库安装：Python
 
@@ -44,7 +62,7 @@ Set-Location -LiteralPath $repositoryRoot
 python tools/install_skill.py --agent codex --project $projectRoot
 ```
 
-只执行所需宿主的一次安装命令；上例选择 Codex，其他宿主替换 `--agent` 参数。下面的安装位置均相对于 `$projectRoot`，是本项目宿主路径和调用方式的维护入口。
+只执行所需宿主的一次安装命令；上例选择 Codex，其他宿主替换 `--agent` 参数。下面的位置相对于 `$projectRoot`，仅描述 Python 安装器；显式调用语法同样可用于 npx 安装的 Skill。
 
 | 宿主 | Python 安装器 `--agent` 参数 | 项目内安装位置 | 在宿主对话中显式调用 |
 |---|---|---|---|
@@ -103,7 +121,7 @@ if (-not (Test-Path -LiteralPath $configPath -PathType Leaf)) {
 }
 ```
 
-其他宿主根据[安装路径表](#1-将-skill-安装到已有项目)设置 `$skillRoot`。确认所选配置确实需要包且尚未准备好，并获得同步授权后，才执行：
+其他宿主或全局安装根据[安装路径表](#1-选择安装范围与途径)设置 `$skillRoot`，并核对实际链接目标。确认所选配置确实需要包且尚未准备好，并获得同步授权后，才执行：
 
 ```powershell
 vale sync --config $configPath --no-global
@@ -119,28 +137,30 @@ Skill 内的 `vale/styles/.gitignore` 精确忽略上述生成目录，不改写
 
 ## 4. 更新时保全旧副本
 
-Python 安装器拒绝覆盖；npx 会覆盖同名复制目标。两种途径都按以下顺序保全后更新，每个宿主副本单独处理：
+Python 安装器拒绝覆盖；npx 能覆盖同名安装。两种途径都按以下顺序保全后更新，先区分项目/全局范围，以及独立复制/共享链接：
 
-1. Python 副本对照 `install-manifest.json`；npx 副本对照项目根 `skills-lock.json` 中的来源和对应发布文件树。识别本地修改、后来同步的包和新增文件，不把未列出的文件自动判为垃圾。保全根锁文件及其他 Skill，不能用只含 TextPrison 的锁替换它。
+1. Python 副本对照 `install-manifest.json`；npx 项目安装对照项目根 `skills-lock.json`，全局安装对照 CLI 实际维护的安装记录，均结合对应发布文件树。识别本地修改、后来同步的包和新增文件，不把未列出的文件自动判为垃圾。保全相关安装记录及其他 Skill，不能用只含 TextPrison 的锁替换原锁。
 2. 明确旧副本的保留绝对路径、新副本的安装范围及用户定制，取得这次替换操作的授权。
 3. 将完整旧副本保全到用户选定位置，确认配置、术语材料和未知文件均有保留，再腾出已批准的安装目标。遇到占用或权限问题时停止处理该路径，不强制删除或改 ACL。
 4. 按第 1 节所选途径安装新副本；先与发布文件核对，再人工比较并合并仍适用的定制，不整目录覆盖回去。npx 更新须保留其他锁条目及其他 Skill，不顺带安装其他宿主。
 5. 核对新配置的包来源、版本和布局；只有另行授权后才同步所需包。固定版本升级属于依赖变更，不在日常写作时自动执行。
-6. 保留旧副本，直到用户确认新副本可用并批准清理。文档交付、复制完成或版本输出都不能替代这个确认。
+6. 保留旧副本，直到用户确认新副本可用并批准清理。共享链接还需核对其他宿主是否指向同一份内容，避免更新或移动公共副本时影响它们。文档交付、复制完成或版本输出都不能替代这个确认。
 
-多宿主各自使用完整、自包含的副本。若 `both` 的两份副本都需要英文包，就分别准备；只使用一份就只维护那份。初版不创建跨副本链接，修改一份不会同步到另一份。
+Python 安装器和 npx 的复制方式生成独立、自包含的副本，修改一份不会更新另一份。若 Python `both` 的两份副本都需要英文包，就分别准备。npx 选择链接方式时，先解析实际目标；多个宿主指向同一份内容时只维护该份资源，不重复同步。共享全局副本的修改可能影响多个项目，因此先确认使用者与作用范围。
 
 项目术语以项目已有词汇配置或术语文档为单一来源。没有这类材料时由写作 Agent 标出缺口，需用户确认的术语单独列出，不在每份 Skill 副本中生成一套术语库。
 
 ## 5. macOS / Linux 差异
 
-总体顺序与 Windows 相同：安装 Skill → 按需安装 CLI → 核对版本 → 按需同步 → 明确指定文档。npx 仍使用固定版本，从目标项目根目录执行，先确认目标不存在或已按授权保全：
+总体顺序与 Windows 相同：安装 Skill → 按需安装 CLI → 核对版本 → 按需同步 → 明确指定文档。npx 主线命令也相同；项目安装先进入目标项目根目录，确认已有目标已按需保全：
 
 ```bash
 projectRoot='/absolute/path/to/your-project'
 cd "$projectRoot"
-npx --yes skills@1.7.4 add psiQAQ/text-prison --skill text-prison --agent codex --copy --yes
+npx skills add psiQAQ/text-prison
 ```
+
+若选择全局范围，则在普通工作目录执行 `npx skills add psiQAQ/text-prison --global`，不再同时执行项目安装命令。
 
 选择 Python 路线时，Python 命令和 shell 变量写法不同；例如从仓库根目录安装 Codex 副本：
 

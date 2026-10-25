@@ -18,7 +18,7 @@ description: Write, improve, or audit Chinese and English technical documentatio
 
 ## 按需加载规则
 
-用 [规则索引](references/index.md) 选择一份用途、一份语言和至多一份品牌摘要。操作说明确需消歧时再读 STE-inspired；混合文档按章节处理，不为每个章节加载整套库。其他语言按其惯例，不套用英文限制。
+用 [规则索引](references/index.md) 选择一份用途、一份语言和至多一份品牌摘要。任何用途出现术语混用、指代不清、条件与动作关系不明，或操作与解释混杂时，再读 [STE-inspired](references/ste-inspired.md)，按其中的通用原则处理本次范围内的歧义；仅审阅时只指出问题。混合文档按章节处理，不重复加载整套库。其他语言按其惯例，不套用英文限制。
 
 中文本地化按需读微软中文摘要，中文排版按需读排版参考。项目明确规则和现有文稿的一致写法优先于社区偏好；间距建议不自动变成全文统一要求，也不替代科研符号或单位规范。
 

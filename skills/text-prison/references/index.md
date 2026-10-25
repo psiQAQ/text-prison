@@ -14,7 +14,7 @@
 
 开发文档通常再读 [Google 摘要](google.md)，英文 UI 文案和产品帮助通常再读 [Microsoft 摘要](microsoft.md)，简体中文本地化读 [Microsoft 中文摘要](microsoft-zh.md)。选一个主线；项目已有约定优先。科研和 Agent 指令默认不加载品牌风格，确有组织或表达需求时才补读。
 
-操作说明需要澄清条件、动作和对象时读 [STE-inspired](ste-inspired.md)，不作为一般文档的强制语法。纯机器输出不进入本 Skill。
+任何用途出现术语混用、指代不清、条件与动作关系不明或结构歧义时，按需读 [STE-inspired](ste-inspired.md)。它为上面的用途补充通用消歧指导，不另设一种用途，也不作为每次写作必读的语法规范。科研保留限定与论证，API/reference 保留定义、表格和标识符；不为主动句或短句改变技术含义。纯机器输出不进入本 Skill。
 
 中文排版任务再读 [中文排版约定](chinese-typography.md)。需机械建议时读 [AutoCorrect 调用说明](autocorrect.md)，配置与版本在 [AutoCorrect 目录](../autocorrect/README.md) 维护。不是每份中文文档都要改变排版。
 

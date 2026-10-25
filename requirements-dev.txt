@@ -1,4 +1,0 @@
--r requirements.txt
-pytest>=8,<10
-PyYAML>=6,<7
-tiktoken>=0.12,<1

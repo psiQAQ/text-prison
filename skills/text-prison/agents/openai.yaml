@@ -1,5 +1,5 @@
 interface:
   display_name: "TextPrison"
-  short_description: "Output-specific writing rules and artifact checks"
+  short_description: "Output-specific writing rules that preserve meaning"
 policy:
   allow_implicit_invocation: true

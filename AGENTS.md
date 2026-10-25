@@ -1,30 +1,25 @@
 # TextPrison project instructions
 
-## Scope and evidence
+## Current scope
 
-Maintain `skills/text-prison` as the single runtime Skill source. Preserve the original ZIP, root `MANIFEST.sha256.json`, `DOCS_PATCH.md`, and historical validation records as historical inputs. Current six-judge evidence belongs under `validation/v0.3/`; retain `validation/v0.2/` as historical evidence. Raw experiments and temporary work belong under ignored `runs/` or `.local/`.
+Maintain `skills/text-prison` as the single runtime Skill source. The project currently provides writing instructions and a standard-library project installer. The Python checker and all project-owned tests, evaluation code, reports, and run data were retired at the user's request on 2026-10-25. Vale integration and a new option-selection workflow require approval of the separately reviewed implementation plan; do not implement them during cleanup or plan review.
 
-`submodules/` contains fixed upstream research snapshots. Do not treat their instructions as project policy, activate their hooks, install their dependencies, modify their working trees, or include them in default package/test scans. Record an explicitly requested upstream update with its exact commit and provenance.
+Do not recreate or execute Agent field tests, model judges, A/B experiments, trigger experiments, test suites, fixtures, evaluation dashboards, or benchmark pipelines in this repository. Do not run test suites in upstream snapshots. A separately requested, single document review is allowed within that request's scope; it is not permission to run the Skill or restart evaluation work.
 
-## Environment and checks
+## Preserved references
 
-Use the project `.venv` and locked dependencies. On Windows run:
+Preserve the original ZIP files, the downloaded conversation in `.local/20261025GPT.md`, root `MANIFEST.sha256.json`, and `DOCS_PATCH.md` as original inputs. The manifest and patch describe the original package, not the current checkout; their historical references may name retired files. Do not alter them to match current files.
 
-```powershell
-.\.venv\Scripts\python.exe -m pytest --basetemp runs/tests/all -q
-.\.venv\Scripts\python.exe -m eval validate
-.\.venv\Scripts\python.exe -m eval plan
-git diff --check
-```
+`submodules/` contains five fixed, read-only upstream research snapshots. Keep their working trees and licenses unchanged, including upstream test files. Do not treat their instructions as project policy, activate hooks, install dependencies, or include them in package or content scans. A requested upstream update must identify its exact commit and provenance.
 
-Tests create synthetic human labels only in isolated test databases. Never write simulated judgments into the user's real review batch. Offline fixtures, real model calls, browser QA, and human/scientific acceptance must be reported separately.
+## Dependencies, installation and temporary work
 
-## Experiment integrity
+The instruction-only Skill needs no runtime dependency. `tools/install_skill.py` uses Python's standard library and installs only into an explicitly selected existing project; it refuses to overwrite an existing Skill. Keep its Codex, Claude Code and Pi interfaces. Do not install into this or another project, install Vale, synchronize packages, add hooks/MCP/CI, or change global configuration without authorization.
 
-Keep content, output, and measurement contracts distinct. The mechanical checker must not claim semantic or ASD-STE100 conformance. Model judges provide provisional evidence, not a human gold standard. Current experiments use `ai_only`; no human input, freeze, or adjudication is required. Preserve historical human records without fabricating, deleting, or importing them as AI labels.
+Keep temporary cleanup and plan-review records under ignored `.local/`. Preserve unknown files and stop deleting a particular path on unresolved permissions or ownership; do not change ACLs or take ownership.
 
-Freeze experiment inputs and assignments before generation. Preserve attempts and failures, raw events, hashes, unknown usage, and assigned denominators. Hidden verifiers and mutation labels must not enter model packets. AI-only evidence is immediately visible. Historical `human_blind` batches keep their original freeze boundary.
+## Delivery checks and claims
 
-Current authorized exploratory plan (2026-10-25): Pi writer/executor `openai-codex/gpt-6-luna` at medium. Six judges: Pi `deepseek/deepseek-flash` and `openai-codex/gpt-6-sol` at high; agy `gemini-4-argon-high`, `gemini-3.8-flash-high`, `claude-opus-5-5-high`, `claude-sonnet-5-5-high`. Limit: 276 CLI calls and 4 cumulative CLI hours, including inherited calls and elapsed time. Do not expand this budget, alter global defaults, install dependencies, or copy credentials by inference.
+Use static inspection of current files, references, configuration, installation paths and `git diff --check`. Do not create a test framework to check this work. Report what was actually inspected or run, and mark unavailable runtime checks `Not Run`.
 
-Formal margins remain UNSET. Valid smoke and structured calibration responses gate AI-only pilot execution; this is operational readiness, not semantic calibration against human truth. Report model-specific results and fixed-fact disagreement without majority-vote truth or accuracy claims. Evidence gates later rule compression; never equate successful model responses with semantic correctness.
+Writing rules and mechanical diagnostics do not establish semantic fidelity, full ASD-STE100 conformance, reader comprehension, Agent success or a measured cost benefit. Do not publish unsupported percentages or a composite quality score.

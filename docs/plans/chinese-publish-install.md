@@ -1,6 +1,6 @@
 # 中文支持、GitHub 发布与项目安装计划
 
-日期：2026-10-25。起点：`9f68938`。状态：已完成一次 agy Claude Opus 审阅并据意见修订，直接进入实施；AutoCorrect 本机安装仍以用户单独答复为准。
+日期：2026-10-25。起点：`9f68938`。状态：已完成一次 agy Claude Opus 审阅、修订、实施、GitHub 发布、npx 项目安装和 Vale CLI 核验。AutoCorrect 仅完成可选集成，未安装或运行；结果见第 10 节。
 
 ## 1. 目标与授权
 
@@ -124,3 +124,25 @@ QCBlender 的改动限于新 Skill、它的已授权规则包及根 `skills-lock
 | P2-5：安装前状态可能已变化 | 采纳，安装前即时复核状态和路径 |
 
 主 Agent 对上述 CLI 事实补读固定版本源码；这不是第二次模型审阅，也不是运行验收。新增来源和实际执行结果随实施记录，不将本次文档审阅当成产品质量认证。
+
+## 10. 执行结果（2026-10-25）
+
+实现与安装固定提交为 `fcf06ce9579eca380ac87b9d8a32dfe9b6ba7f72`；本节是其后的交付记录，未更改 Skill 文件树。仓库公开入口为 [psiQAQ/text-prison](https://github.com/psiQAQ/text-prison)，默认分支为 `main`。SSH 代理命令在当前 shell 下失败，发布改用同一仓库的 HTTPS 与已有 GitHub CLI 凭据连接；没有修改 remote 或 SSH 配置。
+
+| 项目 | 状态与实际证据 |
+|---|---|
+| Opus 计划审阅 | **Passed**：一次调用完成，意见处理见第 9 节 |
+| 静态核对 | **Passed**：29 个发布 Skill 文件、82 个本地引用、YAML/INI/JSON 和安装器语法检查；`git diff --check` 通过 |
+| GitHub 发布 | **Passed**：发布提交与远端一致，默认分支为 main；匿名读取 SKILL.md 与提交内字节一致 |
+| npx 项目安装 | **Passed**：Skills CLI 1.7.4、固定完整 SHA、Codex 项目复制模式；29 个文件全部核对，26 个字节一致、3 个仅为 Git 的 CRLF 转换；锁中的 ref 与 computedHash 均核对通过 |
+| QCBlender 保全 | **Passed**：原有 43 个 Skill 的 154 个文件及 43 条锁记录未变；只新增 TextPrison 和同步规则包、合并根锁，不提交或推送目标项目 |
+| Vale 本机安装 | **Passed**：官方 3.25.1 Windows x64 ZIP 与 checksums 校验通过；绝对路径运行及刷新环境后的 Windows PowerShell / PowerShell 7 命令发现通过。用户 PATH 保留原条目与 REG_EXPAND_SZ 类型；旧宿主未自动刷新，需重启 |
+| 规则包 | **Passed**：Google v0.7.1 与 Microsoft v0.15.1 均通过官方发布资产 SHA-256 核对；分别比对 38、48 个解压文件，并核对各自三个启用规则与固定标签源码一致；没有包内共享配置 |
+| 六套配置 | **Passed**：安装副本实际运行，退出码均为 0；受控 Markdown 分别产生 2/4/4/4/1/1 条预期范围内建议，代码与引用块中的相同文字未被报告。该结果证明诊断可用，不表示输入零问题 |
+| 原始材料 | **Passed**：六份原始输入哈希及五个子模块提交保持不变 |
+| AutoCorrect | **Not Run**：固定版源码和保守配置已核对；额外本机安装未获答复，未下载或执行二进制 |
+| 宿主触发、Agent 实战与写作效果 | **Not Run**：不在本轮执行范围；没有创建或运行测试框架 |
+
+六套配置的结果顺序为 conservative、dev-en、procedure-en、product-en、research-en、zh。包摘要分别为 Google `4b67fca1f2a88595b2a578ab98bbf3017a23af677b04f93e862843f3ea1a9a0b`、Microsoft `0b37660b244a9399d7f10225895773291d27b2967ed0d239a1d379b633e8cd16`。安装文件比对在同步包前完成；同步后再次确认这 29 个源文件未变，生成目录按随 Skill 分发的规则被忽略。
+
+完整机器路径、PATH 备份、下载原件、命令输出及逐文件摘要保留在忽略目录 `.local/deployment-20261025/`。npx 缓存也在该目录；安装器自行管理的系统临时克隆是其既定行为，没有用它存放手动中间产物。没有升级 npm 或修改全局 Skill 锁。

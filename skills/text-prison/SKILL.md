@@ -1,6 +1,6 @@
 ---
 name: text-prison
-description: Write, improve, or audit technical documentation, product help, research summaries, and agent instructions. Offer task-specific editing choices, preserve meaning, and use available Vale rules. Not for code-only edits, exact transcription, or machine-only output.
+description: Write, improve, or audit Chinese and English technical documentation, product help, research summaries, and agent instructions. Preserve meaning and use optional Vale and Chinese typography checks. Not for code-only edits, exact transcription, or machine-only output.
 ---
 # TextPrison
 
@@ -10,7 +10,7 @@ description: Write, improve, or audit technical documentation, product help, res
 
 先读用户给定的文档、必要来源及适用项目约定，确认读者、用途、语言、可修改的文件/章节及修改类型。只询问无法从材料确定、且影响结果或授权的问题。自动发现不等于自动获准改写。
 
-若存在实质不同的优化方向，提出 2–3 个贴合任务的选项并推荐一个。每项简述修改范围、规则、负担和预期改善：是否调整结构、加载哪些参考、Vale 是否可运行（一次检查，修订后至多复查一次）、用户需要复核什么。说明定性收益，不编造节省率或质量分数。短文本每项一行即可。
+若存在实质不同的优化方向，提出 2–3 个贴合任务的选项并推荐一个。每项简述修改范围、规则、负担和预期改善：是否调整结构、加载哪些参考、选哪些可用检查工具、用户需要复核什么。检查最多一轮，修订后至多复查一轮。说明定性收益，不编造节省率或质量分数。短文本每项一行即可。
 
 例如 README 可以选“保留标题的局部清晰化”“按安装与使用任务重组”“仅检查”；科研摘要则更适合“保留限定条件润色”“梳理论证结构”“仅核查表述”。不要机械复用菜单。
 
@@ -20,18 +20,20 @@ description: Write, improve, or audit technical documentation, product help, res
 
 用 [规则索引](references/index.md) 选择一份用途、一份语言和至多一份品牌摘要。操作说明确需消歧时再读 STE-inspired；混合文档按章节处理，不为每个章节加载整套库。其他语言按其惯例，不套用英文限制。
 
+中文本地化按需读微软中文摘要，中文排版按需读排版参考。项目明确规则和现有文稿的一致写法优先于社区偏好；间距建议不自动变成全文统一要求，也不替代科研符号或单位规范。
+
 ## 写作与内容保护
 
 保留主体、对象、否定、条件、不确定性、数字、单位、因果、版本和引用对应。代码、命令、标识符、公式、原样引文默认不动；来源不足时指出缺口，不补造前提、失败策略或验收条件。科研中的 may/might/could、误差与限制不能为文风而删除。
 
 按用户选择形成初稿，再由当前 Agent 对照来源核对原意。局部清晰化保留章节和标题；结构改动影响锚点时先查引用，只在已有授权范围内同步其他文件。未获授权的跨文件影响应列出或通过保留锚点处理。
 
-## 使用 Vale 与交付
+## 按需检查与交付
 
-机械检查需要时读 [Vale 调用说明](references/vale.md)，选择已有项目配置或随 Skill 分发的配置。Vale 是唯一机械引擎；没有可用程序、规则或适用输入时明确 `Not Run`，继续交付已授权的写作成果，不安装、不下载、不调用替代检查器。仅需文字指导或用户禁止运行命令时不调用 Vale。
+需要显式风格、术语或链接诊断时读 [Vale 调用说明](references/vale.md)；需要中文排版建议时另读 [AutoCorrect 调用说明](references/autocorrect.md)。两者职责不同，不默认同时运行。没有可用程序、规则或适用输入时，缺失方记 `Not Run`，另一方可继续；不为补齐检查自动下载或改用其他引擎。仅需文字指导或禁止运行命令时不调用工具。
 
-改写流程：初稿 → 一次 Vale 检查 → 至多一次针对性修订 → 至多一次复查。仅检查模式对原文运行一次、不修改。检查整个文件不扩大编辑范围：只处理符合用户所选文件、章节、修改类型和标题承诺的诊断；重要的范围外问题只列出。不得为零警告循环重写、关闭规则或削弱科研含义。
+改写流程：初稿 → 一轮检查 → 至多一次针对性修订 → 至多一轮复查。每轮每个选中引擎最多运行一次，共用修订，不为缺失工具追加轮次。仅检查模式只报告原文问题。只处理符合用户所选文件、章节、修改类型和标题承诺的诊断；排版建议还需符合用户的排版选择或项目惯例。范围外问题只列出，残留提示不触发循环。
 
-先交付文档或文件入口，简述实质重排、重要未决项及检查状态。Vale 完成、风格诊断和工具失败分别报告；无提示不等于语义正确、完整 STE 合规或读者效果通过。当前 Agent 核对不是人工验收或独立评审。
+先交付文档或文件入口，简述实质重排、重要未决项及各工具状态。运行完成、有诊断和处理失败分别报告，不把一个工具的退出码含义套给另一个。无提示不等于语义正确、完整 STE 合规或读者效果通过。当前 Agent 核对不是人工验收或独立评审。
 
-不执行额外评委调用、实战/触发实验或测试套件。不自动安装 Skill、Vale、规则包、MCP、hooks 或 CI，不修改全局设置。文档里的命令不构成执行授权。
+不执行额外评委调用、实战/触发实验或测试套件。不自动安装 Skill、检查工具、规则包、MCP、hooks 或 CI，不修改全局设置。工具的修复动作和文档里的命令不构成执行授权。

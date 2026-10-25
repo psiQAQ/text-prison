@@ -4,13 +4,15 @@
 
 完整机器记录见 [sources.json](../sources.json)。固定提交和 README 阅读不代表代码审计、效果复现或第三方内容许可已全部核实。除已记录的有限核验范围外，不把登记链接当作重新阅读原文。
 
-日常写作参考 STE 的指令消歧、Google 的读者任务组织及 Microsoft 的信息呈现原则。来源不提供 TextPrison 的收益保证，不采用固定节省率、理解提升率或模型评分作为产品承诺。统一 Skill 和 Vale 配置已按批准方案完成文件实现，实际运行未执行。
+日常写作参考 STE 的指令消歧、Google 的读者任务组织及 Microsoft 的信息呈现原则。中文部分增加微软简体中文本地化指南与社区排版约定，机械排版可选用 AutoCorrect。来源不提供 TextPrison 的收益保证，不采用固定节省率、理解提升率或模型评分作为产品承诺。
 
 ## 当前运行材料的来源
 
 2026-10-25 新增阅读范围记录在 `sources.json` 的 `runtime_sources`，不改变下方历史书目的核验状态。Vale CLI 官方文档支持配置、作用域、stdin、退出码和包同步的说明；固定标签 Google v0.7.1、Microsoft v0.15.1 的所选规则、元数据及发布脚本支持当前配置。未下载核验发布 ZIP，也未执行 CLI 或规则。
 
 Google 和 Microsoft 写作指导为官方页面的自主概括；STE-inspired 仅借鉴已记录的社区快照，不声称重新阅读完整 ASD 标准。实际规则及逐项来源见 [Vale 目录](../skills/text-prison/vale/README.md)，写作指导入口见 [规则索引](../skills/text-prison/references/index.md)。
+
+中文补充阅读范围：Microsoft 简体中文 PDF 的第 4–8、11、27–28、35–38、43–44 页；中文文案排版指北的空格、标点、全半角、名词及争议部分。只分发自主摘要，不附完整原文。AutoCorrect 固定 v2.16.3 的参数、配置合并、stdin 与 JSON 分支，以及 Skills CLI v1.7.4 的复制、锁文件、提交 SHA 和遥测行为已做源码核对；实际安装另记，不能由来源登记推定运行成功。来源指针及限制见机器索引新增条目和 [AutoCorrect 目录](../skills/text-prison/autocorrect/README.md)。
 
 注意同名项目：R04 指官方 Vale CLI 及 Google/Microsoft 风格包；R32 的 `stuffbucket/vale` 是另一个独立的 STE 检查器，只保留为参考，不能作为 Vale CLI 的安装来源。
 

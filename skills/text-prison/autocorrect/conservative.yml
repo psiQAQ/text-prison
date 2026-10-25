@@ -1,0 +1,15 @@
+rules:
+  space-word: 2
+  space-punctuation: 0
+  space-bracket: 0
+  space-backticks: 0
+  space-dash: 0
+  space-dollar: 0
+  fullwidth: 0
+  no-space-fullwidth: 0
+  no-space-fullwidth-quote: 0
+  halfwidth-word: 0
+  halfwidth-punctuation: 0
+  spellcheck: 0
+context:
+  codeblock: 0

@@ -1,5 +1,5 @@
 interface:
   display_name: "TextPrison"
-  short_description: "Task-specific writing choices and optional Vale checks"
+  short_description: "Chinese and English writing with optional style checks"
 policy:
   allow_implicit_invocation: true

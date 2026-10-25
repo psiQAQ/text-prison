@@ -1450,6 +1450,66 @@
       ],
       "scope": "Read selected rule files, metadata and fixed-tag packaging workflow. Selected rules are enabled individually at suggestion severity; the package is not vendored.",
       "limitations": "Release ZIP not downloaded or integrity-verified; no rule execution. meta.json records a feed and Vale constraint but not the package release version."
+    },
+    {
+      "id": "runtime-microsoft-zh",
+      "urls": [
+        "https://learn.microsoft.com/en-us/globalization/reference/microsoft-style-guides",
+        "https://download.microsoft.com/download/1/5/9/159cb91c-b61b-4385-97ca-80ccc7ff1fa0/zho-chn-StyleGuide.pdf"
+      ],
+      "sha256": "dd154a01c2838fae76dca06d5d4e9c99ec72e77c9a2cc7c456ff62af740e438d",
+      "scope": "Read PDF pages 4-8, 11, 27-28, 35-38, 43-44: natural localization, task context, approved terminology, and distinct software/documentation punctuation. Original paraphrases only; the PDF is not redistributed.",
+      "checked_date": "2026-10-25",
+      "status": "documentation_read_no_execution"
+    },
+    {
+      "id": "runtime-chinese-typography",
+      "urls": [
+        "https://github.com/sparanoid/chinese-copywriting-guidelines/blob/master/README.zh-Hans.md"
+      ],
+      "scope": "Read spacing, punctuation, product names, exceptions and disputed conventions. Community style preferences are optional and subordinate to project and scientific conventions.",
+      "checked_date": "2026-10-25",
+      "status": "documentation_read_no_execution"
+    },
+    {
+      "id": "runtime-autocorrect",
+      "selected_version": "v2.16.3",
+      "urls": [
+        "https://github.com/huacnlee/autocorrect/blob/v2.16.3/README.md",
+        "https://github.com/huacnlee/autocorrect/blob/v2.16.3/autocorrect-cli/src/cli.rs",
+        "https://github.com/huacnlee/autocorrect/blob/v2.16.3/autocorrect-cli/src/lib.rs",
+        "https://github.com/huacnlee/autocorrect/blob/v2.16.3/autocorrect/.autocorrectrc.default",
+        "https://github.com/huacnlee/autocorrect/blob/v2.16.3/autocorrect/src/config/mod.rs",
+        "https://github.com/huacnlee/autocorrect/blob/v2.16.3/autocorrect/src/result/json.rs",
+        "https://github.com/huacnlee/autocorrect/blob/v2.16.3/autocorrect/src/code/markdown.rs"
+      ],
+      "scope": "Read CLI configuration merge, JSON result semantics, hardcoded text stdin handling and Markdown context protection. Optional integration only; no binary installation or runtime execution. Only space-word is enabled at warning severity.",
+      "checked_date": "2026-10-25",
+      "status": "documentation_read_no_execution"
+    },
+    {
+      "id": "runtime-skills-npx",
+      "selected_version": "v1.7.4",
+      "urls": [
+        "https://github.com/vercel-labs/skills/blob/v1.7.4/src/installer.ts",
+        "https://github.com/vercel-labs/skills/blob/v1.7.4/src/source-parser.ts",
+        "https://github.com/vercel-labs/skills/blob/v1.7.4/src/git.ts",
+        "https://github.com/vercel-labs/skills/blob/v1.7.4/src/add.ts",
+        "https://github.com/vercel-labs/skills/blob/v1.7.4/src/local-lock.ts",
+        "https://github.com/vercel-labs/skills/blob/v1.7.4/src/telemetry.ts"
+      ],
+      "scope": "Read Codex project copy target, target removal behavior, SHA fallback fetch, local lock generation and disabled telemetry. npm metadata requires Node >=22.20.0; fixed package 1.7.4. Installation evidence is recorded separately.",
+      "checked_date": "2026-10-25",
+      "status": "documentation_read_no_execution"
+    },
+    {
+      "id": "runtime-codex-discovery",
+      "urls": [
+        "https://learn.chatgpt.com/docs/build-skills"
+      ],
+      "scope": "Read project .agents/skills discovery from current directory to repository root and refresh/restart guidance. No host invocation or trigger experiment.",
+      "checked_date": "2026-10-25",
+      "status": "documentation_read_no_execution"
     }
   ]
 }

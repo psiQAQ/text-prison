@@ -1,26 +1,26 @@
 # TextPrison / 文字狱
 
-一个写作 Skill，按任务读取规则，并在已有工具和授权范围内使用 Vale 提供机械诊断。
+一个中英文写作 Skill，按任务读取规则，保留技术含义，并按需使用 Vale 和 AutoCorrect 提供诊断。
 
 ## 当前可用范围
 
-2026-10-25：统一 Skill、按需规则库、六套 Vale 配置及项目级安装器已完成文件实现。交付只做静态检查；实际安装、包同步、Vale 调用和宿主调用均为 **Not Run**。
+统一 Skill 包含五种用途指导、中英文参考、六套 Vale 配置及可选的中文排版配置。中文规则区分产品本地化、社区排版偏好和科研表达，不能把英文风格包当成完整中文规范。
 
-文字指导无需运行依赖。机械检查使用另行准备的 Vale CLI；缺少工具或规则包时说明未运行，不自动下载或切换引擎。配置、版本和实际启用规则统一维护在 [Vale 目录](skills/text-prison/vale/README.md)。
+文字指导无需运行依赖。[Vale](skills/text-prison/vale/README.md)处理显式风格、术语和链接规则；[AutoCorrect](skills/text-prison/autocorrect/README.md)可选地提供中文间距建议。项目惯例和用户范围优先，缺少某个工具时说明该项未运行，不自动下载。工具完成不证明语义或写作效果。
 
 ## 安装与使用
 
-先读 [安装说明](docs/INSTALL.md)，选择目标项目及宿主，再按 [使用说明](docs/USAGE.md) 指定文档和修改范围。安装器使用 Python 标准库，不安装依赖，也不修改全局指令、权限或 hooks。
+先读 [安装说明](docs/INSTALL.md)，选择目标项目及宿主，再按 [使用说明](docs/USAGE.md) 指定文档和修改范围。可使用 npx 从 GitHub 安装，也保留 Python 标准库安装器。
 
-在仓库根目录运行以下 PowerShell 命令，将目标路径替换为实际存在的项目目录：
+在目标项目根目录运行以下命令；先确认 `.agents/skills/text-prison` 不存在，已有副本按安装说明保全后更新：
 
 ```powershell
-python tools/install_skill.py --agent codex --project D:/path/to/project
+npx --yes skills@1.7.4 add psiQAQ/text-prison --skill text-prison --agent codex --copy --yes
 ```
 
-宿主路径与调用方式见安装说明。安装器拒绝覆盖已有目录，并生成 `install-manifest.json`；更新时先保全已有副本。仓库只维护 [skills/text-prison](skills/text-prison/SKILL.md) 这一份源文件。
+宿主路径、固定提交安装及调用方式见安装说明。npx 路线使用 Vercel Skills CLI 并写入项目 `skills-lock.json`，可能覆盖同名目录；Python 路线拒绝覆盖并生成 `install-manifest.json`。安装 Skill 不会同时安装检查工具。仓库只维护 [skills/text-prison](skills/text-prison/SKILL.md) 这一份源文件。
 
-Skill 在有实质取舍时提出 2–3 个适用选项并给出推荐；动作和对象已明确的局部改写直接处理。规则按用途、语言和写作风格读取，保留原意和编辑边界。机械检查针对改写初稿，最多修订一次、复查一次；只审阅时不改写。
+Skill 在有实质取舍时提出 2–3 个适用选项并给出推荐；动作和对象已明确的局部改写直接处理。规则按用途、语言和写作风格读取。两个工具若同时使用，每轮各调用一次，共用至多一次修订和一次复查；只审阅时不改写。
 
 相关文档请求仍可由宿主自动发现 Skill，是否触发取决于宿主。当前不提供自动触发、理解效果或成本改善的实测保证。
 
@@ -28,6 +28,7 @@ Skill 在有实质取舍时提出 2–3 个适用选项并给出推荐；动作�
 
 - [当前设计范围](docs/DESIGN.md)：任务流程、职责和限制。
 - [已批准实施方案](docs/plans/text-prison-vale.md)：设计依据和单次 Opus 审阅记录。
+- [中文支持与发布安装计划](docs/plans/chinese-publish-install.md)：本轮方案、Opus 意见及处理。
 - [来源目录](docs/RELATED_WORK.md)及 [机器来源索引](sources.json)：规范、参考实现和此前的来源核验范围。
 - [归属说明](NOTICE.md)：第三方资料与许可边界。
 

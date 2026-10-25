@@ -1,6 +1,6 @@
 # Vale 配置与规则目录
 
-本页是配置、包版本和启用规则的维护入口。文件已提供；本次交付只做静态核对，Vale 解析、检查和包同步均为 **Not Run**。文字指导不依赖 Vale；机械检查只使用 Vale CLI，不包含 Python 后端或其他插件。
+本页是 Vale 配置、包版本和启用规则的维护入口。文字指导不依赖 Vale；本目录不包含 Python 后端或其他插件。中文排版可另选 [AutoCorrect 配置](../autocorrect/README.md)，不把英文 Google/Microsoft 包称为完整中文规则。文件提供、工具安装和具体文档检查分别记录。
 
 ## 选择配置
 
@@ -38,7 +38,7 @@ Markdown 保留默认跳过的 block scopes，另跳过整个 `blockquote`；inl
 
 ## 准备上游包
 
-**以下命令是用户选择安装后的操作步骤，本次未执行。** 先按配置表选一个入口，令 `$skillRoot` 指向实际使用的已安装 Skill。安装位置由项目安装说明提供，不在此重复维护。
+以下命令仅在用户已授权下载和写入规则包时执行。先按配置表选一个入口，令 `$skillRoot` 指向实际使用的已安装 Skill。安装位置由项目安装说明提供，不在此重复维护。
 
 ```powershell
 $configPath = Join-Path $skillRoot 'vale/dev-en.ini'
@@ -50,7 +50,7 @@ vale sync --config $configPath --no-global
 - [Google v0.7.1 / Google.zip](https://github.com/vale-cli/Google/releases/download/v0.7.1/Google.zip)
 - [Microsoft v0.15.1 / Microsoft.zip](https://github.com/vale-cli/Microsoft/releases/download/v0.15.1/Microsoft.zip)
 
-`StylesPath = styles` 相对于配置文件。六个入口共用此目录；同步会替换同名包并重建 `.vale-config/`，不要在 Google/Microsoft 包内做本地定制。固定标签的发布脚本只打包对应规则目录，未带包内配置；已静态核对发布脚本及规则文件，**未下载核验发布 ZIP**。发现非空 `.vale-config/`、意外 `config/`、嵌套依赖或手改上游规则时，先核实来源和配置隔离，暂不继续检查或同步。
+`StylesPath = styles` 相对于配置文件。六个入口共用此目录；同步会替换同名包并重建 `.vale-config/`，不要在 Google/Microsoft 包内做本地定制。固定标签的发布脚本只打包对应规则目录，未带包内配置；发布脚本及规则文件的静态核对不能替代实际下载内容核验。实际同步时另记资产摘要、布局及启用规则内容。发现非空 `.vale-config/`、意外 `config/`、嵌套依赖或手改上游规则时，先核实来源和配置隔离，暂不继续检查或同步。
 
 首次同步后保留命令、配置固定 URL、日期和同步输出。已读取的两份 `meta.json` 只记录 feed 和 Vale 版本约束，不记录包的发行版本，不能用它证明下载的是所选标签。没有可信同步记录或独立内容核对时报告“包版本未确认”；即使有来源记录，也不声称发布资产完整性已验证。更新要重新核对启用规则及包布局并取得依赖变更授权，不能每次调用都下载最新。
 

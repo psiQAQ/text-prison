@@ -1,0 +1,453 @@
+{
+  "as_of": "2026-10-26",
+  "baseline_commit": "3f264e59ad270e9921cbe5030fc17880cc9fd9dc",
+  "status": "research_only_not_implemented",
+  "definitions": {
+    "D": "deterministic",
+    "N": "NLP_proxy",
+    "A": "contextual_editorial_review",
+    "R": "real_reader_measurement"
+  },
+  "features": [
+    {
+      "id": "L01",
+      "group": "词汇、搭配与语义密度",
+      "feature_zh": "低频词/词汇熟悉度",
+      "metric": "词频 Zipf 中位数、低频词比例、P10 分位数",
+      "verification_level": "N",
+      "caveats": "参照语料需同语言/体裁；专业术语豁免"
+    },
+    {
+      "id": "L02",
+      "group": "词汇、搭配与语义密度",
+      "feature_zh": "罕见双词组合",
+      "metric": "未见 bigram 数/有效 bigram 数",
+      "verification_level": "N",
+      "caveats": "必须固定参照语料、分词器及语料领域"
+    },
+    {
+      "id": "L03",
+      "group": "词汇、搭配与语义密度",
+      "feature_zh": "意外的词序列",
+      "metric": "独立语言模型 trigram PPL；平均 surprisal",
+      "verification_level": "N",
+      "caveats": "模型变化会改变数值，不能当 AI 检测器"
+    },
+    {
+      "id": "L04",
+      "group": "词汇、搭配与语义密度",
+      "feature_zh": "词汇多样性",
+      "metric": "MATTR、MTLD、HD-D；不优先单用 TTR",
+      "verification_level": "N",
+      "caveats": "比较时控制篇幅、分词和主题"
+    },
+    {
+      "id": "L05",
+      "group": "词汇、搭配与语义密度",
+      "feature_zh": "名词占比及词汇密度",
+      "metric": "名词/动词比，实词数/总词数",
+      "verification_level": "N",
+      "caveats": "技术参考本来就名词较多"
+    },
+    {
+      "id": "L06",
+      "group": "词汇、搭配与语义密度",
+      "feature_zh": "名词化过密",
+      "metric": "动词派生名词率/100词，名词化结构/从句",
+      "verification_level": "N",
+      "caveats": "中英文派生构词不同，需分语言规则"
+    },
+    {
+      "id": "L07",
+      "group": "词汇、搭配与语义密度",
+      "feature_zh": "术语一致性",
+      "metric": "同一概念不同称呼次数/概念数",
+      "verification_level": "A",
+      "caveats": "上下文决定是否指同一对象，不禁合理同义词"
+    },
+    {
+      "id": "L08",
+      "group": "词汇、搭配与语义密度",
+      "feature_zh": "缩写未解释",
+      "metric": "首次使用未定义缩写数/缩写总数",
+      "verification_level": "D",
+      "caveats": "常识缩写、代码标识和图表标题例外"
+    },
+    {
+      "id": "L09",
+      "group": "词汇、搭配与语义密度",
+      "feature_zh": "抽象词/空洞黑话",
+      "metric": "未解释抽象短语密度/千字；具体动作/主体覆盖率",
+      "verification_level": "D/A",
+      "caveats": "赋能、闭环在部分行业可能是术语，需白名单"
+    },
+    {
+      "id": "L10",
+      "group": "词汇、搭配与语义密度",
+      "feature_zh": "固定套话与高频惯用词",
+      "metric": "刻板模板命中数/千字；重复命中位置",
+      "verification_level": "D",
+      "caveats": "“AI 常用词”本身不证明机器写作"
+    },
+    {
+      "id": "S01",
+      "group": "句法结构与心理加工",
+      "feature_zh": "句长与极端长句",
+      "metric": "字/词每句的中位数、P90、超阈值比例",
+      "verification_level": "D",
+      "caveats": "中文按字，英文按词；公式和列表排除"
+    },
+    {
+      "id": "S02",
+      "group": "句法结构与心理加工",
+      "feature_zh": "句长节奏",
+      "metric": "句长标准差、变异系数 CV",
+      "verification_level": "D",
+      "caveats": "不要求刻意长短交替；高 CV 也可能难读"
+    },
+    {
+      "id": "S03",
+      "group": "句法结构与心理加工",
+      "feature_zh": "长距离依存",
+      "metric": "依存弧平均 |head−dependent|、P95",
+      "verification_level": "N",
+      "caveats": "依赖分词及句法分析质量"
+    },
+    {
+      "id": "S04",
+      "group": "句法结构与心理加工",
+      "feature_zh": "嵌套结构深度",
+      "metric": "最大句法树深度、平均从句深度",
+      "verification_level": "N",
+      "caveats": "树深度是代理指标，非理解时长"
+    },
+    {
+      "id": "S05",
+      "group": "句法结构与心理加工",
+      "feature_zh": "中心嵌入/插入语",
+      "metric": "中心嵌入次数，主谓间插入词数",
+      "verification_level": "N",
+      "caveats": "法律和科研文本可能有必要限定"
+    },
+    {
+      "id": "S06",
+      "group": "句法结构与心理加工",
+      "feature_zh": "省略关系标记的宾语关系从句",
+      "metric": "英语 reduced object relative 占比",
+      "verification_level": "N",
+      "caveats": "特定英语结构，不直接推广到中文"
+    },
+    {
+      "id": "S07",
+      "group": "句法结构与心理加工",
+      "feature_zh": "名词连续堆叠",
+      "metric": "连续名词串长度≥3 的数量/百句",
+      "verification_level": "N",
+      "caveats": "专有名词与固定技术名词必须保留"
+    },
+    {
+      "id": "S08",
+      "group": "句法结构与心理加工",
+      "feature_zh": "名词动用/非常规词性转换",
+      "metric": "denominal verb 候选数/千词",
+      "verification_level": "N/A",
+      "caveats": "如“Google it”可能自然；需语义判断"
+    },
+    {
+      "id": "S09",
+      "group": "句法结构与心理加工",
+      "feature_zh": "无施事被动",
+      "metric": "agentless passive 比例、缺失执行者提示",
+      "verification_level": "N/A",
+      "caveats": "当执行者未知、不重要时被动合理"
+    },
+    {
+      "id": "S10",
+      "group": "句法结构与心理加工",
+      "feature_zh": "无生命主语+选择限制冲突",
+      "metric": "无生命主语搭配带生命选择限制动词候选数",
+      "verification_level": "N/A",
+      "caveats": "服务器“响应/拒绝”属常规技术拟人"
+    },
+    {
+      "id": "S11",
+      "group": "句法结构与心理加工",
+      "feature_zh": "省略主语或跨句作用域模糊",
+      "metric": "存在两个潜在先行词的指代数；否定/条件跨句警报",
+      "verification_level": "A",
+      "caveats": "结构解析不等于语义消歧；宁可提示不自动补"
+    },
+    {
+      "id": "C01",
+      "group": "篇章组织、信息流与论证",
+      "feature_zh": "相邻句实体衔接",
+      "metric": "相邻句共享实体/lemma 比例",
+      "verification_level": "N",
+      "caveats": "低比例可能是合理换题；高比例可能冗余"
+    },
+    {
+      "id": "C02",
+      "group": "篇章组织、信息流与论证",
+      "feature_zh": "指代距离与跨段跳跃",
+      "metric": "指代-先行词距离、歧义候选数",
+      "verification_level": "N/A",
+      "caveats": "中文零代词与省略增加困难"
+    },
+    {
+      "id": "C03",
+      "group": "篇章组织、信息流与论证",
+      "feature_zh": "局部语义衔接",
+      "metric": "相邻句向量 cosine 平均值与分布",
+      "verification_level": "N",
+      "caveats": "相似度过高可能反而重复"
+    },
+    {
+      "id": "C04",
+      "group": "篇章组织、信息流与论证",
+      "feature_zh": "冗余与同义复述",
+      "metric": "跨句语义重复对数/百句",
+      "verification_level": "N/A",
+      "caveats": "安全警告及术语复现可合理重复"
+    },
+    {
+      "id": "C05",
+      "group": "篇章组织、信息流与论证",
+      "feature_zh": "关系词明确性",
+      "metric": "因果/条件/转折标记覆盖率",
+      "verification_level": "A",
+      "caveats": "不可为了衔接捏造因果"
+    },
+    {
+      "id": "C06",
+      "group": "篇章组织、信息流与论证",
+      "feature_zh": "逻辑关系作用域",
+      "metric": "条件-动作与否定-结论匹配/错误数",
+      "verification_level": "A",
+      "caveats": "机器标签无法直接证明逻辑有效"
+    },
+    {
+      "id": "C07",
+      "group": "篇章组织、信息流与论证",
+      "feature_zh": "主题进展与离题",
+      "metric": "主题切换次数、段落内聚合度",
+      "verification_level": "N/A",
+      "caveats": "新主题是否必要取决于读者目标"
+    },
+    {
+      "id": "C08",
+      "group": "篇章组织、信息流与论证",
+      "feature_zh": "修辞关系与段落功能",
+      "metric": "RST / 论点-证据-解释链条缺口数",
+      "verification_level": "N/A",
+      "caveats": "模型给出的关系标签是概率性判断"
+    },
+    {
+      "id": "C09",
+      "group": "篇章组织、信息流与论证",
+      "feature_zh": "可追溯论证与证据",
+      "metric": "无来源数据/结论数；论点-证据可追溯率",
+      "verification_level": "A",
+      "caveats": "无引用不必然无证据，但科研须严格审查"
+    },
+    {
+      "id": "C10",
+      "group": "篇章组织、信息流与论证",
+      "feature_zh": "信息密度均匀性",
+      "metric": "逐词 surprisal 方差、峰值密度及 CV",
+      "verification_level": "N",
+      "caveats": "UID 是统计倾向，不能目标化为统一句式"
+    },
+    {
+      "id": "P01",
+      "group": "语用、修辞、对话与作者声音",
+      "feature_zh": "答非所问/关联性不足",
+      "metric": "直接回答前字数、所需信息覆盖率",
+      "verification_level": "A",
+      "caveats": "背景铺垫在教程中可能必要"
+    },
+    {
+      "id": "P02",
+      "group": "语用、修辞、对话与作者声音",
+      "feature_zh": "模板化开场与结尾",
+      "metric": "无信息开头/套尾命中数/篇",
+      "verification_level": "D",
+      "caveats": "文种决定是否需要礼貌格式"
+    },
+    {
+      "id": "P03",
+      "group": "语用、修辞、对话与作者声音",
+      "feature_zh": "伪对立金句",
+      "metric": "“不是X而是Y”频率/千字",
+      "verification_level": "D/A",
+      "caveats": "确有对比论证时应当保留"
+    },
+    {
+      "id": "P04",
+      "group": "语用、修辞、对话与作者声音",
+      "feature_zh": "机械三段式/排比",
+      "metric": "相同句首、句型连发数；三点套式密度",
+      "verification_level": "D/N",
+      "caveats": "列举三项可能恰好是真实任务结构"
+    },
+    {
+      "id": "P05",
+      "group": "语用、修辞、对话与作者声音",
+      "feature_zh": "空洞赞美、过度热情",
+      "metric": "赞美或附和句数/百句",
+      "verification_level": "D/A",
+      "caveats": "具体有依据的肯定不应被清除"
+    },
+    {
+      "id": "P06",
+      "group": "语用、修辞、对话与作者声音",
+      "feature_zh": "虚假的平衡或机械两面论",
+      "metric": "无来源双方观点配对数",
+      "verification_level": "A",
+      "caveats": "争议议题仍需真实区分观点"
+    },
+    {
+      "id": "P07",
+      "group": "语用、修辞、对话与作者声音",
+      "feature_zh": "空泛权威与模糊数据",
+      "metric": "“研究表明/数据显示”无出处数",
+      "verification_level": "D/A",
+      "caveats": "孤立规则不能扫描可信引用的语境"
+    },
+    {
+      "id": "P08",
+      "group": "语用、修辞、对话与作者声音",
+      "feature_zh": "置信度与模态校准",
+      "metric": "强断言无证据数、may/might/可能保留率",
+      "verification_level": "A",
+      "caveats": "不要通过删除不确定性变得更自然"
+    },
+    {
+      "id": "P09",
+      "group": "语用、修辞、对话与作者声音",
+      "feature_zh": "例子与类比是否可核实",
+      "metric": "准确示例数/示例总数；类比错配数",
+      "verification_level": "A",
+      "caveats": "无事实来源时不能新增具体例子"
+    },
+    {
+      "id": "P10",
+      "group": "语用、修辞、对话与作者声音",
+      "feature_zh": "读者与体裁适配",
+      "metric": "Biber 风格特征相对同类语料 z-score",
+      "verification_level": "N/A",
+      "caveats": "应按科研/README/聊天分别建参照"
+    },
+    {
+      "id": "P11",
+      "group": "语用、修辞、对话与作者声音",
+      "feature_zh": "个人/团队声线保留",
+      "metric": "与授权样本的功能词、标点、句式距离",
+      "verification_level": "N/A",
+      "caveats": "作者样本需要同意；不建立隐私画像"
+    },
+    {
+      "id": "P12",
+      "group": "语用、修辞、对话与作者声音",
+      "feature_zh": "文化与群体文风同质化",
+      "metric": "方言/地域/惯用表达保留率；群体分布差异",
+      "verification_level": "N/A",
+      "caveats": "不能把单一标准英语/普通话当成“更人类”"
+    },
+    {
+      "id": "F01",
+      "group": "呈现、排版与可扫描性",
+      "feature_zh": "标题层级与开头导航",
+      "metric": "标题层级跳跃数、标题密度",
+      "verification_level": "D",
+      "caveats": "极短答复不必有标题"
+    },
+    {
+      "id": "F02",
+      "group": "呈现、排版与可扫描性",
+      "feature_zh": "列表与表格使用是否恰当",
+      "metric": "列表句比例、表格列数、过深嵌套数",
+      "verification_level": "D/A",
+      "caveats": "同一段论证不应被强拆为孤立条目"
+    },
+    {
+      "id": "F03",
+      "group": "呈现、排版与可扫描性",
+      "feature_zh": "强调符号/标点堆砌",
+      "metric": "加粗、感叹号、破折号密度/千字",
+      "verification_level": "D",
+      "caveats": "引用、公式和文学表达应豁免"
+    },
+    {
+      "id": "F04",
+      "group": "呈现、排版与可扫描性",
+      "feature_zh": "括号与插入说明负担",
+      "metric": "嵌套括号深度、括号内容字符比",
+      "verification_level": "D",
+      "caveats": "规范定义、变量说明需要保留"
+    },
+    {
+      "id": "F05",
+      "group": "呈现、排版与可扫描性",
+      "feature_zh": "中英文混排与拼写",
+      "metric": "间距、标点和错字建议数/千字",
+      "verification_level": "D/N",
+      "caveats": "技术单位、LaTeX、标识符不能自动替换"
+    },
+    {
+      "id": "F06",
+      "group": "呈现、排版与可扫描性",
+      "feature_zh": "文档冗余结论及泛指链接",
+      "metric": "重复总结次数、here/点击这里提示数",
+      "verification_level": "D/A",
+      "caveats": "必要的摘要不能因相似就删除"
+    },
+    {
+      "id": "H01",
+      "group": "真实读者成效",
+      "feature_zh": "阅读理解正确率",
+      "metric": "预设问题答对数/问题总数",
+      "verification_level": "R",
+      "caveats": "读者知识差异要控制；阅读材料不能删事实"
+    },
+    {
+      "id": "H02",
+      "group": "真实读者成效",
+      "feature_zh": "阅读时间",
+      "metric": "秒/百词或千字，控制读者熟悉程度",
+      "verification_level": "R",
+      "caveats": "更快不必然更理解"
+    },
+    {
+      "id": "H03",
+      "group": "真实读者成效",
+      "feature_zh": "回视/重读负担",
+      "metric": "眼动回视率、go-past time、回读次数",
+      "verification_level": "R",
+      "caveats": "需要眼动实验或受控阅读设备"
+    },
+    {
+      "id": "H04",
+      "group": "真实读者成效",
+      "feature_zh": "理解修复/后编辑成本",
+      "metric": "复述重做次数、纠错耗时/千字",
+      "verification_level": "R",
+      "caveats": "与原文难度及任务条件共同决定"
+    },
+    {
+      "id": "H05",
+      "group": "真实读者成效",
+      "feature_zh": "简化后事实保全",
+      "metric": "信息单元保留率；源文可回答问题的可回答率",
+      "verification_level": "A/R",
+      "caveats": "删除限制条件可以使文本更顺却错误"
+    },
+    {
+      "id": "H06",
+      "group": "真实读者成效",
+      "feature_zh": "理解信心校准",
+      "metric": "信心-正确率误差；错误高置信回答率",
+      "verification_level": "R",
+      "caveats": "不宜把主观满意度等同于理解正确"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "as_of": "2026-10-26",
+  "project": "psiQAQ/text-prison",
+  "kind": "additive_docs_only",
+  "count_features": 55,
+  "count_tools": 22,
+  "count_candidate_rules": 16,
+  "files": {
+    "docs/plans/2026-10-26-linguistic-naturalness-candidates.md": "db9b271ed6247cf7bc399a0a4130f5907a90a907236660e4d2a1bc951f16b39c",
+    "docs/research/2026-10-26-linguistic-naturalness/01-feature-matrix.md": "ffeb8a0b47f51ad63aa3a118e0bc9fddd0a405e0fea254b2779f95bcce9a58b6",
+    "docs/research/2026-10-26-linguistic-naturalness/02-project-candidates.md": "75095062b16e22cbe9d1e4e13c87e4df6f8c7b06ff168961111950667550d220",
+    "docs/research/2026-10-26-linguistic-naturalness/03-rule-triage.md": "37e7fe23c71facea663e3b336d8865d2de123b247a0ca6344d0a8389f9fd0e88",
+    "docs/research/2026-10-26-linguistic-naturalness/README.md": "13e302acbac92912ad835f80c3410773c07616481007dd2ee33d23d37bf605f1",
+    "docs/research/2026-10-26-linguistic-naturalness/metrics-catalog.json": "ef7af67afd4a8a5ad9363f4462121b895cbd646d001e634147c8e2fb190c4b29"
+  }
+}

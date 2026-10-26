@@ -6,6 +6,8 @@
 
 先读[研究总览](READABILITY_RESEARCH_2026-10-26.md)或[调研报告](01-report.md)，再按需查看[P0＋P1 实施记录](../../plans/2026-10-26-readability-evolution.md)。[文献地图](02-literature.md)按“原文直接引用”和“本次扩展”区分证据；[工具选型](03-tools.md)区分可日用工具与研究代码；[提示词](04-prompts.md)可单独阅读，不需要安装任何新增工具。
 
+需要逐篇方法、结果与应用边界时，读[17 篇分主题全文精读](07-thematic-fulltext-review.md)。该报告基于下载版本的 279 页全文，按六个主题组织，记录版本差异、附录范围、原文疑点和对当前 Skill 的建议；本次仅新增研究说明，没有进一步修改 Skill。
+
 ## 原包基线与兼容性
 
 | 项目 | 原包状态 |
@@ -31,6 +33,7 @@
 | `04-prompts.md` | 通用短提示、按用途补充、单段编辑示例与反例 |
 | `05-repository-audit.md` | 根据固定文件得出的观察、缺口和风险 |
 | `06-verification.md` | 原包交付检查与后续本地整理记录，分别注明对象 |
+| `07-thematic-fulltext-review.md` | 17 篇下载版本的分主题全文阅读、逐篇证据与 Skill 应用建议 |
 | `sources.json` | 原包来源登记及追加的本地全文版本、下载与核对记录 |
 | `package-manifest.json` | 原始 ZIP 中其余文件的字节数和 SHA-256；保留原样，不代表当前工作区 |
 
@@ -45,6 +48,8 @@ P01 为 arXiv v2 作者稿，P03 为标注 COLM 2024 的 arXiv v2 作者版本�
 ## 证据说明
 
 原包将文献分为正文阅读、摘要阅读、项目说明阅读和仅入口核对，不将它们统称为“完整复现”。各条原始范围保留在 [sources.json](sources.json) 的 `inspection` 中：主论文登记为正文、书目与附录阅读及 PDF 第 1、6 页图像核对；多数扩展论文只采用出版机构摘要，未逐表核验，部分 GitHub 项目只核对作者链接。后续本地检查追加在 `local_verification` 和[本地核对记录](06-verification.md#local-verification-20261026)，不把自动提取全文记成阅读了全文。
+
+其后的[分主题精读](07-thematic-fulltext-review.md#reading-scope)单独记录六组 Agent 阅读及主 Agent 回查的范围，不覆盖上述历史记录。下载文件均已阅读，P01、P06 外置补充材料仍有缺口；这不构成论文复现、独立人工评审或 Skill 效果验证。
 
 工具星标是检索当日GitHub页面展示的约数，不是严格实时计数、活跃度评估或效果证明。外部链接可能有访问控制；ASD官方FAQ本轮返回403，相关标准只保留官方入口和项目既有摘要，不宣称取得完整标准。
 

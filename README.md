@@ -75,21 +75,25 @@ flowchart TD
     b --> references
     c --> references
     choice -->|"动作已明确"| references["按用途和语言加载参考"]
-    references --> ambiguity{"存在术语、指代、条件或结构歧义？"}
-    ambiguity -->|"有"| ste["加载 ASD-STE100 启发的 STE-inspired 指导：术语一致、明确对象、厘清条件与动作"]
+    references --> ambiguity{"存在歧义、主干中断、模板冗余或体裁问题？"}
+    ambiguity -->|"有"| ste["加载 STE-inspired 指导：按语境消歧、处理难读表达，保留技术含义"]
     ambiguity -->|"无"| permission
     ste --> permission{"请求或所选方案允许修改？"}
     permission -->|"否"| audit["结合已加载指导核对原文，只输出问题与依据"]
-    permission -->|"是"| draft["结合已加载指导形成初稿，澄清歧义并核对原意"]
+    permission -->|"是"| draft["结合已加载指导形成初稿，改善阅读障碍并核对原意"]
     audit --> select
     draft --> select{"需要哪些机械检查？"}
-    select -->|"Vale"| vale["选择适用 Vale 配置"]
+    select -->|"Vale"| valeChoice{"明确选择模板表达诊断？"}
     select -->|"AutoCorrect"| auto["选择适用中文排版配置"]
-    select -->|"两者"| both["分别选择配置，共用修订轮次"]
+    select -->|"两者"| both["选择中文排版配置，并选择当轮 Vale 配置；共用修订轮次"]
     select -->|"均不需要"| output["交付正文、文件入口或问题清单；仅对所选工具说明状态"]
+    both --> valeChoice
+    valeChoice -->|"否"| vale["采用项目配置或已选常规 Vale 配置"]
+    valeChoice -->|"是"| optional["确认切换范围，选择对应语言可选配置；仅 Markdown，替代其他 Vale 配置"]
     vale --> ready
+    optional --> ready
     auto --> ready
-    both --> ready["逐个核对工具、配置、规则和输入；缺失方记 Not Run"]
+    ready["逐个核对工具、配置、规则和输入；缺失方记 Not Run"]
     ready --> run["就绪的所选工具各检查一次；若均未就绪则跳过"]
     run --> mode{"是否为改写任务，且有范围内适用诊断？"}
     mode -->|"否：含仅审阅"| output
@@ -100,15 +104,19 @@ flowchart TD
     once --> output
 ```
 
-ASD-STE100 的作用体现在改写或审阅前按需加载的 [STE-inspired 指导](skills/text-prison/references/ste-inspired.md)：Agent 据此澄清术语、对象、指代和条件关系。仅审阅时只指出问题；允许改写时才调整文字。即使不运行 Vale 或 AutoCorrect，这些写作原则仍可使用。完整介绍见 [STE 思想如何参与写作](#ste-思想如何参与写作)。
+[STE-inspired 指导](skills/text-prison/references/ste-inspired.md) 在改写或审阅前按需加载：其中的 STE 启发原则帮助澄清术语、对象、指代和条件，后续可读性指导处理主干中断、模板表达和重复铺垫。仅审阅时只指出问题；允许改写时才调整文字。即使不运行 Vale 或 AutoCorrect，这些写作原则仍可使用。完整介绍见 [STE 思想如何参与写作](#ste-思想如何参与写作)。
 
 工具提示只影响已获准修改的内容。缺少工具时说明 `Not Run`，不自动下载；同一轮两个工具最多各运行一次，共用一次修订，必要时至多再各复查一次。自动发现取决于宿主；上图说明 Skill 的约定流程，不证明宿主触发或写作效果已通过实测。更多局部修改与科研保护示例见[使用说明](docs/USAGE.md)。
 
 ## Vale：显式写作规则检查
 
-**原项目：[Vale CLI](https://github.com/vale-cli/vale)。** Vale 先解析 Markdown 等文档结构，再按配置中的规则检查对应作用域，返回位置、规则名、级别和提示。规则可以针对标题或链接文字；本 Skill 只启用少量 Google/Microsoft 建议和原创模糊链接规则。当前配置不全量检查语法，也不自带完整项目术语库。
+**原项目：[Vale CLI](https://github.com/vale-cli/vale)。** Vale 先解析 Markdown 等文档结构，再按配置中的规则检查对应作用域，返回位置、规则名、级别和提示。常规配置只启用少量 Google/Microsoft 建议和原创模糊链接规则；明确选择模板表达诊断时，还可用独立的可选配置提示少量中英文固定短语。当前配置不全量检查语法，也不自带完整项目术语库。
 
 在 TextPrison 中，它的过程是：**选文档用途 → 读取项目已有配置或选定的 Skill 配置 → 确认 CLI 与所需规则已准备 → 检查明确输入 → Agent 判断提示是否符合原意和修改范围 → 按需修订**。Google/Microsoft 包须事先按授权准备；中文、科研和保守配置不需要它们。完整配置与维护版本见 [Vale 说明](skills/text-prison/vale/README.md)。
+
+可选模板配置也不需要下载规则包，仅用于 Markdown，并替代当轮其他 Vale 配置，不额外扫描。它只定位字符串，不能判断一句话是否空泛或由 AI 生成；必要背景、真实对比、原样引语和科研限定仍须保留。仅请求一般润色或检查时不自动选用，六个原有配置的行为不变。
+
+需要这类提示时，可明确提出：“请检查这份中文 Markdown 的模板表达，使用 TextPrison 的可选中文 Vale 配置，仅报告候选位置，不改文件。”这是示意请求，仍需先确认本机已有 Vale；配置与固定短语清单见 [Vale 维护入口](skills/text-prison/vale/README.md#规则含义和边界)。它不增加新引擎，也不将机械提示作为内容正确性验收。
 
 ### 实际案例：同一输入，按用途选择检查范围
 
@@ -323,9 +331,9 @@ $autoCorrectExitCode
 
 TextPrison 根据这些官方说明和固定社区参考，提炼可跨语言使用的消歧方法：同一概念保持名称一致，明确对象与指代，在动作前给出必要条件，区分操作、解释和结果，并保持步骤及段落主题清楚。
 
-这些方法通过 Agent 写作指导生效。README、操作说明、API 参考、科研说明或 Agent 指令中出现相关歧义时，Skill 才加载 [STE-inspired 参考](skills/text-prison/references/ste-inspired.md)。不会为每份文档强制套用英文词数、时态或受控词典，也不会因此运行额外工具。
+这些方法通过 Agent 写作指导生效。README、操作说明、API 参考、科研说明或 Agent 指令中出现相关歧义、主干中断、模板冗余或体裁问题时，Skill 按需加载 [STE-inspired 参考](skills/text-prison/references/ste-inspired.md)。不会为每份文档强制套用英文词数、时态或受控词典，也不会因此运行额外工具。
 
-参考页也吸收了[可读性研究](docs/research/2026-10-26-llm-readability/READABILITY_RESEARCH_2026-10-26.md)中的工程建议：不以最少字数或 Token 为目标；必要时展开名词串、已有关系和插入信息，原文已经清楚时可以不改。这些补充不是新的 STE 标准条款，也不证明本 Skill 已改善读者表现。
+参考页也吸收了[可读性研究](docs/research/2026-10-26-llm-readability/READABILITY_RESEARCH_2026-10-26.md)中的工程建议：不以最少字数或 Token 为目标；必要时展开名词串、已有关系和插入信息。模板表达按实际作用处理，不为保留原文风格留下阅读障碍，也不因“像 AI”改动清楚的表达。原文事实、技术含义及用户指定的语气继续保留。这些补充不是新的 STE 标准条款，也不证明本 Skill 已改善读者表现。
 
 **编辑示例，非运行记录**：假设上下文已明确“它”是导出的配置文件，且使用编辑器修改该文件。
 
@@ -356,12 +364,14 @@ text-prison/                              # 仓库根目录
 │   ├── DESIGN.md                        # 当前职责、流程与设计边界
 │   ├── RELATED_WORK.md                  # 来源目录与上游快照阅读范围
 │   ├── research/                        # 调研文档与独立来源登记
-│   │   └── 2026-10-26-llm-readability/   # 可读性报告、文献地图与原包凭证
+│   │   ├── 2026-10-26-llm-readability/   # 可读性报告、文献地图、精读与原包凭证
+│   │   └── 2026-10-26-linguistic-naturalness/ # 自然度与表达特征的原始研究包
 │   └── plans/                           # 已审阅的方案与交付记录
 │       ├── text-prison-vale.md           # 统一 Skill 与 Vale 接入方案
 │       ├── chinese-publish-install.md   # 中文支持、发布、安装和 CLI 实测记录
 │       ├── readme-user-guide-ste.md      # README 与 STE 方案、意见取舍及验收
-│       └── 2026-10-26-readability-evolution.md # 可读性 P0＋P1 范围及实施记录
+│       ├── 2026-10-26-readability-evolution.md # 可读性 P0＋P1 范围及实施记录
+│       └── 2026-10-26-linguistic-naturalness-candidates.md # 原始候选方案，非当前实施清单
 ├── skills/                              # 可安装 Skill 的唯一源码位置
 │   └── text-prison/                     # 自包含的 TextPrison Skill
 │       ├── SKILL.md                     # 发现描述、方案选择、编辑与检查流程
@@ -391,8 +401,14 @@ text-prison/                              # 仓库根目录
 │       │   ├── research-en.ini          # 英文科研链接文字配置
 │       │   ├── zh.ini                   # 中文链接文字配置
 │       │   ├── conservative.ini         # 中英混合与 Agent 指令的保守配置
+│       │   ├── optional-prose-zh.ini     # 明确选择的中文模板表达提示
+│       │   ├── optional-prose-en.ini     # 明确选择的英文模板表达提示
 │       │   └── styles/                  # 原创规则及获准同步包的目标位置
 │       │       ├── .gitignore           # 仅忽略指定同步包和 Vale 生成目录
+│       │       ├── TextPrisonOptional/  # 独立选用的三条固定短语规则
+│       │       │   ├── BoilerplateOpeningZh.yml # 中文模板铺垫
+│       │       │   ├── BoilerplateEndingZh.yml  # 中文固定套尾
+│       │       │   └── OverloadedIntroEn.yml   # 英文冗长前缀
 │       │       └── TextPrison/          # 本项目的原创链接文字规则
 │       │           ├── VagueLinkEn.yml  # 英文泛指链接文字提示
 │       │           └── VagueLinkZh.yml  # 中文泛指链接文字提示
@@ -415,6 +431,8 @@ text-prison/                              # 仓库根目录
 - [使用说明](docs/USAGE.md)：局部修改、科研保护、CLI 调用与失败处理。
 - [当前设计](docs/DESIGN.md)、[README 与 STE 实施记录](docs/plans/readme-user-guide-ste.md)：职责、此前审阅取舍及验收。
 - [可读性调研](docs/research/2026-10-26-llm-readability/READABILITY_RESEARCH_2026-10-26.md)、[P0＋P1 实施记录](docs/plans/2026-10-26-readability-evolution.md)：研究依据、技术回答入口及本地文献获取情况。
+- [17 篇分主题精读](docs/research/2026-10-26-llm-readability/07-thematic-fulltext-review.md)：下载版本的全文证据、局限和应用建议。
+- [自然度与表达特征研究包](docs/research/2026-10-26-linguistic-naturalness/README.md)：保留基于旧版本的候选材料；其中的演进建议不是当前实施清单，已采用的能力以本 README 和 Skill 说明为准。
 - [来源目录](docs/RELATED_WORK.md)、[机器索引](sources.json)、[归属说明](NOTICE.md)：来源、阅读范围与许可。
 - [统一 Skill 方案](docs/plans/text-prison-vale.md)、[中文支持及安装记录](docs/plans/chinese-publish-install.md)：此前设计与实际交付。
 

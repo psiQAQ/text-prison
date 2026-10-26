@@ -1,0 +1,8 @@
+extends: existence
+message: "“%s”是固定铺垫候选；核对是否提供必要背景，无实质作用时再删，保留事实和条件。"
+level: suggestion
+scope: paragraph
+nonword: true
+tokens:
+  - '在当今快速发展的时代'
+  - '在这个日新月异的时代'

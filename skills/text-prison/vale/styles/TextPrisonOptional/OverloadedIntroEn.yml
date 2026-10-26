@@ -1,0 +1,9 @@
+extends: existence
+message: "Check whether '%s' adds needed context or emphasis; omit it only if unnecessary, preserving facts, conditions and qualifications."
+level: suggestion
+scope: paragraph
+ignorecase: true
+tokens:
+  - 'It is important to note that'
+  - 'It is worth noting that'
+  - "In today's rapidly evolving world"

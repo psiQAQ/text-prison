@@ -1,0 +1,8 @@
+extends: existence
+message: "“%s”是固定套尾候选；核对礼貌要求和沟通作用，无实质作用时再删，保留必要总结。"
+level: suggestion
+scope: paragraph
+nonword: true
+tokens:
+  - '希望以上内容对你有所帮助'
+  - '希望这篇文章能给你带来启发'

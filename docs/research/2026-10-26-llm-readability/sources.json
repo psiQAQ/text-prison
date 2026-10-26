@@ -1,0 +1,958 @@
+{
+  "report_date": "2026-10-26",
+  "repository": "psiQAQ/text-prison",
+  "base_commit": "c6073e9e9dd2f66c6e823c9dfc9818ea641bd584",
+  "scope_note": "精选来源；不是完整系统综述或运行依赖锁文件。实际阅读范围逐条记录。",
+  "sources": [
+    {
+      "id": "P00",
+      "title": "Why is AI-generated language so hard to understand?",
+      "url": "https://arxiv.org/html/2610.29162v1",
+      "kind": "seed_paper",
+      "checked_on": "2026-10-26",
+      "inspection": "HTML正文、参考文献和附录；PDF第1、6页图像核对；未复现实验",
+      "year": 2026,
+      "publication": "arXiv v1；2026-10-21；预印本",
+      "abstract_url": "https://arxiv.org/abs/2610.29162",
+      "pdf_url": "https://arxiv.org/pdf/2610.29162",
+      "cited_by_seed": null,
+      "authors": [
+        "Thomas Hikaru Clark",
+        "Matias B. Martin",
+        "Kyle Mahowald"
+      ],
+      "local_copy": {
+        "status": "downloaded",
+        "requested_url": "https://arxiv.org/pdf/2610.29162v1",
+        "download_url": "https://arxiv.org/pdf/2610.29162v1",
+        "retrieved_on": "2026-10-26",
+        "local_path": "docs/reference/2026-10-26-llm-readability/P00-2026-ai-generated-language-v1.pdf",
+        "bytes": 920810,
+        "sha256": "22b070a715665f70ffa1c8f7ef9977959c9b223b60138cb2b38459d0dd3f55b7",
+        "pages": 23,
+        "version": "arXiv:2610.29162v1，预印本",
+        "identity_check": "PDF 文件头、全页解析及文本提取通过；当前 Agent 核对标题、作者及首页版本信息，不是独立人工验收"
+      },
+      "local_verification": {
+        "checked_on": "2026-10-26",
+        "inspection": "PDF 首页的论文身份与版本信息；全页文本提取仅用于文件可解析性检查，不等于全文审读；另核对 arXiv HTML 的摘要、引言、研究限制及相关书目",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "P01",
+      "title": "Do LLMs write like humans? Variation in grammatical and rhetorical styles",
+      "url": "https://www.pnas.org/doi/10.1073/pnas.2422455122",
+      "kind": "paper",
+      "checked_on": "2026-10-26",
+      "inspection": "出版社正文与摘要阅读；未复现",
+      "year": 2025,
+      "publication": "PNAS",
+      "cited_by_seed": true,
+      "authors": [
+        "Alex Reinhart",
+        "Ben Markey",
+        "Michael Laudenbach",
+        "Kachatad Pantusen",
+        "Ronald Yurko",
+        "Gordon Weinberg",
+        "David West Brown"
+      ],
+      "local_copy": {
+        "status": "downloaded",
+        "requested_url": "https://arxiv.org/pdf/2410.16107v2",
+        "download_url": "https://arxiv.org/pdf/2410.16107v2",
+        "retrieved_on": "2026-10-26",
+        "local_path": "docs/reference/2026-10-26-llm-readability/P01-2025-llm-grammatical-rhetorical-styles.pdf",
+        "bytes": 2521846,
+        "sha256": "f0bdcb53ed99774d4db44273e0d56e78e3aceb11c1b2b70561f87936541a7c1c",
+        "pages": 7,
+        "version": "arXiv:2410.16107v2，作者稿；首页标注 DRAFT，非出版社 PDF",
+        "identity_check": "PDF 文件头、全页解析及文本提取通过；当前 Agent 核对标题、作者及首页版本信息，不是独立人工验收",
+        "retrieval_note": "首选公开入口返回 HTTP 403，改用已核对的作者、arXiv 或机构副本；实际版本见 version"
+      },
+      "local_verification": {
+        "checked_on": "2026-10-26",
+        "inspection": "PDF 首页的论文身份与版本信息；全页文本提取仅用于文件可解析性检查，不等于全文审读",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "P02",
+      "title": "Why Does ChatGPT “Delve” So Much? Exploring the Sources of Lexical Overrepresentation in Large Language Models",
+      "url": "https://arxiv.org/abs/2412.11385",
+      "kind": "paper",
+      "checked_on": "2026-10-26",
+      "inspection": "作者预印本摘要、元数据；未逐表复核",
+      "year": 2025,
+      "publication": "COLING 2025；预印本首发2024",
+      "cited_by_seed": true,
+      "authors": [
+        "Tom S. Juzek",
+        "Zina B. Ward"
+      ],
+      "local_copy": {
+        "status": "downloaded",
+        "requested_url": "https://aclanthology.org/2025.coling-main.426.pdf",
+        "download_url": "https://aclanthology.org/2025.coling-main.426.pdf",
+        "retrieved_on": "2026-10-26",
+        "local_path": "docs/reference/2026-10-26-llm-readability/P02-2025-chatgpt-delve.pdf",
+        "bytes": 2476748,
+        "sha256": "8ac94feadb43077cc294abb0f208d2bece1c16652bcafbfbd47a1720e2da86ed",
+        "pages": 15,
+        "version": "COLING 2025 正式发表版，ACL Anthology",
+        "identity_check": "PDF 文件头、全页解析及文本提取通过；当前 Agent 核对标题、作者及首页版本信息，不是独立人工验收"
+      },
+      "local_verification": {
+        "checked_on": "2026-10-26",
+        "inspection": "PDF 首页的论文身份与版本信息；全页文本提取仅用于文件可解析性检查，不等于全文审读",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      },
+      "publisher_url": "https://aclanthology.org/2025.coling-main.426/"
+    },
+    {
+      "id": "P03",
+      "title": "A Long Way to Go: Investigating Length Correlations in RLHF",
+      "url": "https://arxiv.org/abs/2310.03716",
+      "kind": "paper",
+      "checked_on": "2026-10-26",
+      "inspection": "摘要、接收信息；未复现",
+      "year": 2024,
+      "publication": "COLM 2024；预印本首发2023",
+      "cited_by_seed": true,
+      "authors": [
+        "Prasann Singhal",
+        "Tanya Goyal",
+        "Jiacheng Xu",
+        "Greg Durrett"
+      ],
+      "local_copy": {
+        "status": "downloaded",
+        "requested_url": "https://arxiv.org/pdf/2310.03716v2",
+        "download_url": "https://arxiv.org/pdf/2310.03716v2",
+        "retrieved_on": "2026-10-26",
+        "local_path": "docs/reference/2026-10-26-llm-readability/P03-2024-length-correlations-rlhf-v2.pdf",
+        "bytes": 2610217,
+        "sha256": "66994c5521e3257e94807136a77e6eca11a8dd7ec22b4a7bd6a0012972748ca9",
+        "pages": 21,
+        "version": "arXiv:2310.03716v2 作者版本；首页标注 Published as a conference paper at COLM 2024",
+        "identity_check": "PDF 文件头、全页解析及文本提取通过；当前 Agent 核对标题、作者及首页版本信息，不是独立人工验收"
+      },
+      "local_verification": {
+        "checked_on": "2026-10-26",
+        "inspection": "PDF 首页的论文身份与版本信息；全页文本提取仅用于文件可解析性检查，不等于全文审读；另核对 arXiv 官方摘要及接收信息",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "P04",
+      "title": "Revisiting the Uniform Information Density Hypothesis",
+      "url": "https://aclanthology.org/2021.emnlp-main.74/",
+      "kind": "paper",
+      "checked_on": "2026-10-26",
+      "inspection": "ACL官方摘要与元数据",
+      "year": 2021,
+      "publication": "EMNLP",
+      "cited_by_seed": true,
+      "authors": [
+        "Clara Meister",
+        "Tiago Pimentel",
+        "Patrick Haller",
+        "Lena Jäger",
+        "Ryan Cotterell",
+        "Roger Levy"
+      ],
+      "local_copy": {
+        "status": "downloaded",
+        "requested_url": "https://aclanthology.org/2021.emnlp-main.74.pdf",
+        "download_url": "https://aclanthology.org/2021.emnlp-main.74.pdf",
+        "retrieved_on": "2026-10-26",
+        "local_path": "docs/reference/2026-10-26-llm-readability/P04-2021-uniform-information-density.pdf",
+        "bytes": 6256633,
+        "sha256": "59d0afd23d348f82273a2e2b5cab15673b932c674aa1b5a3e3be9eefd185c1bd",
+        "pages": 18,
+        "version": "EMNLP 2021 正式发表版，ACL Anthology",
+        "identity_check": "PDF 文件头、全页解析及文本提取通过；当前 Agent 核对标题、作者及首页版本信息，不是独立人工验收"
+      },
+      "local_verification": {
+        "checked_on": "2026-10-26",
+        "inspection": "PDF 首页的论文身份与版本信息；全页文本提取仅用于文件可解析性检查，不等于全文审读",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "P05",
+      "title": "Uniform Information Density-Based Preference Optimization",
+      "url": "https://arxiv.org/html/2610.14578v1",
+      "kind": "paper",
+      "checked_on": "2026-10-26",
+      "inspection": "摘要、方法、实验设置和讨论的HTML段落；未复现",
+      "year": 2026,
+      "publication": "arXiv v1；种子论文书目列 COLM 2026，但本地未独立核实会议录用",
+      "cited_by_seed": true,
+      "code_url": "https://github.com/CLCS-SUSTech/UIDPO",
+      "authors": [
+        "Yongyuan Li",
+        "Yang Xu"
+      ],
+      "local_copy": {
+        "status": "downloaded",
+        "requested_url": "https://arxiv.org/pdf/2610.14578v1",
+        "download_url": "https://arxiv.org/pdf/2610.14578v1",
+        "retrieved_on": "2026-10-26",
+        "local_path": "docs/reference/2026-10-26-llm-readability/P05-2026-uidpo-v1.pdf",
+        "bytes": 3759765,
+        "sha256": "1a31e5a8ee801915bf839ab6ab82c65432cc8dacccdc8a339e310972b0d98e32",
+        "pages": 18,
+        "version": "arXiv:2610.14578v1；首页标注 Preprint. Under review.，会议录用未独立核实",
+        "identity_check": "PDF 文件头、全页解析及文本提取通过；当前 Agent 核对标题、作者及首页版本信息，不是独立人工验收"
+      },
+      "local_verification": {
+        "checked_on": "2026-10-26",
+        "inspection": "PDF 首页的论文身份与版本信息；全页文本提取仅用于文件可解析性检查，不等于全文审读；下载稿标注 Under review；OpenReview 网页访问遇到验证页面，官方 API 返回 HTTP 403，未核实录用",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run",
+        "publication_status": "conference_acceptance_not_independently_verified"
+      },
+      "original_package_publication": "COLM 2026（种子论文书目及OpenReview条目）；arXiv v1",
+      "openreview_url": "https://openreview.net/forum?id=7PEYAPbjtN"
+    },
+    {
+      "id": "P06",
+      "title": "Poor writing, not specialized concepts, drives processing difficulty in legal language",
+      "url": "https://doi.org/10.1016/j.cognition.2022.105070",
+      "kind": "paper",
+      "checked_on": "2026-10-26",
+      "inspection": "出版信息和作者网页摘要；DOI直接访问失败，使用作者页面交叉核对",
+      "year": 2022,
+      "publication": "Cognition",
+      "cited_by_seed": true,
+      "accessible_url": "https://mollicaf.github.io/publication/martinez-202-xwhat/",
+      "authors": [
+        "Eric Martínez",
+        "Francis Mollica",
+        "Edward Gibson"
+      ],
+      "local_copy": {
+        "status": "downloaded",
+        "requested_url": "https://www.pure.ed.ac.uk/ws/portalfiles/portal/256304933/Poor_Writing_MARTINEZ_DOA17022022_VOR_CC_BY_NC_ND.pdf",
+        "download_url": "https://www.pure.ed.ac.uk/ws/portalfiles/portal/256304933/Poor_Writing_MARTINEZ_DOA17022022_VOR_CC_BY_NC_ND.pdf",
+        "retrieved_on": "2026-10-26",
+        "local_path": "docs/reference/2026-10-26-llm-readability/P06-2022-legal-language.pdf",
+        "bytes": 1133409,
+        "sha256": "763137b06d770660d8a97655fdce02a051804738836cb77e522d467a5b9ebfaf",
+        "pages": 8,
+        "version": "Cognition 224 (2022) 105070 正式发表版，爱丁堡大学仓储封面标注 Version of record",
+        "identity_check": "PDF 文件头、全页解析及文本提取通过；当前 Agent 核对标题、作者及首页版本信息，不是独立人工验收",
+        "retrieval_note": "首选公开入口返回 HTTP 403，改用已核对的作者、arXiv 或机构副本；实际版本见 version"
+      },
+      "local_verification": {
+        "checked_on": "2026-10-26",
+        "inspection": "核对机构封面及正文首页（PDF 第 1–2 页）的论文身份、正式发表版声明与摘要；对照作者网页的旧摘要；全页解析不等于全文审读",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run",
+        "version_difference": "正式发表版摘要为两项实验，总 N = 184；作者网页旧摘要为 108 人。文献地图已区分版本并采用正式版总数。"
+      }
+    },
+    {
+      "id": "P07",
+      "title": "Large-scale evidence of dependency length minimization in 37 languages",
+      "url": "https://www.pnas.org/doi/10.1073/pnas.1502134112",
+      "kind": "paper",
+      "checked_on": "2026-10-26",
+      "inspection": "出版社页面、摘要和更正提示；未重新核算数据",
+      "year": 2015,
+      "publication": "PNAS；页面列有更正",
+      "cited_by_seed": true,
+      "authors": [
+        "Richard Futrell",
+        "Kyle Mahowald",
+        "Edward Gibson"
+      ],
+      "local_copy": {
+        "status": "downloaded",
+        "requested_url": "https://mahowak.github.io/assets/pdf/dep.pdf",
+        "download_url": "https://mahowak.github.io/assets/pdf/dep.pdf",
+        "retrieved_on": "2026-10-26",
+        "local_path": "docs/reference/2026-10-26-llm-readability/P07-2015-dependency-length-37-languages.pdf",
+        "bytes": 1819687,
+        "sha256": "555824c78f851bd550962c5659ddf8353f729c28d13b252f6a4e78844136a453",
+        "pages": 11,
+        "version": "PNAS 2015 作者网站副本：6 页正文及 5 页补充材料；更正另见公开入口",
+        "identity_check": "PDF 文件头、全页解析及文本提取通过；当前 Agent 核对标题、作者及首页版本信息，不是独立人工验收",
+        "retrieval_note": "首选公开入口返回 HTTP 403，改用已核对的作者、arXiv 或机构副本；实际版本见 version"
+      },
+      "local_verification": {
+        "checked_on": "2026-10-26",
+        "inspection": "PDF 首页的论文身份与版本信息；全页文本提取仅用于文件可解析性检查，不等于全文审读；确认副本包含正文及 Supporting Information；未重新计算结果，也未把副本标成已合并更正的版本",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      },
+      "correction_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4655573/"
+    },
+    {
+      "id": "P08",
+      "title": "Why Does Surprisal From Larger Transformer-Based Language Models Provide a Poorer Fit to Human Reading Times?",
+      "url": "https://aclanthology.org/2023.tacl-1.20/",
+      "kind": "paper",
+      "checked_on": "2026-10-26",
+      "inspection": "ACL官方摘要与元数据",
+      "year": 2023,
+      "publication": "TACL",
+      "cited_by_seed": true,
+      "authors": [
+        "Byung-Doh Oh",
+        "William Schuler"
+      ],
+      "local_copy": {
+        "status": "downloaded",
+        "requested_url": "https://aclanthology.org/2023.tacl-1.20.pdf",
+        "download_url": "https://aclanthology.org/2023.tacl-1.20.pdf",
+        "retrieved_on": "2026-10-26",
+        "local_path": "docs/reference/2026-10-26-llm-readability/P08-2023-surprisal-reading-times.pdf",
+        "bytes": 1111106,
+        "sha256": "0d051f3582bf1bdb96f252b4d24b3eedde51293217a982c739df190e2b3e1f4b",
+        "pages": 15,
+        "version": "TACL 2023 正式发表版，ACL Anthology",
+        "identity_check": "PDF 文件头、全页解析及文本提取通过；当前 Agent 核对标题、作者及首页版本信息，不是独立人工验收"
+      },
+      "local_verification": {
+        "checked_on": "2026-10-26",
+        "inspection": "PDF 首页的论文身份与版本信息；全页文本提取仅用于文件可解析性检查，不等于全文审读",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "E01",
+      "title": "Controllable Sentence Simplification",
+      "url": "https://arxiv.org/abs/1910.02677",
+      "kind": "paper",
+      "checked_on": "2026-10-26",
+      "inspection": "摘要及引言/控制属性段落",
+      "year": 2020,
+      "publication": "LREC 2020；预印本首发2019",
+      "cited_by_seed": false,
+      "authors": [
+        "Louis Martin",
+        "Éric Villemonte de la Clergerie",
+        "Benoît Sagot",
+        "Antoine Bordes"
+      ],
+      "local_copy": {
+        "status": "downloaded",
+        "requested_url": "https://aclanthology.org/2020.lrec-1.577.pdf",
+        "download_url": "https://aclanthology.org/2020.lrec-1.577.pdf",
+        "retrieved_on": "2026-10-26",
+        "local_path": "docs/reference/2026-10-26-llm-readability/E01-2020-access.pdf",
+        "bytes": 2320612,
+        "sha256": "9c8ecae5c9b35830dad331f446037d64984cc5913ac481e29cdd8381363e672e",
+        "pages": 10,
+        "version": "LREC 2020 正式发表版，ACL Anthology",
+        "identity_check": "PDF 文件头、全页解析及文本提取通过；当前 Agent 核对标题、作者及首页版本信息，不是独立人工验收"
+      },
+      "local_verification": {
+        "checked_on": "2026-10-26",
+        "inspection": "PDF 首页的论文身份与版本信息；全页文本提取仅用于文件可解析性检查，不等于全文审读；另核对 ACL Anthology 官方摘要及元数据",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      },
+      "publisher_url": "https://aclanthology.org/2020.lrec-1.577/"
+    },
+    {
+      "id": "E02",
+      "title": "MUSS: Multilingual Unsupervised Sentence Simplification by Mining Paraphrases",
+      "url": "https://aclanthology.org/2022.lrec-1.176/",
+      "kind": "paper",
+      "checked_on": "2026-10-26",
+      "inspection": "ACL官方摘要；另查项目README",
+      "year": 2022,
+      "publication": "LREC",
+      "cited_by_seed": false,
+      "code_url": "https://github.com/facebookresearch/muss",
+      "authors": [
+        "Louis Martin",
+        "Angela Fan",
+        "Éric de la Clergerie",
+        "Antoine Bordes",
+        "Benoît Sagot"
+      ],
+      "local_copy": {
+        "status": "downloaded",
+        "requested_url": "https://aclanthology.org/2022.lrec-1.176.pdf",
+        "download_url": "https://aclanthology.org/2022.lrec-1.176.pdf",
+        "retrieved_on": "2026-10-26",
+        "local_path": "docs/reference/2026-10-26-llm-readability/E02-2022-muss.pdf",
+        "bytes": 511451,
+        "sha256": "fbdb9313c47790183aa2621c305ae53372d5c6d5c31e209ccdccbdd4a9eb0b86",
+        "pages": 14,
+        "version": "LREC 2022 正式发表版，ACL Anthology",
+        "identity_check": "PDF 文件头、全页解析及文本提取通过；当前 Agent 核对标题、作者及首页版本信息，不是独立人工验收"
+      },
+      "local_verification": {
+        "checked_on": "2026-10-26",
+        "inspection": "PDF 首页的论文身份与版本信息；全页文本提取仅用于文件可解析性检查，不等于全文审读",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "E03",
+      "title": "BLESS: Benchmarking Large Language Models on Sentence Simplification",
+      "url": "https://aclanthology.org/2023.emnlp-main.821/",
+      "kind": "paper",
+      "checked_on": "2026-10-26",
+      "inspection": "ACL官方摘要与元数据；代码入口检索",
+      "year": 2023,
+      "publication": "EMNLP",
+      "cited_by_seed": false,
+      "code_url": "https://github.com/ZurichNLP/BLESS",
+      "authors": [
+        "Tannon Kew",
+        "Alison Chi",
+        "Laura Vásquez-Rodríguez",
+        "Sweta Agrawal",
+        "Dennis Aumiller",
+        "Fernando Alva-Manchego",
+        "Matthew Shardlow"
+      ],
+      "local_copy": {
+        "status": "downloaded",
+        "requested_url": "https://aclanthology.org/2023.emnlp-main.821.pdf",
+        "download_url": "https://aclanthology.org/2023.emnlp-main.821.pdf",
+        "retrieved_on": "2026-10-26",
+        "local_path": "docs/reference/2026-10-26-llm-readability/E03-2023-bless.pdf",
+        "bytes": 1103055,
+        "sha256": "c226b82f133983aeec0f48d9aa0e811ac55e3134b3ce01c91d37db723ac03055",
+        "pages": 19,
+        "version": "EMNLP 2023 正式发表版，ACL Anthology",
+        "identity_check": "PDF 文件头、全页解析及文本提取通过；当前 Agent 核对标题、作者及首页版本信息，不是独立人工验收"
+      },
+      "local_verification": {
+        "checked_on": "2026-10-26",
+        "inspection": "PDF 首页的论文身份与版本信息；全页文本提取仅用于文件可解析性检查，不等于全文审读",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "E04",
+      "title": "Optimizing Statistical Machine Translation for Text Simplification",
+      "url": "https://aclanthology.org/Q16-1029/",
+      "kind": "paper",
+      "checked_on": "2026-10-26",
+      "inspection": "ACL官方摘要和元数据；SARI仅作方法背景，不重引实验表",
+      "year": 2016,
+      "publication": "TACL",
+      "cited_by_seed": false,
+      "authors": [
+        "Wei Xu",
+        "Courtney Napoles",
+        "Ellie Pavlick",
+        "Quanze Chen",
+        "Chris Callison-Burch"
+      ],
+      "local_copy": {
+        "status": "downloaded",
+        "requested_url": "https://aclanthology.org/Q16-1029.pdf",
+        "download_url": "https://aclanthology.org/Q16-1029.pdf",
+        "retrieved_on": "2026-10-26",
+        "local_path": "docs/reference/2026-10-26-llm-readability/E04-2016-sari.pdf",
+        "bytes": 440845,
+        "sha256": "593459547e8175c068dd5e76eb0b23440fa279b7f6d49a214337b3c9b7419c6d",
+        "pages": 16,
+        "version": "TACL 2016 正式发表版，ACL Anthology",
+        "identity_check": "PDF 文件头、全页解析及文本提取通过；当前 Agent 核对标题、作者及首页版本信息，不是独立人工验收"
+      },
+      "local_verification": {
+        "checked_on": "2026-10-26",
+        "inspection": "PDF 首页的论文身份与版本信息；全页文本提取仅用于文件可解析性检查，不等于全文审读",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      },
+      "existing_root_source_id": "R18"
+    },
+    {
+      "id": "E05",
+      "title": "LENS: A Learnable Evaluation Metric for Text Simplification",
+      "url": "https://aclanthology.org/2023.acl-long.905/",
+      "kind": "paper",
+      "checked_on": "2026-10-26",
+      "inspection": "ACL官方摘要；GitHub上游关系与README",
+      "year": 2023,
+      "publication": "ACL",
+      "cited_by_seed": false,
+      "code_url": "https://github.com/Yao-Dou/LENS",
+      "authors": [
+        "Mounica Maddela",
+        "Yao Dou",
+        "David Heineman",
+        "Wei Xu"
+      ],
+      "local_copy": {
+        "status": "downloaded",
+        "requested_url": "https://aclanthology.org/2023.acl-long.905.pdf",
+        "download_url": "https://aclanthology.org/2023.acl-long.905.pdf",
+        "retrieved_on": "2026-10-26",
+        "local_path": "docs/reference/2026-10-26-llm-readability/E05-2023-lens.pdf",
+        "bytes": 3862091,
+        "sha256": "72ea420978911ef431252e6d00a458de8867e519640dd235a1f75ffdf12e3444",
+        "pages": 26,
+        "version": "ACL 2023 正式发表版，ACL Anthology",
+        "identity_check": "PDF 文件头、全页解析及文本提取通过；当前 Agent 核对标题、作者及首页版本信息，不是独立人工验收"
+      },
+      "local_verification": {
+        "checked_on": "2026-10-26",
+        "inspection": "PDF 首页的论文身份与版本信息；全页文本提取仅用于文件可解析性检查，不等于全文审读",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      },
+      "existing_root_source_id": "R19"
+    },
+    {
+      "id": "E06",
+      "title": "Dancing Between Success and Failure: Edit-level Simplification Evaluation using SALSA",
+      "url": "https://aclanthology.org/2023.emnlp-main.211/",
+      "kind": "paper",
+      "checked_on": "2026-10-26",
+      "inspection": "ACL官方摘要和元数据；项目入口检索",
+      "year": 2023,
+      "publication": "EMNLP",
+      "cited_by_seed": false,
+      "code_url": "https://github.com/davidheineman/salsa",
+      "authors": [
+        "David Heineman",
+        "Yao Dou",
+        "Mounica Maddela",
+        "Wei Xu"
+      ],
+      "local_copy": {
+        "status": "downloaded",
+        "requested_url": "https://aclanthology.org/2023.emnlp-main.211.pdf",
+        "download_url": "https://aclanthology.org/2023.emnlp-main.211.pdf",
+        "retrieved_on": "2026-10-26",
+        "local_path": "docs/reference/2026-10-26-llm-readability/E06-2023-salsa.pdf",
+        "bytes": 2421528,
+        "sha256": "562a591ba7cf9a5c37b6d9c7d7724888127629ef071a7cfc86b333894c8855fd",
+        "pages": 30,
+        "version": "EMNLP 2023 正式发表版，ACL Anthology",
+        "identity_check": "PDF 文件头、全页解析及文本提取通过；当前 Agent 核对标题、作者及首页版本信息，不是独立人工验收"
+      },
+      "local_verification": {
+        "checked_on": "2026-10-26",
+        "inspection": "PDF 首页的论文身份与版本信息；全页文本提取仅用于文件可解析性检查，不等于全文审读；另核对 ACL Anthology 官方摘要及元数据",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      },
+      "existing_root_source_id": "R15"
+    },
+    {
+      "id": "E07",
+      "title": "Adapting Sentence-level Automatic Metrics for Document-level Simplification Evaluation",
+      "url": "https://aclanthology.org/2025.naacl-long.327/",
+      "kind": "paper",
+      "checked_on": "2026-10-26",
+      "inspection": "ACL官方摘要和元数据",
+      "year": 2025,
+      "publication": "NAACL",
+      "cited_by_seed": false,
+      "authors": [
+        "Mounica Maddela",
+        "Fernando Alva-Manchego"
+      ],
+      "local_copy": {
+        "status": "downloaded",
+        "requested_url": "https://aclanthology.org/2025.naacl-long.327.pdf",
+        "download_url": "https://aclanthology.org/2025.naacl-long.327.pdf",
+        "retrieved_on": "2026-10-26",
+        "local_path": "docs/reference/2026-10-26-llm-readability/E07-2025-document-simplification-metrics.pdf",
+        "bytes": 339643,
+        "sha256": "7ff5cff4a54afb0db423856da8042d6769af21e79edaef43d8c83dbdf97942c0",
+        "pages": 16,
+        "version": "NAACL 2025 正式发表版，ACL Anthology",
+        "identity_check": "PDF 文件头、全页解析及文本提取通过；当前 Agent 核对标题、作者及首页版本信息，不是独立人工验收"
+      },
+      "local_verification": {
+        "checked_on": "2026-10-26",
+        "inspection": "PDF 首页的论文身份与版本信息；全页文本提取仅用于文件可解析性检查，不等于全文审读；另核对 ACL Anthology 官方摘要及元数据",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      },
+      "existing_root_source_id": "R20"
+    },
+    {
+      "id": "E08",
+      "title": "MCTS: A Multi-Reference Chinese Text Simplification Dataset",
+      "url": "https://aclanthology.org/2024.lrec-main.969/",
+      "kind": "paper",
+      "checked_on": "2026-10-26",
+      "inspection": "ACL官方摘要和代码链接；未检查数据内容",
+      "year": 2024,
+      "publication": "LREC-COLING",
+      "cited_by_seed": false,
+      "code_url": "https://github.com/blcuicall/mcts",
+      "authors": [
+        "Ruining Chong",
+        "Luming Lu",
+        "Liner Yang",
+        "Jinran Nie",
+        "Zhenghao Liu",
+        "Shuo Wang",
+        "Shuhan Zhou",
+        "Yaoxin Li",
+        "Erhong Yang"
+      ],
+      "local_copy": {
+        "status": "downloaded",
+        "requested_url": "https://aclanthology.org/2024.lrec-main.969.pdf",
+        "download_url": "https://aclanthology.org/2024.lrec-main.969.pdf",
+        "retrieved_on": "2026-10-26",
+        "local_path": "docs/reference/2026-10-26-llm-readability/E08-2024-mcts.pdf",
+        "bytes": 1180637,
+        "sha256": "a2b5bac311d42340f1969470e2804dca94bfee86af4450a775d3502ca590753f",
+        "pages": 12,
+        "version": "LREC-COLING 2024 正式发表版，ACL Anthology",
+        "identity_check": "PDF 文件头、全页解析及文本提取通过；当前 Agent 核对标题、作者及首页版本信息，不是独立人工验收"
+      },
+      "local_verification": {
+        "checked_on": "2026-10-26",
+        "inspection": "PDF 首页的论文身份与版本信息；全页文本提取仅用于文件可解析性检查，不等于全文审读",
+        "code_execution": "not_run",
+        "effect_reproduction": "not_run"
+      }
+    },
+    {
+      "id": "T01",
+      "title": "Vale",
+      "url": "https://github.com/vale-cli/vale",
+      "kind": "tool",
+      "checked_on": "2026-10-26",
+      "inspection": "项目README相关段落、GitHub页面许可标识与约数星标；未安装、未审计全部代码",
+      "stars_display": "6.3k",
+      "license_reported": "MIT",
+      "runtime_status": "Not Run",
+      "local_verification": {
+        "checked_on": "2026-10-26",
+        "inspection": "通过 GitHub 连接器读取仓库 API 元数据；未执行或审计代码",
+        "stars_count": 6289,
+        "license_metadata": "MIT"
+      }
+    },
+    {
+      "id": "T02",
+      "title": "AutoCorrect",
+      "url": "https://github.com/huacnlee/autocorrect",
+      "kind": "tool",
+      "checked_on": "2026-10-26",
+      "inspection": "项目README相关段落、GitHub页面许可标识与约数星标；未安装、未审计全部代码",
+      "stars_display": "1.7k",
+      "license_reported": "MIT",
+      "runtime_status": "Not Run",
+      "local_verification": {
+        "checked_on": "2026-10-26",
+        "inspection": "通过 GitHub 连接器读取仓库 API 元数据；未执行或审计代码",
+        "stars_count": 1659,
+        "license_metadata": "MIT"
+      }
+    },
+    {
+      "id": "T03",
+      "title": "textlint",
+      "url": "https://github.com/textlint/textlint",
+      "kind": "tool",
+      "checked_on": "2026-10-26",
+      "inspection": "项目README相关段落、GitHub页面许可标识与约数星标；未安装、未审计全部代码",
+      "stars_display": "3.2k",
+      "license_reported": "MIT",
+      "runtime_status": "Not Run",
+      "local_verification": {
+        "checked_on": "2026-10-26",
+        "inspection": "通过 GitHub 连接器读取仓库 API 元数据；未执行或审计代码",
+        "stars_count": 3202,
+        "license_metadata": "MIT"
+      }
+    },
+    {
+      "id": "T04",
+      "title": "retext",
+      "url": "https://github.com/retextjs/retext",
+      "kind": "tool",
+      "checked_on": "2026-10-26",
+      "inspection": "项目README相关段落、GitHub页面许可标识与约数星标；未安装、未审计全部代码",
+      "stars_display": "2.4k",
+      "license_reported": "MIT",
+      "runtime_status": "Not Run",
+      "local_verification": {
+        "checked_on": "2026-10-26",
+        "inspection": "通过 GitHub 连接器读取仓库 API 元数据；未执行或审计代码",
+        "stars_count": 2433,
+        "license_metadata": "MIT"
+      }
+    },
+    {
+      "id": "T05",
+      "title": "write-good",
+      "url": "https://github.com/btford/write-good",
+      "kind": "tool",
+      "checked_on": "2026-10-26",
+      "inspection": "项目README相关段落、GitHub页面许可标识与约数星标；未安装、未审计全部代码",
+      "stars_display": "5.1k",
+      "license_reported": "MIT",
+      "runtime_status": "Not Run",
+      "local_verification": {
+        "checked_on": "2026-10-26",
+        "inspection": "通过 GitHub 连接器读取仓库 API 元数据；未执行或审计代码",
+        "stars_count": 5104,
+        "license_metadata": "MIT"
+      }
+    },
+    {
+      "id": "T06",
+      "title": "proselint",
+      "url": "https://github.com/amperser/proselint",
+      "kind": "tool",
+      "checked_on": "2026-10-26",
+      "inspection": "项目README相关段落、GitHub页面许可标识与约数星标；未安装、未审计全部代码",
+      "stars_display": "4.6k",
+      "license_reported": "BSD-3-Clause",
+      "runtime_status": "Not Run",
+      "local_verification": {
+        "checked_on": "2026-10-26",
+        "inspection": "通过 GitHub 连接器读取仓库 API 元数据；未执行或审计代码",
+        "stars_count": 4587,
+        "license_metadata": "BSD-3-Clause",
+        "primary_repository": "https://codeberg.org/amperser/proselint"
+      }
+    },
+    {
+      "id": "T07",
+      "title": "MUSS code",
+      "url": "https://github.com/facebookresearch/muss",
+      "kind": "research_code",
+      "checked_on": "2026-10-26",
+      "inspection": "README的用途、语言和环境说明；未安装",
+      "runtime_status": "Not Run",
+      "license_status": "未完整核对代码、权重及数据的各自许可"
+    },
+    {
+      "id": "T08",
+      "title": "LENS upstream code",
+      "url": "https://github.com/Yao-Dou/LENS",
+      "kind": "research_code",
+      "checked_on": "2026-10-26",
+      "inspection": "GitHub API确认上游及README；davidheineman/LENS为fork",
+      "runtime_status": "Not Run",
+      "license_status": "API license=null；不能据此认定无任何许可，也不能视为已获复用授权",
+      "local_verification": {
+        "checked_on": "2026-10-26",
+        "inspection": "GitHub API 核对 Yao-Dou/LENS 非 fork、davidheineman/LENS 的 parent 为该仓库、上游 license=null；不据此推定已获复用授权"
+      }
+    },
+    {
+      "id": "T09",
+      "title": "SALSA code",
+      "url": "https://github.com/davidheineman/salsa",
+      "kind": "research_code",
+      "checked_on": "2026-10-26",
+      "inspection": "作者项目检索入口及论文链接；未审计代码或许可",
+      "runtime_status": "Not Run",
+      "license_status": "未核清"
+    },
+    {
+      "id": "T10",
+      "title": "MCTS code and data",
+      "url": "https://github.com/blcuicall/mcts",
+      "kind": "research_code",
+      "checked_on": "2026-10-26",
+      "inspection": "论文明确给出的代码/数据链接与项目检索结果；未下载数据",
+      "runtime_status": "Not Run",
+      "license_status": "未核清代码和数据各自许可"
+    },
+    {
+      "id": "T11",
+      "title": "UIDPO code",
+      "url": "https://github.com/CLCS-SUSTech/UIDPO",
+      "kind": "research_code",
+      "checked_on": "2026-10-26",
+      "inspection": "GitHub API元数据和根目录；根README.md请求404，根目录未列出README或LICENSE",
+      "runtime_status": "Not Run",
+      "license_status": "API license=null；许可未核清，不作为已确认开源依赖",
+      "local_verification": {
+        "checked_on": "2026-10-26",
+        "inspection": "GitHub API license=null；仍按许可未核清处理，不复制代码或安装"
+      }
+    },
+    {
+      "id": "T12",
+      "title": "BLESS code",
+      "url": "https://github.com/ZurichNLP/BLESS",
+      "kind": "research_code",
+      "checked_on": "2026-10-26",
+      "inspection": "作者项目检索入口；能力描述以论文为依据",
+      "runtime_status": "Not Run",
+      "license_status": "未核清"
+    },
+    {
+      "id": "S01",
+      "title": "Google developer documentation style guide: Highlights",
+      "url": "https://developers.google.com/style/highlights",
+      "kind": "official_guide",
+      "checked_on": "2026-10-26",
+      "inspection": "当前页面正文；非全文指南审计"
+    },
+    {
+      "id": "S02",
+      "title": "Microsoft Writing Style Guide: Scannable content",
+      "url": "https://learn.microsoft.com/en-us/style-guide/scannable-content/",
+      "kind": "official_guide",
+      "checked_on": "2026-10-26",
+      "inspection": "当前页面正文；非完整中文风格指南核验"
+    },
+    {
+      "id": "S03",
+      "title": "ASD-STE100 FAQ",
+      "url": "https://www.asd-ste100.org/STE_faq.html",
+      "kind": "official_guide",
+      "checked_on": "2026-10-26",
+      "inspection": "本轮请求403；仅保留官方入口和仓库2026-10-25的既有阅读记录；未取得完整标准",
+      "access_status": "blocked_403"
+    },
+    {
+      "id": "O01",
+      "title": "OpenAI API deployment checklist",
+      "url": "https://developers.openai.com/api/docs/guides/deployment-checklist",
+      "kind": "official_product_docs",
+      "checked_on": "2026-10-26",
+      "inspection": "text.verbosity及相关提示词段落"
+    },
+    {
+      "id": "O02",
+      "title": "ChatGPT Custom Instructions",
+      "url": "https://help.openai.com/en/articles/8096356-chatgpt-custom-instructions",
+      "kind": "official_product_docs",
+      "checked_on": "2026-10-26",
+      "inspection": "自定义指令用途及设置段落；不在报告转述易变额度"
+    },
+    {
+      "id": "O03",
+      "title": "Projects in ChatGPT",
+      "url": "https://help.openai.com/en/articles/10169521-projects-in-chatgpt",
+      "kind": "official_product_docs",
+      "checked_on": "2026-10-26",
+      "inspection": "项目指令及其作用范围段落"
+    },
+    {
+      "id": "R01",
+      "title": "text-prison/AGENTS.md",
+      "url": "https://github.com/psiQAQ/text-prison/blob/c6073e9e9dd2f66c6e823c9dfc9818ea641bd584/AGENTS.md",
+      "kind": "project_file",
+      "checked_on": "2026-10-26",
+      "inspection": "GitHub连接器读取：全文",
+      "commit": "c6073e9e9dd2f66c6e823c9dfc9818ea641bd584"
+    },
+    {
+      "id": "R02",
+      "title": "text-prison/skills/text-prison/SKILL.md",
+      "url": "https://github.com/psiQAQ/text-prison/blob/c6073e9e9dd2f66c6e823c9dfc9818ea641bd584/skills/text-prison/SKILL.md",
+      "kind": "project_file",
+      "checked_on": "2026-10-26",
+      "inspection": "GitHub连接器读取：全文",
+      "commit": "c6073e9e9dd2f66c6e823c9dfc9818ea641bd584"
+    },
+    {
+      "id": "R03",
+      "title": "text-prison/docs/DESIGN.md",
+      "url": "https://github.com/psiQAQ/text-prison/blob/c6073e9e9dd2f66c6e823c9dfc9818ea641bd584/docs/DESIGN.md",
+      "kind": "project_file",
+      "checked_on": "2026-10-26",
+      "inspection": "GitHub连接器读取：全文",
+      "commit": "c6073e9e9dd2f66c6e823c9dfc9818ea641bd584"
+    },
+    {
+      "id": "R04",
+      "title": "text-prison/skills/text-prison/vale/README.md",
+      "url": "https://github.com/psiQAQ/text-prison/blob/c6073e9e9dd2f66c6e823c9dfc9818ea641bd584/skills/text-prison/vale/README.md",
+      "kind": "project_file",
+      "checked_on": "2026-10-26",
+      "inspection": "GitHub连接器读取：全文",
+      "commit": "c6073e9e9dd2f66c6e823c9dfc9818ea641bd584"
+    },
+    {
+      "id": "R05",
+      "title": "text-prison/skills/text-prison/references/ste-inspired.md",
+      "url": "https://github.com/psiQAQ/text-prison/blob/c6073e9e9dd2f66c6e823c9dfc9818ea641bd584/skills/text-prison/references/ste-inspired.md",
+      "kind": "project_file",
+      "checked_on": "2026-10-26",
+      "inspection": "GitHub连接器读取：全文",
+      "commit": "c6073e9e9dd2f66c6e823c9dfc9818ea641bd584"
+    },
+    {
+      "id": "R06",
+      "title": "text-prison/docs/RELATED_WORK.md",
+      "url": "https://github.com/psiQAQ/text-prison/blob/c6073e9e9dd2f66c6e823c9dfc9818ea641bd584/docs/RELATED_WORK.md",
+      "kind": "project_file",
+      "checked_on": "2026-10-26",
+      "inspection": "GitHub连接器读取：运行来源说明及主要书目；长输出有截断，不声称重新阅读全部条目",
+      "commit": "c6073e9e9dd2f66c6e823c9dfc9818ea641bd584"
+    },
+    {
+      "id": "R07",
+      "title": "text-prison/README.md",
+      "url": "https://github.com/psiQAQ/text-prison/blob/c6073e9e9dd2f66c6e823c9dfc9818ea641bd584/README.md",
+      "kind": "project_file",
+      "checked_on": "2026-10-26",
+      "inspection": "GitHub连接器读取：安装、工作流程、Vale及其运行示例段落；长输出有截断",
+      "commit": "c6073e9e9dd2f66c6e823c9dfc9818ea641bd584"
+    },
+    {
+      "id": "R08",
+      "title": "text-prison pinned commit",
+      "url": "https://github.com/psiQAQ/text-prison/commit/c6073e9e9dd2f66c6e823c9dfc9818ea641bd584",
+      "kind": "project_metadata",
+      "checked_on": "2026-10-26",
+      "inspection": "GitHub连接器读取main提交和递归tree；未取得完整本地checkout",
+      "commit": "c6073e9e9dd2f66c6e823c9dfc9818ea641bd584",
+      "tree": "1d20fb75a1e3c3e555e6ab41b158f2519db6db9d"
+    },
+    {
+      "id": "C01",
+      "title": "asd-ste100-skill pinned reference",
+      "url": "https://github.com/danyuchn/asd-ste100-skill/blob/cd62d297d5ef7cf9f59718cadc233ab2876ea013/SKILL.md",
+      "kind": "existing_project_reference",
+      "checked_on": "2026-10-26",
+      "inspection": "本轮通过R06/R05核对既有来源登记，未重新审计上游全文"
+    },
+    {
+      "id": "C02",
+      "title": "SimpleEnglish pinned reference",
+      "url": "https://github.com/AminBlg/SimpleEnglish/blob/a6fcb4fde098b33617cc1578d151ebf58774b883/skills/simple-english/SKILL.md",
+      "kind": "existing_project_reference",
+      "checked_on": "2026-10-26",
+      "inspection": "本轮通过R06核对既有登记，不重新背书作者自评"
+    },
+    {
+      "id": "C03",
+      "title": "ste pinned reference",
+      "url": "https://github.com/stazelabs/ste/tree/922c9773d0004f4c40b2e1373db9ed949321373d",
+      "kind": "existing_project_reference",
+      "checked_on": "2026-10-26",
+      "inspection": "本轮通过R06核对既有登记；未执行或审计上游代码"
+    }
+  ],
+  "local_archive": {
+    "retrieved_on": "2026-10-26",
+    "directory": "docs/reference/2026-10-26-llm-readability",
+    "git_ignored": true,
+    "papers_expected": 17,
+    "papers_downloaded": 17,
+    "total_bytes": 34790083,
+    "scope": "仅本目录现有 17 篇论文；不下载代码、模型、数据集或完整标准；公开文档使用外部来源链接",
+    "original_package_manifest": "package-manifest.json",
+    "original_inspection_note": "原包 inspection 与 checked_on 保留历史阅读范围；本次追加 local_verification，不把下载或自动提取全文记成全文审读"
+  }
+}

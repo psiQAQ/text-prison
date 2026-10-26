@@ -1,0 +1,65 @@
+{
+  "package": "text-prison-readability-research-2026-10-26",
+  "created_on": "2026-10-26",
+  "repository": "psiQAQ/text-prison",
+  "base_commit": "c6073e9e9dd2f66c6e823c9dfc9818ea641bd584",
+  "mode": "documentation-only-additive-overlay",
+  "archive_root": "repository root; no enclosing directory",
+  "runtime_files_changed": false,
+  "remote_changes": false,
+  "files_total_in_archive": 11,
+  "manifest_self_excluded": true,
+  "historical_root_manifest_unchanged": true,
+  "files": [
+    {
+      "path": "READABILITY_RESEARCH_2026-10-26.md",
+      "bytes": 2239,
+      "sha256": "cc880d3db2d81fc1c0a6cf87527b366c8b6074103eea6a950383a8d05430eef8"
+    },
+    {
+      "path": "docs/plans/2026-10-26-readability-evolution.md",
+      "bytes": 11009,
+      "sha256": "612f061420f02353291ddb8961845d2216d02be1045cf8958c18e9ffcb90eca4"
+    },
+    {
+      "path": "docs/research/2026-10-26-llm-readability/01-report.md",
+      "bytes": 11076,
+      "sha256": "ada1265092705acda13f025e7942092546be3735dbcc375678d9d6a11016aed9"
+    },
+    {
+      "path": "docs/research/2026-10-26-llm-readability/02-literature.md",
+      "bytes": 12182,
+      "sha256": "a2a97c32e105180416c577e80922f7ccaed6d3ba2ea34661f0a985de6922f2cc"
+    },
+    {
+      "path": "docs/research/2026-10-26-llm-readability/03-tools.md",
+      "bytes": 8436,
+      "sha256": "32b408fe4b57149edfce1840b60c81c6f64d096caf55b33bbde13f75c3eaf150"
+    },
+    {
+      "path": "docs/research/2026-10-26-llm-readability/04-prompts.md",
+      "bytes": 9971,
+      "sha256": "059acd2fd3ee1ff578f0a8502eb6de2c6264db92cf7cfacbccb7dc750b7fc9e7"
+    },
+    {
+      "path": "docs/research/2026-10-26-llm-readability/05-repository-audit.md",
+      "bytes": 6761,
+      "sha256": "8c63b4e0eaf2a54329677129faf225111f3d8c8d92b02f40ec52a5066d56d5ae"
+    },
+    {
+      "path": "docs/research/2026-10-26-llm-readability/06-verification.md",
+      "bytes": 4286,
+      "sha256": "8113879e0376ed124bfcf8fbca90501168b095eefb8e0bd7a46a411d32422afe"
+    },
+    {
+      "path": "docs/research/2026-10-26-llm-readability/README.md",
+      "bytes": 3574,
+      "sha256": "3e7db51b206eb89ec3672f17986f3c22d42c37790c059cf5866e86103b96640e"
+    },
+    {
+      "path": "docs/research/2026-10-26-llm-readability/sources.json",
+      "bytes": 18531,
+      "sha256": "26754bf761c411ceb03fcfed1fb0cab94394221e8cd1eb112d6e250d3101f50a"
+    }
+  ]
+}

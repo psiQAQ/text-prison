@@ -1,6 +1,6 @@
 # 来源目录与只读参考快照
 
-当前用途更新于 2026-10-25；原书目和快照核验日期为 2026-10-24。本页保留来源入口、归属和此前阅读范围。旧评测实施建议已撤除；历史研究方法条目仅为书目，不是本仓库继续开展测试的计划。
+当前用途更新于 2026-10-26；原书目和快照核验日期为 2026-10-24。本页保留来源入口、归属和此前阅读范围。旧评测实施建议已撤除；历史研究方法条目仅为书目，不是本仓库继续开展测试的计划。
 
 完整机器记录见 [sources.json](../sources.json)。固定提交和 README 阅读不代表代码审计、效果复现或第三方内容许可已全部核实。除已记录的有限核验范围外，不把登记链接当作重新阅读原文。
 
@@ -17,6 +17,16 @@ Google 和 Microsoft 写作指导为官方页面的自主概括。STE-inspired �
 注意同名项目：R04 指官方 Vale CLI 及 Google/Microsoft 风格包；R32 的 `stuffbucket/vale` 是另一个独立的 STE 检查器，只保留为参考，不能作为 Vale CLI 的安装来源。
 
 README 安装主线另核对了 [Skills CLI 当前命令说明](https://github.com/vercel-labs/skills/blob/main/docs/commands.md)和[宿主表](https://github.com/vercel-labs/skills/blob/main/docs/agents.md)中的项目/全局范围、交互安装方式与路径，查阅日期为 2026-10-25。当前文档核对不等于重新执行安装，历史 1.7.4 的实际复制行为仍单独保留。README 的工具案例复用当日 Vale/AutoCorrect 的已存运行记录，核对依据和本次整理状态见[README 完善计划](plans/readme-user-guide-ste.md)。
+
+## 2026-10-26 可读性研究与采纳范围
+
+[研究入口](research/2026-10-26-llm-readability/READABILITY_RESEARCH_2026-10-26.md)汇集报告、17 篇文献地图、工具比较和编辑示例；[实施记录](plans/2026-10-26-readability-evolution.md)说明本次 P0＋P1 的采纳范围。研究来源表保留原包的阅读记录，并追加本地下载版本、来源、文件摘要及实际核对范围，下载全文不等于全文审读或实验复现。
+
+本次指导主要参考种子论文的正文与局限、RLHF 长度偏差研究摘要及 SALSA 的编辑分析摘要，补充名词串、隐含关系和插入信息的处理，不以最少字数作为目标。运行参考只保留必要的来源链接，不依赖本研究目录或本地论文；这些工程适配没有读者效果或成本改善的实测结论。
+
+研究编号与历史书目复用关系为 E04 → [R18](#r18)（SARI）、E05 → [R19](#r19)（LENS）、E06 → [R15](#r15)（SALSA）、E07 → [R20](#r20)（文档级简化指标）。根来源索引在 `runtime_sources` 追加本次采纳记录，详细条目继续以[研究来源表](research/2026-10-26-llm-readability/sources.json)为准，不重写历史核验状态。
+
+PDF 只存放于 Git 忽略的 `docs/reference/2026-10-26-llm-readability/`；公开入口使用出版机构、作者或预印本链接，不依赖本机文件。原 ZIP 的 `package-manifest.json` 保留原包含义，整理后的文件与文献获取状态见[本地核对记录](research/2026-10-26-llm-readability/06-verification.md#local-verification-20261026)。
 
 ## 1. 原始来源目录
 

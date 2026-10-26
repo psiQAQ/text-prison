@@ -1568,6 +1568,27 @@
       "scope": "Read official About STE and FAQ sections on rule/dictionary structure, technical terms, application beyond procedures, reader-required conditions and tool limitations. Read the fixed community Skill and writing-rule summary. Adapt terminology consistency, explicit referents, condition/action ordering and document structure across purposes; retain TextPrison meaning and authorization safeguards. No English-specific word limits, grammar restrictions, controlled dictionary or new checker rules.",
       "limitations": "Full ASD-STE100 standard and dictionary not obtained or verified. Official HTML retained only in ignored local working records. Community guidance is not the official standard. No upstream code, Agent field tests or effect measurements executed.",
       "runtime_reference": "skills/text-prison/references/ste-inspired.md"
+    },
+    {
+      "id": "runtime-readability-guidance",
+      "checked_date": "2026-10-26",
+      "status": "documentation_and_pdf_identity_reviewed_no_runtime_execution",
+      "urls": [
+        "https://arxiv.org/html/2610.29162v1",
+        "https://arxiv.org/abs/2310.03716v2",
+        "https://aclanthology.org/2023.emnlp-main.211/"
+      ],
+      "scope": "Read the seed paper's abstract, introduction, limitations and relevant bibliography, the RLHF length-bias abstract and SALSA abstract. Adapt evidence-bounded noun-chain expansion, explicit relationships, clause organization and edit-level meaning checks. Add explicitly requested technical answers within the existing five purposes. No claim of measured readability gains or full STE compliance.",
+      "research_catalog": "docs/research/2026-10-26-llm-readability/sources.json",
+      "existing_source_ids": [
+        "R15",
+        "R18",
+        "R19",
+        "R20"
+      ],
+      "runtime_reference": "skills/text-prison/references/ste-inspired.md",
+      "delivery_record": "docs/plans/2026-10-26-readability-evolution.md",
+      "limitations": "The 17 PDFs are ignored local reference copies; identity and parseability checks do not establish full-paper review, reproduction or reader outcomes. P06 published-abstract sample size differs from the older author-site abstract; P05 conference acceptance was not independently verified. The initial local implementation included no installations, model calls, field or trigger experiments, test suites, package synchronization or publication; later publication and installed-Skill synchronization require separate execution records."
     }
   ]
 }

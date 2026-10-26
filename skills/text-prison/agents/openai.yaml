@@ -1,5 +1,5 @@
 interface:
   display_name: "TextPrison"
-  short_description: "Chinese and English writing with optional style checks"
+  short_description: "Chinese/English writing and requested technical answers"
 policy:
   allow_implicit_invocation: true

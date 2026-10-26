@@ -1,8 +1,8 @@
 # TextPrison / 文字狱
 
-一个中英文写作 Skill，按文档用途选用规则，在保留技术含义的前提下改善表达，并按需调用 Vale 和 AutoCorrect 检查。
+一个中英文写作 Skill，按内容用途选用规则，在保留技术含义的前提下改善表达，并按需调用 Vale 和 AutoCorrect 检查。
 
-适用于 README、安装与操作说明、API 参考、产品帮助、科研摘要和 Agent 指令。你指定读者、文档和允许的改动，Agent 再选择需要的写作参考；只使用文字指导时，无需额外工具。
+适用于 README、安装与操作说明、API 参考、产品帮助、科研摘要和 Agent 指令，也可处理你明确要求使用 TextPrison 的技术回答。你指定读者、内容和允许的改动，Agent 再选择需要的写作参考；只使用文字指导时，无需额外工具。
 
 - [安装](#安装)
 - [在 Agent 中使用](#在-agent-中使用)
@@ -58,9 +58,15 @@ npx 可能先询问是否下载 `skills` 包；随后按 CLI 当前提示选择�
 
 选项随任务变化，不是固定菜单。已经要求“只改术语”“保留标题把这一段改通顺”等明确动作时，Agent 直接在范围内处理；请求本身是审阅时，也无需先选择 C。
 
+技术回答也可以直接在对话中交付。例如：
+
+> $text-prison 请解释“统计不显著”与“证明相等”的区别。面向有基础统计知识的读者，保留前提和不确定性，直接在对话中回答。
+
+这同样是**示意调用**。回答沿用解释或科研等现有用途，默认只使用文字指导，不为检查创建文件；未请求、未使用工具时不附机械状态清单。文档任务保留自动发现，普通聊天和未指定使用 TextPrison 的技术问答不进入此流程。
+
 ```mermaid
 flowchart TD
-    start["读取文档、来源和项目约定，确认读者与范围"] --> choice{"有实质不同的优化方向？"}
+    start["读取文档或问题、来源和项目约定，确认读者与范围"] --> choice{"有实质不同的优化方向？"}
     choice -->|"有"| options["说明选项、推荐理由、规则、工具与复核负担"]
     options --> a["A：保留结构，局部清晰化"]
     options --> b["B：按读者任务重组"]
@@ -80,7 +86,7 @@ flowchart TD
     select -->|"Vale"| vale["选择适用 Vale 配置"]
     select -->|"AutoCorrect"| auto["选择适用中文排版配置"]
     select -->|"两者"| both["分别选择配置，共用修订轮次"]
-    select -->|"均不需要"| output["交付文档或问题清单，说明范围、未决项与工具状态"]
+    select -->|"均不需要"| output["交付正文、文件入口或问题清单；仅对所选工具说明状态"]
     vale --> ready
     auto --> ready
     both --> ready["逐个核对工具、配置、规则和输入；缺失方记 Not Run"]
@@ -319,6 +325,8 @@ TextPrison 根据这些官方说明和固定社区参考，提炼可跨语言使
 
 这些方法通过 Agent 写作指导生效。README、操作说明、API 参考、科研说明或 Agent 指令中出现相关歧义时，Skill 才加载 [STE-inspired 参考](skills/text-prison/references/ste-inspired.md)。不会为每份文档强制套用英文词数、时态或受控词典，也不会因此运行额外工具。
 
+参考页也吸收了[可读性研究](docs/research/2026-10-26-llm-readability/READABILITY_RESEARCH_2026-10-26.md)中的工程建议：不以最少字数或 Token 为目标；必要时展开名词串、已有关系和插入信息，原文已经清楚时可以不改。这些补充不是新的 STE 标准条款，也不证明本 Skill 已改善读者表现。
+
 **编辑示例，非运行记录**：假设上下文已明确“它”是导出的配置文件，且使用编辑器修改该文件。
 
 > 原文：完成导出后，如果还要修改，可以再打开它。
@@ -329,7 +337,7 @@ TextPrison 根据这些官方说明和固定社区参考，提炼可跨语言使
 
 ## 仓库目录
 
-以下列出公开文件和固定子模块入口；`skills/` 完整展开。私有运行记录、Git 内部文件和按需同步的规则包不在树中。
+以下列出公开文件和固定子模块入口；`skills/` 完整展开。私有运行记录、本地下载论文、Git 内部文件和按需同步的规则包不在树中。
 
 ```text
 text-prison/                              # 仓库根目录
@@ -347,10 +355,13 @@ text-prison/                              # 仓库根目录
 │   ├── USAGE.md                         # 编辑范围、检查调用和状态处理
 │   ├── DESIGN.md                        # 当前职责、流程与设计边界
 │   ├── RELATED_WORK.md                  # 来源目录与上游快照阅读范围
+│   ├── research/                        # 调研文档与独立来源登记
+│   │   └── 2026-10-26-llm-readability/   # 可读性报告、文献地图与原包凭证
 │   └── plans/                           # 已审阅的方案与交付记录
 │       ├── text-prison-vale.md           # 统一 Skill 与 Vale 接入方案
 │       ├── chinese-publish-install.md   # 中文支持、发布、安装和 CLI 实测记录
-│       └── readme-user-guide-ste.md      # 本次 README 与 STE 方案、意见取舍及验收
+│       ├── readme-user-guide-ste.md      # README 与 STE 方案、意见取舍及验收
+│       └── 2026-10-26-readability-evolution.md # 可读性 P0＋P1 范围及实施记录
 ├── skills/                              # 可安装 Skill 的唯一源码位置
 │   └── text-prison/                     # 自包含的 TextPrison Skill
 │       ├── SKILL.md                     # 发现描述、方案选择、编辑与检查流程
@@ -402,7 +413,8 @@ text-prison/                              # 仓库根目录
 
 - [安装说明](docs/INSTALL.md)：宿主路径、工具准备和已有副本更新。
 - [使用说明](docs/USAGE.md)：局部修改、科研保护、CLI 调用与失败处理。
-- [当前设计](docs/DESIGN.md)、[本次实施计划](docs/plans/readme-user-guide-ste.md)：职责、审阅取舍及验收。
+- [当前设计](docs/DESIGN.md)、[README 与 STE 实施记录](docs/plans/readme-user-guide-ste.md)：职责、此前审阅取舍及验收。
+- [可读性调研](docs/research/2026-10-26-llm-readability/READABILITY_RESEARCH_2026-10-26.md)、[P0＋P1 实施记录](docs/plans/2026-10-26-readability-evolution.md)：研究依据、技术回答入口及本地文献获取情况。
 - [来源目录](docs/RELATED_WORK.md)、[机器索引](sources.json)、[归属说明](NOTICE.md)：来源、阅读范围与许可。
 - [统一 Skill 方案](docs/plans/text-prison-vale.md)、[中文支持及安装记录](docs/plans/chinese-publish-install.md)：此前设计与实际交付。
 

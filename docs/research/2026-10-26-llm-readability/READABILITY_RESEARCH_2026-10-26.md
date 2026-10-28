@@ -13,6 +13,7 @@
 | 比较开源工具和论文代码 | [工具选型](03-tools.md) |
 | 立即复制一段写作提示词 | [提示词与编辑示例](04-prompts.md) |
 | 了解原基线下的能力与缺口 | [固定提交审查](05-repository-audit.md) |
+| 查看关于 AI 文本可读性与稳定控制的对话记录 | [讨论记录](08-discussion-on-ai-readability-control.md) |
 | 查看本次采纳范围及实施情况 | [P0＋P1 实施记录](../../plans/2026-10-26-readability-evolution.md) |
 | 核对阅读范围、文献获取和包清单 | [交付说明](README.md)及[验证记录](06-verification.md) |
 
